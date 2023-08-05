@@ -1635,8 +1635,7 @@ static void AlertNotify(const std::string& strMessage)
 {
     uiInterface.NotifyAlertChanged();
 #if HAVE_SYSTEM
-    std::string strCmd = gArgs.GetArg("-alertnotify", "");
-    if (strCmd.empty()) return;
+    if (!gArgs.IsArgSet("-alertnotify")) return;
 
     // Alert text should be plain ascii coming from a trusted source, but to
     // be safe we first strip anything not in safeChars, then add single quotes around
@@ -1644,10 +1643,13 @@ static void AlertNotify(const std::string& strMessage)
     std::string singleQuote("'");
     std::string safeStatus = SanitizeString(strMessage);
     safeStatus = singleQuote+safeStatus+singleQuote;
-    ReplaceAll(strCmd, "%s", safeStatus);
 
-    std::thread t(runCommand, strCmd);
-    t.detach(); // thread runs free
+    for (std::string command : gArgs.GetArgs("-alertnotify")) {
+        ReplaceAll(command, "%s", safeStatus);
+
+        std::thread t(runCommand, command);
+        t.detach(); // thread runs free
+    }
 #endif
 }
 

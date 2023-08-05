@@ -440,6 +440,7 @@ void SetupServerArgs(ArgsManager& argsman)
     argsman.AddArg("-dbbatchsize", strprintf("Maximum database write batch size in bytes (default: %u)", nDefaultDbBatchSize), ArgsManager::ALLOW_ANY | ArgsManager::DEBUG_ONLY, OptionsCategory::OPTIONS);
     argsman.AddArg("-dbcache=<n>", strprintf("Maximum database cache size <n> MiB (%d to %d, default: %d). In addition, unused mempool memory is shared for this cache (see -maxmempool).", nMinDbCache, nMaxDbCache, nDefaultDbCache), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-includeconf=<file>", "Specify additional configuration file, relative to the -datadir path (only useable from configuration file, not command line)", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
+    argsman.AddArg("-allowignoredconf", strprintf("For backwards compatibility, treat an unused %s file in the datadir as a warning, not an error.", BITCOIN_CONF_FILENAME), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-loadblock=<file>", "Imports blocks from external file on startup", ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-maxmempool=<n>", strprintf("Keep the transaction memory pool below <n> megabytes (default: %u)", DEFAULT_MAX_MEMPOOL_SIZE_MB), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
     argsman.AddArg("-maxorphantx=<n>", strprintf("Keep at most <n> unconnectable transactions in memory (default: %u)", DEFAULT_MAX_ORPHAN_TRANSACTIONS), ArgsManager::ALLOW_ANY, OptionsCategory::OPTIONS);
@@ -646,9 +647,8 @@ static void BlockNotifyGenesisWait(const CBlockIndex* pBlockIndex)
 #if HAVE_SYSTEM
 static void StartupNotify(const ArgsManager& args)
 {
-    std::string cmd = args.GetArg("-startupnotify", "");
-    if (!cmd.empty()) {
-        std::thread t(runCommand, cmd);
+    for (std::string command : args.GetArgs("-startupnotify")) {
+        std::thread t(runCommand, command);
         t.detach(); // thread runs free
     }
 }
@@ -1649,14 +1649,17 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
     }
 
 #if HAVE_SYSTEM
-    const std::string block_notify = args.GetArg("-blocknotify", "");
-    if (!block_notify.empty()) {
-        uiInterface.NotifyBlockTip_connect([block_notify](SynchronizationState sync_state, const CBlockIndex* pBlockIndex) {
+    if (args.IsArgSet("-blocknotify")) {
+        auto blocknotify_commands = args.GetArgs("-blocknotify");
+        uiInterface.NotifyBlockTip_connect([blocknotify_commands](SynchronizationState sync_state, const CBlockIndex* pBlockIndex) {
             if (sync_state != SynchronizationState::POST_INIT || !pBlockIndex) return;
-            std::string command = block_notify;
-            ReplaceAll(command, "%s", pBlockIndex->GetBlockHash().GetHex());
-            std::thread t(runCommand, command);
-            t.detach(); // thread runs free
+            const std::string blockhash_hex = pBlockIndex->GetBlockHash().GetHex();
+            for (std::string command : blocknotify_commands) {
+                ReplaceAll(command, "%s", blockhash_hex);
+
+                std::thread t(runCommand, command);
+                t.detach(); // thread runs free
+            }
         });
     }
 #endif
