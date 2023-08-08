@@ -498,6 +498,7 @@ static RPCHelpMan getprioritisedtransactions()
                 {RPCResult::Type::OBJ, "txid", "", {
                     {RPCResult::Type::NUM, "fee_delta", "transaction fee delta in satoshis"},
                     {RPCResult::Type::BOOL, "in_mempool", "whether this transaction is currently in mempool"},
+                    {RPCResult::Type::NUM, "priority_delta", /*optional=*/true, "transaction coin-age priority delta"},
                 }}
             },
         },
@@ -514,6 +515,7 @@ static RPCHelpMan getprioritisedtransactions()
                 UniValue result_inner{UniValue::VOBJ};
                 result_inner.pushKV("fee_delta", delta_info.delta);
                 result_inner.pushKV("in_mempool", delta_info.in_mempool);
+                result_inner.pushKV("priority_delta", delta_info.priority_delta);
                 rpc_result.pushKV(delta_info.txid.GetHex(), result_inner);
             }
             return rpc_result;
