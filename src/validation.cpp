@@ -791,9 +791,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 // Replaceability signaling of the original transactions may be
                 // ignored due to node setting.
                 bool allow_rbf;
-                if (m_pool.m_full_rbf || ignore_rejects.count("txn-mempool-conflict")) {
+                if (m_pool.m_rbf_policy == RBFPolicy::Always || ignore_rejects.count("txn-mempool-conflict")) {
                     allow_rbf = true;
-                } else if (!gEnableReplacement) {
+                } else if (m_pool.m_rbf_policy == RBFPolicy::Never) {
                     allow_rbf = false;
                 } else {
                     allow_rbf = SignalsOptInRBF(*ptxConflicting) || ptxConflicting->nVersion == 3;

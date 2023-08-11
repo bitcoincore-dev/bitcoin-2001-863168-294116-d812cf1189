@@ -635,8 +635,8 @@ void SetupServerArgs(ArgsManager& argsman)
                              "is of this size or less (default: %u)",
                              MAX_OP_RETURN_RELAY),
                    ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
-    argsman.AddArg("-mempoolfullrbf", strprintf("Accept transaction replace-by-fee without requiring replaceability signaling (default: %u)", DEFAULT_MEMPOOL_FULL_RBF), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
-    argsman.AddArg("-mempoolreplacement", strprintf("Enable transaction replacement in the memory pool (\"fee,-optin\" = ignore opt-out flag, default: %u)", DEFAULT_ENABLE_REPLACEMENT), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
+    argsman.AddArg("-mempoolfullrbf", strprintf("Accept transaction replace-by-fee without requiring replaceability signaling (default: %u)", (DEFAULT_MEMPOOL_RBF_POLICY == RBFPolicy::Always)), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
+    argsman.AddArg("-mempoolreplacement", strprintf("Enable transaction replacement in the memory pool (\"fee,-optin\" = ignore opt-out flag, default: %u)", "fee,optin"), ArgsManager::ALLOW_ANY, OptionsCategory::NODE_RELAY);
     argsman.AddArg("-permitbaremultisig", strprintf("Relay non-P2SH multisig (default: %u)", DEFAULT_PERMIT_BAREMULTISIG), ArgsManager::ALLOW_ANY,
                    OptionsCategory::NODE_RELAY);
     argsman.AddArg("-minrelaytxfee=<amt>", strprintf("Fees (in %s/kvB) smaller than this are considered zero fee for relaying, mining and transaction creation (default: %s)",
@@ -880,8 +880,6 @@ bool AppInitBasicSetup(const ArgsManager& args, std::atomic<int>& exit_status)
     return true;
 }
 
-static bool gReplacementHonourOptOut;  // FIXME: Get rid of this
-
 bool AppInitParameterInteraction(const ArgsManager& args)
 {
     const CChainParams& chainparams = Params();
@@ -1027,26 +1025,6 @@ bool AppInitParameterInteraction(const ArgsManager& args)
 
     if (args.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS))
         nLocalServices = ServiceFlags(nLocalServices | NODE_BLOOM);
-
-    gEnableReplacement = args.GetBoolArg("-mempoolreplacement", DEFAULT_ENABLE_REPLACEMENT);
-    gReplacementHonourOptOut = !args.GetBoolArg("-mempoolfullrbf", DEFAULT_MEMPOOL_FULL_RBF);
-    if ((!gEnableReplacement) && args.IsArgSet("-mempoolreplacement")) {
-        // Minimal effort at forwards compatibility
-        std::string replacement_opt = args.GetArg("-mempoolreplacement", "");  // default is impossible
-        std::vector<std::string> replacement_modes = SplitString(replacement_opt, ",+");
-        gEnableReplacement = (std::find(replacement_modes.begin(), replacement_modes.end(), "fee") != replacement_modes.end());
-        if (gEnableReplacement) {
-            for (auto& opt : replacement_modes) {
-                if (opt == "optin") {
-                    gReplacementHonourOptOut = true;
-                } else if (opt == "-optin") {
-                    gReplacementHonourOptOut = false;
-                }
-            }
-        } else {
-            gReplacementHonourOptOut = true;
-        }
-    }
 
     // Also report errors from parsing before daemonization
     {
@@ -1502,7 +1480,6 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 
     CTxMemPool::Options mempool_opts{
         .check_ratio = chainparams.DefaultConsistencyChecks() ? 1 : 0,
-        .full_rbf = !gReplacementHonourOptOut,
     };
     auto result{ApplyArgsManOptions(args, chainparams, mempool_opts)};
     if (!result) {
@@ -1523,7 +1500,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         LogPrintf("* Flushing caches if available system memory drops below %s MiB\n", g_low_memory_threshold / 1024 / 1024);
     }
 
-    if (mempool_opts.full_rbf) {
+    if (mempool_opts.rbf_policy == RBFPolicy::Always) {
         nLocalServices = ServiceFlags(nLocalServices | NODE_REPLACE_BY_FEE);
     }
 
