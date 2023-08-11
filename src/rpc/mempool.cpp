@@ -726,7 +726,7 @@ UniValue MempoolInfoToJSON(const CTxMemPool& pool, const std::optional<MempoolHi
     ret.pushKV("minrelaytxfee", ValueFromAmount(pool.m_min_relay_feerate.GetFeePerK()));
     ret.pushKV("incrementalrelayfee", ValueFromAmount(pool.m_incremental_relay_feerate.GetFeePerK()));
     ret.pushKV("unbroadcastcount", uint64_t{pool.GetUnbroadcastTxs().size()});
-    ret.pushKV("fullrbf", pool.m_full_rbf);
+    ret.pushKV("fullrbf", (pool.m_rbf_policy == RBFPolicy::Always));
 
     if (histogram_floors) {
         const MempoolHistogramFeeRates& floors{histogram_floors.value()};
