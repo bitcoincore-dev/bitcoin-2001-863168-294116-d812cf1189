@@ -947,6 +947,7 @@ V2Transport::V2Transport(NodeId nodeid, bool initiating, int type_in, int versio
 bool V2Transport::ReceivedMessageComplete() const noexcept
 {
     AssertLockNotHeld(m_recv_mutex);
+    if (m_use_v1) return m_v1_fallback.ReceivedMessageComplete();
     LOCK(m_recv_mutex);
     if (m_recv_state == RecvState::V1) return m_v1_fallback.ReceivedMessageComplete();
 
@@ -956,6 +957,7 @@ bool V2Transport::ReceivedMessageComplete() const noexcept
 void V2Transport::SetReceiveVersion(int nVersionIn) noexcept
 {
     AssertLockNotHeld(m_recv_mutex);
+    if (m_use_v1) return m_v1_fallback.SetReceiveVersion(nVersionIn);
     LOCK(m_recv_mutex);
     if (m_recv_state == RecvState::V1) return m_v1_fallback.SetReceiveVersion(nVersionIn);
 
@@ -1028,6 +1030,8 @@ void V2Transport::ProcessReceivedMaybeV1() noexcept
         // Reset v2 transport buffers to save memory.
         m_recv_buffer = {};
         m_send_buffer = {};
+        // Set atomic to allow quick dispatch to fallback transport.
+        m_use_v1 = true;
     }
 }
 
@@ -1158,6 +1162,7 @@ bool V2Transport::ProcessReceivedPacket() noexcept
 bool V2Transport::ReceivedBytes(Span<const uint8_t>& msg_bytes) noexcept
 {
     AssertLockNotHeld(m_recv_mutex);
+    if (m_use_v1) return m_v1_fallback.ReceivedBytes(msg_bytes);
     LOCK(m_recv_mutex);
     if (m_recv_state == RecvState::V1) return m_v1_fallback.ReceivedBytes(msg_bytes);
 
@@ -1227,6 +1232,7 @@ std::optional<std::string> V2Transport::GetMessageType(Span<const uint8_t>& cont
 CNetMessage V2Transport::GetReceivedMessage(std::chrono::microseconds time, bool& reject_message) noexcept
 {
     AssertLockNotHeld(m_recv_mutex);
+    if (m_use_v1) return m_v1_fallback.GetReceivedMessage(time, reject_message);
     LOCK(m_recv_mutex);
     if (m_recv_state == RecvState::V1) return m_v1_fallback.GetReceivedMessage(time, reject_message);
 
@@ -1256,6 +1262,7 @@ CNetMessage V2Transport::GetReceivedMessage(std::chrono::microseconds time, bool
 bool V2Transport::SetMessageToSend(CSerializedNetMsg& msg) noexcept
 {
     AssertLockNotHeld(m_send_mutex);
+    if (m_use_v1) return m_v1_fallback.SetMessageToSend(msg);
     LOCK(m_send_mutex);
     if (m_send_state == SendState::V1) return m_v1_fallback.SetMessageToSend(msg);
 
@@ -1278,6 +1285,7 @@ bool V2Transport::SetMessageToSend(CSerializedNetMsg& msg) noexcept
 Transport::BytesToSend V2Transport::GetBytesToSend(bool have_next_message) const noexcept
 {
     AssertLockNotHeld(m_send_mutex);
+    if (m_use_v1) return m_v1_fallback.GetBytesToSend(have_next_message);
     LOCK(m_send_mutex);
     if (m_send_state == SendState::V1) return m_v1_fallback.GetBytesToSend(have_next_message);
 
@@ -1300,6 +1308,7 @@ Transport::BytesToSend V2Transport::GetBytesToSend(bool have_next_message) const
 void V2Transport::MarkBytesSent(size_t bytes_sent) noexcept
 {
     AssertLockNotHeld(m_send_mutex);
+    if (m_use_v1) return m_v1_fallback.MarkBytesSent(bytes_sent);
     LOCK(m_send_mutex);
     if (m_send_state == SendState::V1) return m_v1_fallback.MarkBytesSent(bytes_sent);
 
@@ -1316,6 +1325,7 @@ void V2Transport::MarkBytesSent(size_t bytes_sent) noexcept
 size_t V2Transport::GetSendMemoryUsage() const noexcept
 {
     AssertLockNotHeld(m_send_mutex);
+    if (m_use_v1) return m_v1_fallback.GetSendMemoryUsage();
     LOCK(m_send_mutex);
     if (m_send_state == SendState::V1) return m_v1_fallback.GetSendMemoryUsage();
 

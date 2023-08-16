@@ -493,7 +493,8 @@ private:
 
         /** Nothing (this transport is using v1 fallback).
          *
-         * All receive operations are redirected to m_v1_fallback. */
+         * All receive operations are redirected to m_v1_fallback. m_use_v1 is also set in this
+         * state, so this redirection can usually happen without needing the m_cs_recv lock. */
         V1,
     };
 
@@ -538,7 +539,8 @@ private:
 
         /** Nothing (this transport is using v1 fallback).
          *
-         * All send operations are redirected to m_v1_fallback. */
+         * All send operations are redirected to m_v1_fallback. m_use_v1 is also set in this state,
+         * so this redirection can usually happen without needing the m_cs_send lock. */
         V1,
     };
 
@@ -548,6 +550,9 @@ private:
     const bool m_initiating;
     /** NodeId (for debug logging). */
     const NodeId m_nodeid;
+    /** Whether the send/receive states are V1. This is an optimization allowing fallback to
+     *  (typically) work without the m_cs_send or m_cs_recv locks. */
+    std::atomic<bool> m_use_v1{false};
     /** Encapsulate a V1Transport to fall back to. */
     V1Transport m_v1_fallback;
     /** V1 prefix to look for (4-byte network magic + "version\x00"; magic will be filled in). */
