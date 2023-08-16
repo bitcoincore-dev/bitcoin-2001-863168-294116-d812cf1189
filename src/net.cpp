@@ -866,20 +866,22 @@ bool V1Transport::SetMessageToSend(CSerializedNetMsg& msg) noexcept
     return true;
 }
 
-Transport::BytesToSend V1Transport::GetBytesToSend() const noexcept
+Transport::BytesToSend V1Transport::GetBytesToSend(bool have_next_message) const noexcept
 {
     AssertLockNotHeld(m_send_mutex);
     LOCK(m_send_mutex);
     if (m_sending_header) {
         return {Span{m_header_to_send}.subspan(m_bytes_sent),
-                // We have more to send after the header if the message has payload.
-                !m_message_to_send.data.empty(),
+                // We have more to send after the header if the message has payload, or if there
+                // is a next message after that.
+                have_next_message || !m_message_to_send.data.empty(),
                 m_message_to_send.m_type
                };
     } else {
         return {Span{m_message_to_send.data}.subspan(m_bytes_sent),
-                // We never have more to send after this message's payload.
-                false,
+                // We only have more to send after this message's payload if there is another
+                // message.
+                have_next_message,
                 m_message_to_send.m_type
                };
     }
@@ -915,6 +917,7 @@ std::pair<size_t, bool> CConnman::SocketSendData(CNode& node) const
     auto it = node.vSendMsg.begin();
     size_t nSentSize = 0;
     bool data_left{false}; //!< second return value (whether unsent data remains)
+    std::optional<bool> expected_more;
 
     while (true) {
         if (it != node.vSendMsg.end()) {
@@ -927,7 +930,12 @@ std::pair<size_t, bool> CConnman::SocketSendData(CNode& node) const
                 ++it;
             }
         }
-        const auto& [data, more, msg_type] = node.m_transport->GetBytesToSend();
+        const auto& [data, more, msg_type] = node.m_transport->GetBytesToSend(it != node.vSendMsg.end());
+        // We rely on the 'more' value returned by GetBytesToSend to correctly predict whether more
+        // bytes are still to be sent, to correctly set the MSG_MORE flag. As a sanity check,
+        // verify that the previously returned 'more' was correct.
+        if (expected_more.has_value()) Assume(!data.empty() == *expected_more);
+        expected_more = more;
         data_left = !data.empty(); // will be overwritten on next loop if all of data gets sent
         int nBytes = 0;
         if (!data.empty()) {
@@ -940,9 +948,7 @@ std::pair<size_t, bool> CConnman::SocketSendData(CNode& node) const
             }
             int flags = MSG_NOSIGNAL | MSG_DONTWAIT;
 #ifdef MSG_MORE
-            // We have more to send if either the transport itself has more, or if we have more
-            // messages to send.
-            if (more || it != node.vSendMsg.end()) {
+            if (more) {
                 flags |= MSG_MORE;
             }
 #endif
@@ -1322,9 +1328,10 @@ Sock::EventsPerSock CConnman::GenerateWaitSockets(Span<CNode* const> nodes)
         {
             LOCK(pnode->cs_vSend);
             // Sending is possible if either there are bytes to send right now, or if there will be
-            // once a potential message from vSendMsg is handed to the transport.
-            const auto& [to_send, _more, _msg_type] = pnode->m_transport->GetBytesToSend();
-            select_send = !to_send.empty() || !pnode->vSendMsg.empty();
+            // once a potential message from vSendMsg is handed to the transport. GetBytesToSend
+            // determines both of these in a single call.
+            const auto& [to_send, more, _msg_type] = pnode->m_transport->GetBytesToSend(!pnode->vSendMsg.empty());
+            select_send = !to_send.empty() || more;
         }
         if (!select_recv && !select_send) continue;
 
@@ -3006,7 +3013,7 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
     size_t nBytesSent = 0;
     {
         LOCK(pnode->cs_vSend);
-        const auto& [to_send, _more, _msg_type] = pnode->m_transport->GetBytesToSend();
+        const auto& [to_send, more, _msg_type] = pnode->m_transport->GetBytesToSend(true);
         const bool queue_was_empty{to_send.empty() && pnode->vSendMsg.empty()};
 
         // Update memory usage of send buffer.
@@ -3015,10 +3022,11 @@ void CConnman::PushMessage(CNode* pnode, CSerializedNetMsg&& msg)
         // Move message to vSendMsg queue.
         pnode->vSendMsg.push_back(std::move(msg));
 
-        // If there was nothing to send before, attempt "optimistic write":
+        // If there was nothing to send before, and there is now (predicted by the "more" value
+        // returned by the GetBytesToSend call above), attempt "optimistic write":
         // because the poll/select loop may pause for SELECT_TIMEOUT_MILLISECONDS before actually
         // doing a send, try sending from the calling thread if the queue was empty before.
-        if (queue_was_empty) {
+        if (queue_was_empty && more) {
             std::tie(nBytesSent, std::ignore) = SocketSendData(*pnode);
         }
     }

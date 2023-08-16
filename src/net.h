@@ -310,6 +310,12 @@ public:
 
     /** Get bytes to send on the wire.
      *
+     * The have_next_message value controls whether the "more" return value indicates more bytes to
+     * be sent before (have_next_message=false) or after (have_next_message=true) a potential
+     * SetMessageToSend immediately afterwards. It is set by the caller when they know they have
+     * another message ready to send. The have_next_message argument only affects this "more"
+     * return value and nothing else.
+     *
      * As a const function, it does not modify the transport's observable state, and is thus safe
      * to be called multiple times.
      *
@@ -320,7 +326,7 @@ public:
      * Note that m_type and to_send refer to data that is internal to the transport, and calling
      * any non-const function on this object may invalidate them.
      */
-    virtual BytesToSend GetBytesToSend() const noexcept = 0;
+    virtual BytesToSend GetBytesToSend(bool have_next_message) const noexcept = 0;
 
     /** Report how many bytes returned by the last GetBytesToSend() have been sent.
      *
@@ -416,7 +422,7 @@ public:
     CNetMessage GetReceivedMessage(std::chrono::microseconds time, bool& reject_message) override EXCLUSIVE_LOCKS_REQUIRED(!m_recv_mutex);
 
     bool SetMessageToSend(CSerializedNetMsg& msg) noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_send_mutex);
-    BytesToSend GetBytesToSend() const noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_send_mutex);
+    BytesToSend GetBytesToSend(bool have_next_message) const noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_send_mutex);
     void MarkBytesSent(size_t bytes_sent) noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_send_mutex);
     size_t GetSendMemoryUsage() const noexcept override EXCLUSIVE_LOCKS_REQUIRED(!m_send_mutex);
 };
