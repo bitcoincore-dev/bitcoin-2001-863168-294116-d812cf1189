@@ -464,7 +464,7 @@ public:
     bool m_datacarrier_fullcount;
     bool m_accept_non_std_datacarrier;
     const bool m_require_standard;
-    const RBFPolicy m_rbf_policy;
+    RBFPolicy m_rbf_policy;
 
     const Limits m_limits;
 
