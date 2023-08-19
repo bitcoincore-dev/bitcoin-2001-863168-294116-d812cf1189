@@ -419,8 +419,8 @@ void BitcoinApplication::initializeResult(bool success, interfaces::BlockAndHead
         }
 #endif // ENABLE_WALLET
 
-        // Show or minimize window
-        if (!start_minimized) {
+        // If -min option passed, start window minimized (iconified) or minimized to tray
+        if (!gArgs.GetBoolArg("-min", false)) {
             window->show();
         } else if (clientModel->getOptionsModel()->getMinimizeToTray() && window->hasTrayIcon()) {
             // do nothing as the window is managed by the tray icon
