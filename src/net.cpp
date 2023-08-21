@@ -2860,8 +2860,9 @@ void CConnman::OpenNetworkConnection(const CAddress& addrConnect, bool fCountFai
 
     if (!pnode)
         return;
-    if (grantOutbound)
-        grantOutbound->MoveTo(pnode->grantOutbound);
+    if (grantOutbound) {
+        pnode->grantOutbound = std::move(*grantOutbound);
+    }
 
     m_msgproc->InitializeNode(*pnode, nLocalServices);
     {
