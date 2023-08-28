@@ -15,6 +15,7 @@
 #include <serialize.h>
 #include <span.h>
 #include <streams.h>
+#include <test/util/random.h>
 #include <test/util/setup_common.h>
 #include <test/util/validation.h>
 #include <timedata.h>
@@ -1006,6 +1007,416 @@ BOOST_AUTO_TEST_CASE(advertise_local_address)
     RemoveLocal(addr_onion);
     RemoveLocal(addr_i2p);
     RemoveLocal(addr_cjdns);
+}
+
+namespace {
+
+class V2TransportTester
+{
+    V2Transport m_transport; //!< V2Transport being tested
+    BIP324Cipher m_cipher; //!< Cipher to help with the other side
+    bool m_test_initiator; //!< Whether m_transport is the initiator (true) or responder (false)
+
+    std::vector<uint8_t> m_sent_garbage; //!< The garbage we've sent to m_transport.
+    std::vector<uint8_t> m_to_send; //!< Bytes we have queued up to send to m_transport.
+    std::vector<uint8_t> m_received; //!< Bytes we have received from m_transport.
+
+public:
+    /** Construct a tester object. test_initiator: whether the tested transport is initiator. */
+    V2TransportTester(bool test_initiator) :
+        m_transport(0, test_initiator, SER_NETWORK, INIT_PROTO_VERSION),
+        m_test_initiator(test_initiator) {}
+
+    /** Data type returned by Interact:
+     *
+     * - std::nullopt: transport error occurred
+     * - otherwise: a vector of
+     *   - std::nullopt: invalid message received
+     *   - otherwise: a CNetMessage retrieved
+     */
+    using InteractResult = std::optional<std::vector<std::optional<CNetMessage>>>;
+
+    /** Send/receive scheduled/available bytes and messages. */
+    InteractResult Interact()
+    {
+        std::vector<std::optional<CNetMessage>> ret;
+        while (true) {
+            bool progress{false};
+            // Send bytes from m_to_send to the transport.
+            if (!m_to_send.empty()) {
+                Span<const uint8_t> to_send = Span{m_to_send}.first(1 + InsecureRandRange(m_to_send.size()));
+                size_t old_len = to_send.size();
+                if (!m_transport.ReceivedBytes(to_send)) {
+                    return std::nullopt; // transport error occurred
+                }
+                if (old_len != to_send.size()) {
+                    progress = true;
+                    m_to_send.erase(m_to_send.begin(), m_to_send.begin() + (old_len - to_send.size()));
+                }
+            }
+            // Retrieve messages received by the transport.
+            if (m_transport.ReceivedMessageComplete() && (!progress || InsecureRandBool())) {
+                bool reject{false};
+                auto msg = m_transport.GetReceivedMessage({}, reject);
+                if (reject) {
+                    ret.push_back(std::nullopt);
+                } else {
+                    ret.push_back(std::move(msg));
+                }
+                progress = true;
+            }
+            // Receive bytes from the transport.
+            const auto& [recv_bytes, _more, _msg_type] = m_transport.GetBytesToSend(false);
+            if (!recv_bytes.empty() && (!progress || InsecureRandBool())) {
+                size_t to_receive = 1 + InsecureRandRange(recv_bytes.size());
+                m_received.insert(m_received.end(), recv_bytes.begin(), recv_bytes.begin() + to_receive);
+                progress = true;
+                m_transport.MarkBytesSent(to_receive);
+            }
+            if (!progress) break;
+        }
+        return ret;
+    }
+
+    /** Expose the cipher. */
+    BIP324Cipher& GetCipher() { return m_cipher; }
+
+    /** Schedule bytes to be sent to the transport. */
+    void Send(Span<const uint8_t> data)
+    {
+        m_to_send.insert(m_to_send.end(), data.begin(), data.end());
+    }
+
+    /** Schedule bytes to be sent to the transport. */
+    void Send(Span<const std::byte> data) { Send(MakeUCharSpan(data)); }
+
+    /** Schedule our ellswift key to be sent to the transport. */
+    void SendKey() { Send(m_cipher.GetOurPubKey()); }
+
+    /** Schedule an encrypted packet with specified content/aad/ignore to be sent to transport. */
+    void SendPacket(Span<const uint8_t> content, Span<const uint8_t> aad = {}, bool ignore = false)
+    {
+        // Use cipher to construct ciphertext.
+        std::vector<std::byte> ciphertext;
+        ciphertext.resize(content.size() + BIP324Cipher::EXPANSION);
+        m_cipher.Encrypt(MakeByteSpan(content), MakeByteSpan(aad), ignore, ciphertext);
+        // Schedule it for sending.
+        Send(ciphertext);
+    }
+
+    /** Schedule specified garbage to be sent to the transport. */
+    void SendGarbage(Span<const uint8_t> garbage)
+    {
+        // Remember the specified garbage (so we can use it for constructing garbage authentication packet).
+        m_sent_garbage.assign(garbage.begin(), garbage.end());
+        // Schedule it for sending.
+        Send(m_sent_garbage);
+    }
+
+    /** Schedule garbage (of specified length) to be sent to the transport. */
+    void SendGarbage(size_t garbage_len)
+    {
+        // Generate random garbage and send it.
+        SendGarbage(g_insecure_rand_ctx.randbytes<uint8_t>(garbage_len));
+    }
+
+    /** Schedule garbage (with valid random length) to be sent to the transport. */
+    void SendGarbage()
+    {
+         SendGarbage(InsecureRandRange(V2Transport::MAX_GARBAGE_LEN));
+    }
+
+    /** Schedule garbage terminator and authentication packet to be sent to the transport. */
+    void SendGarbageTermAuth(size_t garb_auth_data_len = 0, bool garb_auth_ignore = false)
+    {
+        // Generate random data to include in the garbage authentication packet (ignored by peer).
+        auto garb_auth_data = g_insecure_rand_ctx.randbytes<uint8_t>(garb_auth_data_len);
+        // Schedule the garbage terminator to be sent.
+        Send(m_cipher.GetSendGarbageTerminator());
+        // Schedule the garbage authentication packet to be sent.
+        SendPacket(/*content=*/garb_auth_data, /*aad=*/m_sent_garbage, /*ignore=*/garb_auth_ignore);
+    }
+
+    /** Schedule version packet to be sent to the transport. */
+    void SendVersion(Span<const uint8_t> version_data = {}, bool vers_ignore = false)
+    {
+        SendPacket(/*content=*/version_data, /*aad=*/{}, /*ignore=*/vers_ignore);
+    }
+
+    /** Expect ellswift key to have been received from transport and process it. */
+    void ReceiveKey()
+    {
+        // When processing a key, enough bytes need to have been received already.
+        BOOST_CHECK(m_received.size() >= EllSwiftPubKey::size());
+        // Construct the ellswift public key from the received data.
+        std::array<std::byte, EllSwiftPubKey::size()> key_data;
+        std::copy(m_received.begin(), m_received.begin() + EllSwiftPubKey::size(), UCharCast(key_data.data()));
+        EllSwiftPubKey theirs(key_data);
+        // Initialize the cipher using it.
+        m_cipher.Initialize(theirs, !m_test_initiator);
+        // Strip the processed bytes off the front of the receive buffer.
+        m_received.erase(m_received.begin(), m_received.begin() + EllSwiftPubKey::size());
+    }
+
+    /** Expect a packet to have been received from transport, process it, and return its contents. */
+    std::vector<uint8_t> ReceivePacket(Span<const std::byte> aad = {}, bool skip_ignore = true)
+    {
+        std::vector<uint8_t> contents;
+        // Loop as long as there are ignored packets that are to be skipped.
+        while (true) {
+            // When processing a packet, at least enough bytes for its length descriptor must be received.
+            BOOST_CHECK(m_received.size() >= BIP324Cipher::LENGTH_LEN);
+            // Decrypt the content length.
+            size_t size = m_cipher.DecryptLength(MakeByteSpan(Span{m_received}.first(BIP324Cipher::LENGTH_LEN)));
+            // Check that the full packet is in the receive buffer.
+            BOOST_CHECK(m_received.size() >= size + BIP324Cipher::EXPANSION);
+            // Decrypt the packet contents.
+            contents.resize(size);
+            bool ignore{false};
+            bool ret = m_cipher.Decrypt(
+                MakeByteSpan(Span{m_received}.first(size + BIP324Cipher::EXPANSION).subspan(BIP324Cipher::LENGTH_LEN)),
+                aad, ignore, MakeWritableByteSpan(contents));
+            BOOST_CHECK(ret);
+            // Strip the processed packet's bytes off the front of the receive buffer.
+            m_received.erase(m_received.begin(), m_received.begin() + size + BIP324Cipher::EXPANSION);
+            // Stop if the ignore bit is not set on this packet, or if we choose to not honor it.
+            if (!ignore || !skip_ignore) break;
+        }
+        return contents;
+    }
+
+    /** Expect garbage, garbage terminator, and garbage auth packet to have been received, and process them. */
+    void ReceiveGarbage()
+    {
+        // Figure out the garbage length.
+        size_t garblen;
+        for (garblen = 0; garblen <= V2Transport::MAX_GARBAGE_LEN; ++garblen) {
+            assert(m_received.size() >= garblen + BIP324Cipher::GARBAGE_TERMINATOR_LEN);
+            auto term_span = MakeByteSpan(Span{m_received}.subspan(garblen, BIP324Cipher::GARBAGE_TERMINATOR_LEN));
+            if (term_span == m_cipher.GetReceiveGarbageTerminator()) break;
+        }
+        // Copy the garbage to a buffer.
+        std::vector<uint8_t> garbage(m_received.begin(), m_received.begin() + garblen);
+        // Strip garbage + garbage terminator off the front of the receive buffer.
+        m_received.erase(m_received.begin(), m_received.begin() + garblen + BIP324Cipher::GARBAGE_TERMINATOR_LEN);
+        // Process the expected garbage authentication packet. Such a packet still functions as one
+        // even when its ignore bit is true, so we do not skip ignored packets here.
+        ReceivePacket(/*aad=*/MakeByteSpan(garbage), /*skip_ignore=*/false);
+    }
+
+    /** Expect version packet to have been received, and process it. */
+    void ReceiveVersion()
+    {
+        auto contents = ReceivePacket();
+        // Version packets from real BIP324 peers are expected to be empty, despite the fact that
+        // this class supports *sending* non-empty version packets (to test that BIP324 peers
+        // correctly ignore version packet contents).
+        BOOST_CHECK(contents.empty());
+    }
+
+    /** Schedule an encrypted packet with specified message type and payload to be sent to transport. */
+    void SendMessage(std::string mtype, Span<const uint8_t> payload)
+    {
+        // Construct contents consisting of 0x00 + 12-byte message type + payload.
+        std::vector<uint8_t> contents(13 + payload.size());
+        std::copy(mtype.begin(), mtype.end(), reinterpret_cast<char*>(contents.data() + 1));
+        std::copy(payload.begin(), payload.end(), contents.begin() + 13);
+        // Send a packet with that as contents.
+        SendPacket(contents);
+    }
+
+    /** Schedule an encrypted packet with specified short message id and payload to be sent to transport. */
+    void SendMessage(uint8_t short_id, Span<const uint8_t> payload)
+    {
+        // Construct contents consisting of short_id + payload.
+        std::vector<uint8_t> contents(1 + payload.size());
+        contents[0] = short_id;
+        std::copy(payload.begin(), payload.end(), contents.begin() + 1);
+        // Send a packet with that as contents.
+        SendPacket(contents);
+    }
+
+    /** Introduce a bit error in the data scheduled to be sent. */
+    void Damage()
+    {
+        m_to_send[InsecureRandRange(m_to_send.size())] ^= (uint8_t{1} << InsecureRandRange(8));
+    }
+};
+
+} // namespace
+
+BOOST_AUTO_TEST_CASE(v2transport_test)
+{
+    // A most normal scenario, testing a transport in initiator mode.
+    for (int i = 0; i < 10; ++i) {
+        V2TransportTester tester(true);
+        auto ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.SendKey();
+        tester.SendGarbage();
+        tester.ReceiveKey();
+        tester.SendGarbageTermAuth();
+        tester.SendVersion();
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.ReceiveGarbage();
+        tester.ReceiveVersion();
+        auto msg_data_1 = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(100000));
+        auto msg_data_2 = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(1000));
+        tester.SendMessage(uint8_t(2), msg_data_1);
+        tester.SendMessage(0, {}); // Invalidly encoded message
+        tester.SendMessage("tx", msg_data_2);
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->size() == 3 &&
+                    (*ret)[0] && (*ret)[0]->m_type == "block" && Span{(*ret)[0]->m_recv} == MakeByteSpan(msg_data_1) &&
+                    !(*ret)[1] &&
+                    (*ret)[2] && (*ret)[2]->m_type == "tx" && Span{(*ret)[2]->m_recv} == MakeByteSpan(msg_data_2));
+
+        // Then send a message with a bit error, expecting failure.
+        tester.SendMessage("bad", msg_data_1);
+        tester.Damage();
+        ret = tester.Interact();
+        BOOST_CHECK(!ret);
+    }
+
+    // Normal scenario, with a transport in responder node.
+    for (int i = 0; i < 20; ++i) {
+        V2TransportTester tester(false);
+        tester.SendKey();
+        tester.SendGarbage();
+        auto ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.ReceiveKey();
+        tester.SendGarbageTermAuth();
+        tester.SendVersion();
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.ReceiveGarbage();
+        tester.ReceiveVersion();
+        auto msg_data_1 = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(100000));
+        auto msg_data_2 = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(1000));
+        tester.SendMessage(uint8_t(14), msg_data_1);
+        tester.SendMessage(uint8_t(19), msg_data_2);
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->size() == 2 &&
+                    (*ret)[0] && (*ret)[0]->m_type == "inv" && Span{(*ret)[0]->m_recv} == MakeByteSpan(msg_data_1) &&
+                    (*ret)[1] && (*ret)[1]->m_type == "pong" && Span{(*ret)[1]->m_recv} == MakeByteSpan(msg_data_2));
+    }
+
+    // Various valid but unusual scenarios.
+    for (int i = 0; i < 50; ++i) {
+        /** Whether an initiator or responder is being tested. */
+        bool initiator = InsecureRandBool();
+        /** Use either 0 bytes or the maximum possible (4095 bytes) garbage length. */
+        size_t garb_len = InsecureRandBool() ? 0 : V2Transport::MAX_GARBAGE_LEN;
+        /** Sometimes, use non-empty contents in the garbage authentication packet (which is to be ignored). */
+        size_t garb_auth_data_len = InsecureRandBool() ? 0 : InsecureRandRange(100000);
+        /** Whether to set the ignore bit on the garbage authentication packet (it still functions as garbage authentication). */
+        bool garb_ignore = InsecureRandBool();
+        /** How many decoy packets to send before the version packet. */
+        unsigned num_ignore_version = InsecureRandRange(10);
+        /** What data to send in the version packet (ignored by BIP324 peers, but reserved for future extensions). */
+        auto ver_data = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandBool() ? 0 : InsecureRandRange(1000));
+        /** Whether to immediately send key and garbage out (required for responders, optional otherwise). */
+        bool send_immediately = !initiator || InsecureRandBool();
+        /** How many decoy packets to send before the first and second real message. */
+        unsigned num_decoys_1 = InsecureRandRange(1000), num_decoys_2 = InsecureRandRange(1000);
+        V2TransportTester tester(initiator);
+        if (send_immediately) {
+            tester.SendKey();
+            tester.SendGarbage(garb_len);
+        }
+        auto ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        if (!send_immediately) {
+            tester.SendKey();
+            tester.SendGarbage(garb_len);
+        }
+        tester.ReceiveKey();
+        tester.SendGarbageTermAuth(garb_auth_data_len, garb_ignore);
+        for (unsigned v = 0; v < num_ignore_version; ++v) {
+            size_t ver_ign_data_len = InsecureRandBool() ? 0 : InsecureRandRange(1000);
+            auto ver_ign_data = g_insecure_rand_ctx.randbytes<uint8_t>(ver_ign_data_len);
+            tester.SendVersion(ver_ign_data, true);
+        }
+        tester.SendVersion(ver_data, false);
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.ReceiveGarbage();
+        tester.ReceiveVersion();
+        for (unsigned d = 0; d < num_decoys_1; ++d) {
+            auto decoy_data = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(1000));
+            tester.SendPacket(/*content=*/decoy_data, /*aad=*/{}, /*ignore=*/true);
+        }
+        auto msg_data_1 = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(4000000));
+        tester.SendMessage(uint8_t(28), msg_data_1);
+        for (unsigned d = 0; d < num_decoys_2; ++d) {
+            auto decoy_data = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(1000));
+            tester.SendPacket(/*content=*/decoy_data, /*aad=*/{}, /*ignore=*/true);
+        }
+        auto msg_data_2 = g_insecure_rand_ctx.randbytes<uint8_t>(InsecureRandRange(1000));
+        tester.SendMessage(uint8_t(13), msg_data_2);
+        tester.SendMessage(std::string("blocktxn\x00\x00\x00a", 12), {}); // Send invalidly-encoded message
+        tester.SendMessage("foobar", {});
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->size() == 4 &&
+                    (*ret)[0] && (*ret)[0]->m_type == "addrv2" && Span{(*ret)[0]->m_recv} == MakeByteSpan(msg_data_1) &&
+                    (*ret)[1] && (*ret)[1]->m_type == "headers" && Span{(*ret)[1]->m_recv} == MakeByteSpan(msg_data_2) &&
+                    !(*ret)[2] &&
+                    (*ret)[3] && (*ret)[3]->m_type == "foobar" && (*ret)[3]->m_recv.empty());
+    }
+
+    // Too long garbage (initiator).
+    {
+        V2TransportTester tester(true);
+        auto ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.SendKey();
+        tester.SendGarbage(V2Transport::MAX_GARBAGE_LEN + 1);
+        tester.ReceiveKey();
+        tester.SendGarbageTermAuth();
+        ret = tester.Interact();
+        BOOST_CHECK(!ret);
+    }
+
+    // Too long garbage (responder).
+    {
+        V2TransportTester tester(false);
+        tester.SendKey();
+        tester.SendGarbage(V2Transport::MAX_GARBAGE_LEN + 1);
+        auto ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.ReceiveKey();
+        tester.SendGarbageTermAuth();
+        ret = tester.Interact();
+        BOOST_CHECK(!ret);
+    }
+
+    // Send garbage that includes the first 15 garbage terminator bytes somewhere.
+    {
+        V2TransportTester tester(true);
+        auto ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.SendKey();
+        tester.ReceiveKey();
+        size_t len_before = InsecureRandRange(V2Transport::MAX_GARBAGE_LEN - 16 + 1);
+        size_t len_after = InsecureRandRange(V2Transport::MAX_GARBAGE_LEN - 16 - len_before + 1);
+        auto garbage = g_insecure_rand_ctx.randbytes<uint8_t>(len_before + 16 + len_after);
+        auto garb_term = MakeUCharSpan(tester.GetCipher().GetSendGarbageTerminator());
+        std::copy(garb_term.begin(), garb_term.begin() + 16, garbage.begin() + len_before);
+        garbage[len_before + 15] ^= (uint8_t(1) << InsecureRandRange(8));
+        tester.SendGarbage(garbage);
+        tester.SendGarbageTermAuth();
+        tester.SendVersion();
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->empty());
+        tester.ReceiveGarbage();
+        tester.ReceiveVersion();
+        tester.SendMessage(uint8_t(4), {});
+        ret = tester.Interact();
+        BOOST_CHECK(ret && ret->size() == 1 &&
+                    (*ret)[0] && (*ret)[0]->m_type == "cmpctblock" && (*ret)[0]->m_recv.empty());
+    }
 }
 
 BOOST_AUTO_TEST_SUITE_END()
