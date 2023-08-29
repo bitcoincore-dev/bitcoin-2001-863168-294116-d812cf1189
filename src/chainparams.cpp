@@ -15,6 +15,25 @@
 
 #include <assert.h>
 
+static void HandleRenounceArgs(const ArgsManager& args, CChainParams::RenounceParameters& renounce)
+{
+    if (!args.IsArgSet("-renounce")) return;
+    for (const std::string& dep_name : args.GetArgs("-renounce")) {
+        bool found = false;
+        for (int j = 0; j < (int)Consensus::MAX_VERSION_BITS_DEPLOYMENTS; ++j) {
+            if (dep_name == VersionBitsDeploymentInfo[j].name) {
+                renounce.emplace_back(static_cast<Consensus::BuriedDeployment>(j));
+                found = true;
+                LogPrintf("Disabling deployment %s\n", dep_name);
+                break;
+            }
+        }
+        if (!found) {
+            throw std::runtime_error(strprintf("Invalid deployment (%s)", dep_name));
+        }
+    }
+}
+
 void ReadSigNetArgs(const ArgsManager& args, CChainParams::SigNetOptions& options)
 {
     if (args.IsArgSet("-signetseednode")) {
@@ -27,6 +46,7 @@ void ReadSigNetArgs(const ArgsManager& args, CChainParams::SigNetOptions& option
         }
         options.challenge.emplace(ParseHex(signet_challenge[0]));
     }
+    HandleRenounceArgs(args, options.renounce);
 }
 
 void ReadRegTestArgs(const ArgsManager& args, CChainParams::RegTestOptions& options)
@@ -52,6 +72,8 @@ void ReadRegTestArgs(const ArgsManager& args, CChainParams::RegTestOptions& opti
             throw std::runtime_error(strprintf("Invalid name (%s) for -testactivationheight=name@height.", arg));
         }
     }
+
+    HandleRenounceArgs(args, options.renounce);
 
     if (!args.IsArgSet("-vbparams")) return;
 
