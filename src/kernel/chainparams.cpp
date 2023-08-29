@@ -64,6 +64,30 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
+namespace {
+struct SetupDeployment
+{
+    uint16_t bip = 0;
+    uint8_t bip_version = 0;
+    int64_t start = 0;
+    int64_t timeout = 0;
+    int32_t activate = -1;
+    int32_t abandon = -1;
+    bool always = false;
+    bool never = false;
+
+    operator Consensus::HereticalDeployment () const
+    {
+        return Consensus::HereticalDeployment{
+            .signal_activate = (activate >= 0 ? activate : CalculateActivateVersion(bip, bip_version)),
+            .signal_abandon = (abandon >= 0 ? abandon : CalculateAbandonVersion(bip, bip_version)),
+            .nStartTime = (always ? Consensus::HereticalDeployment::ALWAYS_ACTIVE : never ? Consensus::HereticalDeployment::NEVER_ACTIVE : start),
+            .nTimeout = (always || never ? Consensus::HereticalDeployment::NO_TIMEOUT : timeout),
+        };
+    }
+};
+}
+
 /**
  * Main network on which people trade goods and services.
  */
@@ -93,10 +117,7 @@ public:
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1815; // 90% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY] = SetupDeployment{.activate = 0x30000000, .abandon = 0, .never = true};
 
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000044a50fe819c39ad624021859");
         consensus.defaultAssumeValid = uint256S("0x000000000000000000035c3f0d31e71a5ee24c5aaf3354689f65bd7b07dee632"); // 784000
@@ -208,10 +229,7 @@ public:
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY] = SetupDeployment{.activate = 0x30000000, .abandon = 0, .never = true};
 
         consensus.nMinimumChainWork = uint256S("0x000000000000000000000000000000000000000000000977edb0244170858d07");
         consensus.defaultAssumeValid = uint256S("0x0000000000000021bc50a89cde4870d4a81ffe0153b3c8de77b435a2fd3f6761"); // 2429000
@@ -333,14 +351,11 @@ public:
         consensus.nPowTargetSpacing = 10 * 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1815; // 90% of 2016
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 432; // 100% of 432 (unused)
+        consensus.nMinerConfirmationWindow = 432; // 3 days
         consensus.MinBIP9WarningHeight = 0;
         consensus.powLimit = uint256S("00000377ae000000000000000000000000000000000000000000000000000000");
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = Consensus::BIP9Deployment::NEVER_ACTIVE;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY] = SetupDeployment{.activate = 0x30000000, .abandon = 0, .never = true};
 
         // message start is defined as the first 4 bytes of the sha256d of the block script
         HashWriter h{};
@@ -402,10 +417,8 @@ public:
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
         consensus.nMinerConfirmationWindow = 144; // Faster than normal for regtest (144 instead of 2016)
 
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].min_activation_height = 0; // No activation delay
+        // 0x3000_0000 = bit 28 plus versionbits signalling; 0x5000_0000 = bit 38 plus VERSIONBITS_TOP_ABANDON
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY] = SetupDeployment{.start = 0, .timeout = Consensus::HereticalDeployment::NO_TIMEOUT, .activate = 0x30000000, .abandon = 0x50000000};
 
         consensus.nMinimumChainWork = uint256{};
         consensus.defaultAssumeValid = uint256{};
@@ -445,7 +458,6 @@ public:
         for (const auto& [deployment_pos, version_bits_params] : opts.version_bits_parameters) {
             consensus.vDeployments[deployment_pos].nStartTime = version_bits_params.start_time;
             consensus.vDeployments[deployment_pos].nTimeout = version_bits_params.timeout;
-            consensus.vDeployments[deployment_pos].min_activation_height = version_bits_params.min_activation_height;
         }
 
         genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 50 * COIN);
