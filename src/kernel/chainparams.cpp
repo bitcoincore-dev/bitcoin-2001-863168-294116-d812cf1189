@@ -308,6 +308,7 @@ class SigNetParams : public CChainParams {
 public:
     explicit SigNetParams(const SigNetOptions& options)
     {
+        bool is_special_ctv_signet = false;
         std::vector<uint8_t> bin;
         vSeeds.clear();
 
@@ -373,6 +374,15 @@ public:
             .start = 1654041600, // 2022-06-01
             .timeout = 1969660800, // 2032-06-01
         };
+        if (is_special_ctv_signet) {
+            // custom deployment parameters for compat
+            consensus.vDeployments[Consensus::DEPLOYMENT_CHECKTEMPLATEVERIFY] = SetupDeployment{
+                .start = 1608242730, // 2020-12-18 (first block on ctv signet)
+                .timeout = 1969660800, // 2032-06-01
+                .activate = 0x20000000, // default version signals for activation
+                .abandon = 0, // consensus invalid due to BIP34
+            };
+        }
 
         RenounceDeployments(options.renounce, consensus.vDeployments);
 
