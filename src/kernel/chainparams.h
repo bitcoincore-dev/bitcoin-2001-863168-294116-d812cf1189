@@ -23,6 +23,11 @@
 #include <utility>
 #include <vector>
 
+/** What bits to set to signal activation */
+static constexpr int32_t VERSIONBITS_TOP_ACTIVE = 0x60000000UL;
+/** What bits to set to signal abandonment */
+static constexpr int32_t VERSIONBITS_TOP_ABANDON = 0x40000000UL;
+
 typedef std::map<int, uint256> MapCheckpoints;
 
 struct CCheckpointData {
@@ -129,12 +134,15 @@ public:
 
     const ChainTxData& TxData() const { return chainTxData; }
 
+    using RenounceParameters = std::vector<Consensus::BuriedDeployment>;
+
     /**
      * SigNetOptions holds configurations for creating a signet CChainParams.
      */
     struct SigNetOptions {
         std::optional<std::vector<uint8_t>> challenge{};
         std::optional<std::vector<std::string>> seeds{};
+        RenounceParameters renounce{};
     };
 
     /**
@@ -143,7 +151,6 @@ public:
     struct VersionBitsParameters {
         int64_t start_time;
         int64_t timeout;
-        int min_activation_height;
     };
 
     /**
@@ -152,6 +159,7 @@ public:
     struct RegTestOptions {
         std::unordered_map<Consensus::DeploymentPos, VersionBitsParameters> version_bits_parameters{};
         std::unordered_map<Consensus::BuriedDeployment, int> activation_heights{};
+        RenounceParameters renounce{};
         bool fastprune{false};
     };
 
@@ -183,5 +191,15 @@ protected:
     MapAssumeutxo m_assumeutxo_data;
     ChainTxData chainTxData;
 };
+
+inline int32_t CalculateActivateVersion(uint16_t bip, uint8_t bip_version)
+{
+    return (VERSIONBITS_TOP_ACTIVE | (int32_t{bip} << 8) | bip_version);
+}
+
+inline int32_t CalculateAbandonVersion(int bip, int bip_version)
+{
+    return (VERSIONBITS_TOP_ABANDON | (int32_t{bip} << 8) | bip_version);
+}
 
 #endif // BITCOIN_KERNEL_CHAINPARAMS_H
