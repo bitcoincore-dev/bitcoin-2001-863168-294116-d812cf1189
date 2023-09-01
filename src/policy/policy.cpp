@@ -42,6 +42,10 @@ CAmount GetDustThreshold(const CTxOut& txout, const CFeeRate& dustRelayFeeIn)
     if (txout.scriptPubKey.IsUnspendable())
         return 0;
 
+    // Anchor outputs have no dust limit
+    if (txout.scriptPubKey.IsPayToAnchor())
+        return 0;
+
     size_t nSize = GetSerializeSize(txout);
     int witnessversion = 0;
     std::vector<unsigned char> witnessprogram;
@@ -91,7 +95,7 @@ bool IsStandard(const CScript& scriptPubKey, const std::optional<unsigned>& max_
     return true;
 }
 
-bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_datacarrier_bytes, bool permit_bare_multisig, const CFeeRate& dust_relay_fee, std::string& reason)
+bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_datacarrier_bytes, bool permit_bare_multisig, const CFeeRate& dust_relay_fee, bool permit_ephemeral_anchor, std::string& reason)
 {
     if (tx.nVersion > TX_MAX_STANDARD_VERSION || tx.nVersion < 1) {
         reason = "version";
@@ -129,6 +133,7 @@ bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_dat
     }
 
     unsigned int nDataOut = 0;
+    unsigned int num_anchors = 0;
     TxoutType whichType;
     for (const CTxOut& txout : tx.vout) {
         if (!::IsStandard(txout.scriptPubKey, max_datacarrier_bytes, whichType)) {
@@ -141,15 +146,26 @@ bool IsStandardTx(const CTransaction& tx, const std::optional<unsigned>& max_dat
         else if ((whichType == TxoutType::MULTISIG) && (!permit_bare_multisig)) {
             reason = "bare-multisig";
             return false;
+        } else if (whichType == TxoutType::ANCHOR && !permit_ephemeral_anchor) {
+            reason = "ephemeral-anchor";
+            return false;
         } else if (IsDust(txout, dust_relay_fee)) {
             reason = "dust";
             return false;
+        } else if (whichType == TxoutType::ANCHOR) {
+            num_anchors++;
         }
     }
 
     // only one OP_RETURN txout is permitted
     if (nDataOut > 1) {
         reason = "multi-op-return";
+        return false;
+    }
+
+    // only one ANCHOR is permitted
+    if (num_anchors > 1) {
+        reason = "too-many-ephemeral-anchors";
         return false;
     }
 
@@ -213,8 +229,15 @@ bool AreInputsStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
     return true;
 }
 
-bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
+bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs, bool allow_annex_data)
 {
+    // For now allow 0 to MAX_ANNEX_DATA bytes push to allow drop-in replacement via BIP PR#1381
+    // but we allow it spread over any number of inputs based on this budget:
+    // 1(witness stack element size) + 1(annex marker) + 1(payload len) + MAX_ANNEX_DATA(payload)
+    size_t annex_bytes_left{1 + 1 + 1 + MAX_ANNEX_DATA};
+
+    if (!allow_annex_data) annex_bytes_left = 0;
+
     if (tx.IsCoinBase())
         return true; // Coinbases are skipped
 
@@ -266,13 +289,18 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
 
         // Check policy limits for Taproot spends:
         // - MAX_STANDARD_TAPSCRIPT_STACK_ITEM_SIZE limit for stack item size
-        // - No annexes
+        // - Limited annex format
         if (witnessversion == 1 && witnessprogram.size() == WITNESS_V1_TAPROOT_SIZE && !p2sh) {
             // Taproot spend (non-P2SH-wrapped, version 1, witness program size 32; see BIP 341)
             Span stack{tx.vin[i].scriptWitness.stack};
             if (stack.size() >= 2 && !stack.back().empty() && stack.back()[0] == ANNEX_TAG) {
-                // Annexes are nonstandard as long as no semantics are defined for them.
-                return false;
+                const auto& annex = stack.back();
+
+                if (annex.size() >= annex_bytes_left) return false;
+                annex_bytes_left -= annex.size() + 1; // bip141 witness stack element size included
+
+                // limit annex format to allow for future expansion
+                if (annex.size() < 2 || annex.size() != static_cast<size_t>(annex[1]) + 2) return false;
             }
             if (stack.size() >= 2) {
                 // Script path spend (2 or more stack elements after removing optional annex)
@@ -295,6 +323,16 @@ bool IsWitnessStandard(const CTransaction& tx, const CCoinsViewCache& mapInputs)
         }
     }
     return true;
+}
+
+size_t HasPayToAnchor(const CTransaction& tx)
+{
+    for (const CTxOut& txout : tx.vout) {
+        if (txout.scriptPubKey.IsPayToAnchor()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 int64_t GetVirtualTransactionSize(int64_t nWeight, int64_t nSigOpCost, unsigned int bytes_per_sigop)

@@ -69,8 +69,8 @@ FUZZ_TARGET_INIT(transaction, initialize_transaction)
 
     const CFeeRate dust_relay_fee{DUST_RELAY_TX_FEE};
     std::string reason;
-    const bool is_standard_with_permit_bare_multisig = IsStandardTx(tx, std::nullopt, /* permit_bare_multisig= */ true, dust_relay_fee, reason);
-    const bool is_standard_without_permit_bare_multisig = IsStandardTx(tx, std::nullopt, /* permit_bare_multisig= */ false, dust_relay_fee, reason);
+    const bool is_standard_with_permit_bare_multisig = IsStandardTx(tx, std::nullopt, /* permit_bare_multisig= */ true, dust_relay_fee, /* permit_ephemeral_anchors= */ true, reason);
+    const bool is_standard_without_permit_bare_multisig = IsStandardTx(tx, std::nullopt, /* permit_bare_multisig= */ false, dust_relay_fee, /* permit_ephemeral_anchors= */ true, reason);
     if (is_standard_without_permit_bare_multisig) {
         assert(is_standard_with_permit_bare_multisig);
     }
@@ -98,7 +98,7 @@ FUZZ_TARGET_INIT(transaction, initialize_transaction)
     CCoinsView coins_view;
     const CCoinsViewCache coins_view_cache(&coins_view);
     (void)AreInputsStandard(tx, coins_view_cache);
-    (void)IsWitnessStandard(tx, coins_view_cache);
+    (void)IsWitnessStandard(tx, coins_view_cache, /* allow_annex_data= */true);
 
     UniValue u(UniValue::VOBJ);
     TxToUniv(tx, /*block_hash=*/uint256::ZERO, /*entry=*/u);

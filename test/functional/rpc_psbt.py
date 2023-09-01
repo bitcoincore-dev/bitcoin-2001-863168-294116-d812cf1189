@@ -17,6 +17,7 @@ from test_framework.messages import (
     MAX_BIP125_RBF_SEQUENCE,
     WITNESS_SCALE_FACTOR,
     ser_compact_size,
+    tx_from_hex,
 )
 from test_framework.psbt import (
     PSBT,
@@ -57,7 +58,7 @@ class PSBTTest(BitcoinTestFramework):
         self.extra_args = [
             ["-walletrbf=1", "-addresstype=bech32", "-changetype=bech32"], #TODO: Remove address type restrictions once taproot has psbt extensions
             ["-walletrbf=0", "-changetype=legacy"],
-            []
+            ["-ephemeraldelta=0.00010000"] # 10x higher than default
         ]
         # whitelist peers to speed up tx relay / mempool sync
         for args in self.extra_args:
@@ -943,6 +944,55 @@ class PSBTTest(BitcoinTestFramework):
 
         self.log.info("Test we don't crash when making a 0-value funded transaction at 0 fee without forcing an input selection")
         assert_raises_rpc_error(-4, "Transaction requires one destination of non-0 value, a non-0 feerate, or a pre-selected input", self.nodes[0].walletcreatefundedpsbt, [], [{"data": "deadbeef"}], 0, {"fee_rate": "0"})
+
+
+        self.log.info("Test that PSBT can have ephemeral anchor added in rpc")
+        # Fake input to avoid tripping up segwit deserialization error
+        raw_anchor = self.nodes[0].createrawtransaction([{"txid": "ff"*32, "vout": 0}], [{"anchor":"0.00000001"}])
+        anchor_tx = tx_from_hex(raw_anchor)
+
+        # Is not restricted to V3 like Ephemeral Anchors BIP
+        assert_equal(anchor_tx.nVersion, 2)
+        assert_equal(len(anchor_tx.vout), 1)
+        assert_equal(anchor_tx.vout[0].nValue, 1)
+        assert_equal(anchor_tx.vout[0].scriptPubKey, bytes([OP_TRUE]))
+
+        psbt_anchor = self.nodes[0].createpsbt([{"txid": "ff"*32, "vout": 0}], [{"anchor":"0.00000001"}])
+        anchor = PSBT.from_base64(psbt_anchor)
+
+        assert_equal(anchor.g.map[0], anchor_tx.serialize())
+
+        # Make 1 satoshi anchor to allow coin selection to happen and still only make two outputs
+        funded_anchor = self.nodes[0].walletcreatefundedpsbt([], [{"anchor": "0.00000001"}], 0, {"fee_rate": "0"})
+        funded_decoded = self.nodes[0].decodepsbt(funded_anchor["psbt"])["tx"]
+        anchor_idx = 0 if funded_decoded["vout"][0]["scriptPubKey"]["hex"] == "51" else 1
+        assert_equal(funded_decoded["vout"][anchor_idx]["scriptPubKey"]["hex"], "51")
+        assert_equal(funded_decoded["vout"][anchor_idx]["scriptPubKey"]["type"], "anchor")
+        assert_equal(funded_decoded["vout"][anchor_idx]["value"], Decimal("0.00000001"))
+
+        anchor_tx = self.nodes[0].finalizepsbt(self.nodes[0].walletprocesspsbt(psbt=funded_anchor["psbt"])["psbt"])["hex"]
+
+        # Modified fees equal 1 sat/vbyte
+        anchor_txid = self.nodes[0].sendrawtransaction(anchor_tx)
+        anchor_entry = self.nodes[0].getmempoolentry(anchor_txid)
+        assert_equal(Decimal(anchor_entry["ancestorsize"])/Decimal(10**8), anchor_entry["fees"]["modified"])
+
+        # Let's bump it using the wallet via CPFP
+        anchor_decoded = self.nodes[0].getrawtransaction(anchor_txid, 1)
+        anchor_index = 0 if anchor_decoded["vout"][0]["value"] == Decimal("0.00000001") else 1
+        assert self.nodes[0].getbalance() > 0
+        # 165WU is exactly the size of the input, and the minimum argument value
+        bump = self.nodes[0].walletcreatefundedpsbt([{"txid": anchor_txid, "vout": anchor_index, "weight": 165}], [{self.nodes[0].getnewaddress(): 1}], 0, {"fee_rate": "10", "add_inputs": True})
+        bump_signed = self.nodes[0].walletprocesspsbt(bump["psbt"])
+        bump_final = self.nodes[0].finalizepsbt(bump_signed["psbt"])
+        cpfp_txid = self.nodes[0].sendrawtransaction(bump_final["hex"])
+        cpfp_details = self.nodes[0].getmempoolentry(cpfp_txid)
+        assert_equal(cpfp_details["fees"]["ancestor"], cpfp_details["fees"]["base"] + anchor_entry["fees"]["modified"])
+
+        # Check modified fee on node with -ephemeraldelta set
+        self.nodes[2].sendrawtransaction(anchor_tx)
+        anchor_entry_2 = self.nodes[2].getmempoolentry(anchor_txid)
+        assert_equal(anchor_entry["fees"]["modified"] * 10, anchor_entry_2["fees"]["modified"])
 
 
 if __name__ == '__main__':
