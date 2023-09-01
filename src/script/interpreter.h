@@ -425,7 +425,7 @@ public:
     virtual std::optional<ScriptError> CheckVaultTrigger(
         ScriptExecutionData& execdata,
         const size_t trigger_out_idx,
-        const std::optional<size_t> revault_out_idx,
+        const int revault_out_idx,
         const CAmount revault_amount,
         CScript flu_script_with_data,
         unsigned int flags,
@@ -482,7 +482,7 @@ public:
     std::optional<ScriptError> CheckVaultTrigger(
         ScriptExecutionData& execdata,
         const size_t trigger_out_idx,
-        const std::optional<size_t> revault_out_idx,
+        const int revault_out_idx,
         const CAmount revault_amount,
         CScript flu_script_with_data,
         unsigned int flags,
@@ -531,7 +531,7 @@ public:
     std::optional<ScriptError> CheckVaultTrigger(
         ScriptExecutionData& execdata,
         const size_t trigger_out_idx,
-        const std::optional<size_t> revault_out_idx,
+        const int revault_out_idx,
         const CAmount revault_amount,
         CScript flu_script_with_data,
         unsigned int flags,
