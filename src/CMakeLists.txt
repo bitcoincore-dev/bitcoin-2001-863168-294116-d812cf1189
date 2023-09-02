@@ -243,10 +243,6 @@ if(BUILD_DAEMON)
       core
       bitcoin_node
   )
-  target_link_options(bitcoind
-    PRIVATE
-      $<$<BOOL:${MINGW}>:-static>
-  )
 endif()
 
 
