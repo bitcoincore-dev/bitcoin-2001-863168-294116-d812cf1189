@@ -19,6 +19,7 @@ add_library(test_util STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(test_util
   PRIVATE
+    core
     bitcoin_common
     bitcoin_node
     leveldb
@@ -32,3 +33,5 @@ if(ENABLE_WALLET)
       ../../wallet/test/util.cpp
   )
 endif()
+
+target_link_libraries(test_util PRIVATE core)

@@ -111,3 +111,5 @@ if(HAVE_ARM64_CRC32C)
     APPEND PROPERTY COMPILE_OPTIONS ${ARM_CRC_CXXFLAGS}
   )
 endif()
+
+target_link_libraries(crc32c PRIVATE core)
