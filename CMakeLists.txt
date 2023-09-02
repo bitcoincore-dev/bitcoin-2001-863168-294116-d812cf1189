@@ -84,6 +84,8 @@ set(configure_warnings)
 # It is intended to be a usage requirement for all other targets.
 add_library(core INTERFACE)
 
+include(TryAppendLinkerFlag)
+
 if(WIN32)
   #[=[
   This build system supports two ways to build binaries for Windows.
@@ -128,14 +130,29 @@ if(WIN32)
       _MT
     )
     # We require Windows 7 (NT 6.1) or later.
-    add_link_options(-Wl,--major-subsystem-version,6 -Wl,--minor-subsystem-version,1)
+    try_append_linker_flag(core "-Wl,--major-subsystem-version,6")
+    try_append_linker_flag(core "-Wl,--minor-subsystem-version,1")
   endif()
+endif()
+
+# Use 64-bit off_t on 32-bit Linux.
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+  # Ensure 64-bit offsets are used for filesystem accesses for 32-bit compilation.
+  target_compile_definitions(core INTERFACE
+    _FILE_OFFSET_BITS=64
+  )
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   target_compile_definitions(core INTERFACE
     MAC_OSX
   )
+  # These flags are specific to ld64, and may cause issues with other linkers.
+  # For example: GNU ld will interpret -dead_strip as -de and then try and use
+  # "ad_strip" as the symbol for the entry point.
+  try_append_linker_flag(core "-Wl,-dead_strip")
+  try_append_linker_flag(core "-Wl,-dead_strip_dylibs")
+  try_append_linker_flag(core "-Wl,-headerpad_max_install_names")
 endif()
 
 if(CMAKE_CROSSCOMPILING AND DEPENDS_ALLOW_HOST_PACKAGES)
@@ -232,6 +249,8 @@ else()
   set(common_link_options)
 endif()
 message("Common link options ................... ${common_link_options}")
+message("Linker flags for executables .......... ${CMAKE_EXE_LINKER_FLAGS}")
+message("Linker flags for shared libraries ..... ${CMAKE_SHARED_LINKER_FLAGS}")
 if(DEFINED CMAKE_BUILD_TYPE)
   message("Build type:")
   message(" - CMAKE_BUILD_TYPE ................... ${CMAKE_BUILD_TYPE}")
