@@ -69,3 +69,6 @@ target_link_libraries(minisketch
     minisketch_defs
     $<TARGET_NAME_IF_EXISTS:minisketch_clmul>
 )
+
+target_link_libraries(minisketch_clmul PRIVATE core)
+target_link_libraries(minisketch PRIVATE core)

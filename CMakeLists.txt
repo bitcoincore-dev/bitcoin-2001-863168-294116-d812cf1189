@@ -80,6 +80,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(configure_warnings)
 
+# The core interface library aims to encapsulate all common build flags.
+# It is intended to be a usage requirement for all other targets.
+add_library(core INTERFACE)
+
 if(WIN32)
   #[=[
   This build system supports two ways to build binaries for Windows.
@@ -97,25 +101,39 @@ if(WIN32)
   - A run-time library must be specified explicitly using _MT definition.
   ]=]
 
-  add_compile_definitions(_WIN32_WINNT=0x0601 _WIN32_IE=0x0501 WIN32_LEAN_AND_MEAN NOMINMAX)
+  target_compile_definitions(core INTERFACE
+    _WIN32_WINNT=0x0601
+    _WIN32_IE=0x0501
+    WIN32_LEAN_AND_MEAN
+    NOMINMAX
+  )
 
   if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    add_compile_options(/utf-8 /Zc:__cplusplus)
+    target_compile_options(core INTERFACE
+      /utf-8
+      /Zc:__cplusplus
+    )
     # Improve parallelism in MSBuild.
     # See: https://devblogs.microsoft.com/cppblog/improved-parallelism-in-msbuild/.
     list(APPEND CMAKE_VS_GLOBALS "UseMultiToolTask=true")
   endif()
 
   if(MINGW)
-    add_compile_definitions(WIN32 _WINDOWS _MT)
+    target_compile_definitions(core INTERFACE
+      WIN32
+      _WINDOWS
+      _MT
+    )
     # We require Windows 7 (NT 6.1) or later.
     add_link_options(-Wl,--major-subsystem-version,6 -Wl,--minor-subsystem-version,1)
   endif()
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  add_compile_definitions(MAC_OSX)
+  target_compile_definitions(core INTERFACE
+    MAC_OSX
+  )
 endif()
 
 if(CMAKE_CROSSCOMPILING AND DEPENDS_ALLOW_HOST_PACKAGES)
@@ -197,11 +215,20 @@ message("C compiler ............................ ${CMAKE_C_COMPILER}")
 message("CFLAGS ................................ ${CMAKE_C_FLAGS}")
 message("C++ compiler .......................... ${CMAKE_CXX_COMPILER}")
 message("CXXFLAGS .............................. ${CMAKE_CXX_FLAGS}")
-get_directory_property(common_compile_options COMPILE_OPTIONS)
-string(REPLACE ";" " " common_compile_options "${common_compile_options}")
+get_target_property(common_compile_options core INTERFACE_COMPILE_OPTIONS)
+if(common_compile_options)
+  list(JOIN common_compile_options " " common_compile_options)
+else()
+  set(common_compile_options)
+endif()
+string(GENEX_STRIP "${common_compile_options}" common_compile_options)
 message("Common compile options ................ ${common_compile_options}")
-get_directory_property(common_link_options LINK_OPTIONS)
-string(REPLACE ";" " " common_link_options "${common_link_options}")
+get_target_property(common_link_options core INTERFACE_LINK_OPTIONS)
+if(common_link_options)
+  list(JOIN common_link_options " " common_link_options)
+else()
+  set(common_link_options)
+endif()
 message("Common link options ................... ${common_link_options}")
 if(DEFINED CMAKE_BUILD_TYPE)
   message("Build type:")
