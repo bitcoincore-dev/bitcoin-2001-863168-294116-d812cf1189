@@ -27,7 +27,11 @@ add_library(bitcoin_consensus OBJECT EXCLUDE_FROM_ALL
   uint256.cpp
   util/strencodings.cpp
 )
-target_link_libraries(bitcoin_consensus PRIVATE secp256k1)
+target_link_libraries(bitcoin_consensus
+  PRIVATE
+    core
+    secp256k1
+)
 
 if(WITH_ZMQ)
   add_subdirectory(zmq EXCLUDE_FROM_ALL)
@@ -86,6 +90,7 @@ target_compile_definitions(bitcoin_common
 )
 target_link_libraries(bitcoin_common
   PRIVATE
+    core
     bitcoin_consensus
     bitcoin_util
     univalue
@@ -105,6 +110,7 @@ if(ENABLE_WALLET)
       wallet/wallettool.cpp
     )
     target_link_libraries(bitcoin-wallet
+      core
       bitcoin_wallet
       bitcoin_common
       bitcoin_util
@@ -211,6 +217,7 @@ else()
 endif()
 target_link_libraries(bitcoin_node
   PRIVATE
+    core
     bitcoin_common
     bitcoin_util
     leveldb
@@ -233,6 +240,7 @@ if(BUILD_DAEMON)
   )
   target_link_libraries(bitcoind
     PRIVATE
+      core
       bitcoin_node
   )
   target_link_options(bitcoind
@@ -248,6 +256,7 @@ add_library(bitcoin_cli STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_cli
   PUBLIC
+    core
     univalue
 )
 
@@ -256,6 +265,7 @@ target_link_libraries(bitcoin_cli
 if(BUILD_CLI)
   add_executable(bitcoin-cli bitcoin-cli.cpp)
   target_link_libraries(bitcoin-cli
+    core
     bitcoin_cli
     bitcoin_common
     bitcoin_util
@@ -267,6 +277,7 @@ endif()
 if(BUILD_TX)
   add_executable(bitcoin-tx bitcoin-tx.cpp)
   target_link_libraries(bitcoin-tx
+    core
     bitcoin_common
     bitcoin_util
     univalue
@@ -277,6 +288,7 @@ endif()
 if(BUILD_UTIL)
   add_executable(bitcoin-util bitcoin-util.cpp)
   target_link_libraries(bitcoin-util
+    core
     bitcoin_common
     bitcoin_util
   )
