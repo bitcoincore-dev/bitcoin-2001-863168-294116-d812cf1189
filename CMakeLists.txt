@@ -86,3 +86,6 @@ if(configure_warnings)
     endforeach()
     message("  ******\n")
 endif()
+
+# We want all build properties to be encapsulated properly.
+include(WarnAboutGlobalProperties)
