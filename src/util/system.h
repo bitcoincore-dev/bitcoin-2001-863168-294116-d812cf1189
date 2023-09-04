@@ -103,6 +103,8 @@ std::optional<std::string> SettingToString(const util::SettingsValue&);
 int64_t SettingToInt(const util::SettingsValue&, int64_t);
 std::optional<int64_t> SettingToInt(const util::SettingsValue&);
 
+std::optional<int64_t> SettingToFixedPoint(const util::SettingsValue&, int decimals);
+
 bool SettingToBool(const util::SettingsValue&, bool);
 std::optional<bool> SettingToBool(const util::SettingsValue&);
 
@@ -303,6 +305,15 @@ protected:
      */
     int64_t GetIntArg(const std::string& strArg, int64_t nDefault) const;
     std::optional<int64_t> GetIntArg(const std::string& strArg) const;
+
+    /**
+     * Return fixed-point argument
+     *
+     * @param arg Argument to get (e.g. "-foo")
+     * @param decimals Number of fractional decimal digits to accept
+     * @return Command-line argument (0 if invalid number) multiplied by 10**decimals
+     */
+    std::optional<int64_t> GetFixedPointArg(const std::string& arg, int decimals) const;
 
     /**
      * Return boolean argument or default value
