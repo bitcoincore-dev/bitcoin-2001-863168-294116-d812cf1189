@@ -430,7 +430,7 @@ std::vector<CTransactionRef> TestChain100Setup::PopulateMempool(FastRandomContex
             double dPriority = GetPriority(*ptx, active_chainstate.CoinsTip(), height + 1, in_chain_input_value);
             m_node.mempool->addUnchecked(CTxMemPoolEntry(ptx, /*fee=*/(total_in - num_outputs * amount_per_output),
                                                          /*time=*/0, /*entry_priority=*/ dPriority, /*entry_height=*/ height,
-                                                         in_chain_input_value, /*spends_coinbase=*/false, /*sigops_cost=*/4, lp));
+                                                         in_chain_input_value, /*spends_coinbase=*/false, /*extra_weight=*/0, /*sigops_cost=*/4, lp));
         }
         --num_transactions;
     }

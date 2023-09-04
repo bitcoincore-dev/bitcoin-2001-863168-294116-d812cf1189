@@ -87,6 +87,7 @@ private:
     CAmount inChainInputValue;      //!< Sum of all txin values that are already in blockchain
     const bool spendsCoinbase;      //!< keep track of transactions that spend a coinbase
     const int64_t sigOpCost;        //!< Total sigop cost
+    const int32_t m_extra_weight;   //!< Policy-only additional transaction weight beyond nTxWeight
     const size_t nModSize;          //!< Cached modified size for priority
     CAmount m_modified_fee;         //!< Used for determining the priority of the transaction for mining in a block
     LockPoints lockPoints;          //!< Track the height and time at which tx was final
@@ -108,6 +109,7 @@ public:
     CTxMemPoolEntry(const CTransactionRef& tx, CAmount fee,
                     int64_t time, double entry_priority, unsigned int entry_height,
                     CAmount in_chain_input_value, bool spends_coinbase,
+                    int32_t extra_weight,
                     int64_t sigops_cost, LockPoints lp)
         : tx{tx},
           nFee{fee},
@@ -122,6 +124,7 @@ public:
           inChainInputValue{in_chain_input_value},
           spendsCoinbase{spends_coinbase},
           sigOpCost{sigops_cost},
+          m_extra_weight{extra_weight},
           nModSize{CalculateModifiedSize(*tx, GetTxSize())},
           m_modified_fee{nFee},
           lockPoints{lp},
