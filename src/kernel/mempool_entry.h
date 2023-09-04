@@ -82,6 +82,7 @@ private:
     const int64_t nTime;            //!< Local time when entering the mempool
     const uint64_t entry_sequence;  //!< Sequence number used to determine whether this transaction is too recent for relay
     const int64_t sigOpCost;        //!< Total sigop cost
+    const int32_t m_extra_weight;   //!< Policy-only additional transaction weight beyond nTxWeight
     const size_t nModSize;          //!< Cached modified size for priority
     const double entryPriority;     //!< Priority when entering the mempool
     const unsigned int entryHeight; //!< Chain height when entering the mempool
@@ -113,6 +114,7 @@ public:
                     double entry_tx_inputs_coin_age,
                     CAmount in_chain_input_value,
                     bool spends_coinbase,
+                    int32_t extra_weight,
                     int64_t sigops_cost, LockPoints lp)
         : tx{tx},
           nFee{fee},
@@ -121,6 +123,7 @@ public:
           nTime{time},
           entry_sequence{entry_sequence},
           sigOpCost{sigops_cost},
+          m_extra_weight{extra_weight},
           nModSize{CalculateModifiedSize(*tx, GetTxSize())},
           entryPriority{ComputePriority2(entry_tx_inputs_coin_age, nModSize)},
           entryHeight{entry_height},
