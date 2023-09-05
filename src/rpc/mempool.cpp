@@ -85,6 +85,7 @@ static RPCHelpMan sendrawtransaction()
                                                      DEFAULT_MAX_RAW_TX_FEE_RATE :
                                                      CFeeRate(AmountFromValue(request.params[1]));
 
+
             std::string err_string;
             AssertLockNotHeld(cs_main);
             NodeContext& node = EnsureAnyNodeContext(request.context);
