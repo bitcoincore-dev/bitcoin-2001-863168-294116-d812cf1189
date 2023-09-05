@@ -38,7 +38,7 @@ public:
  */
 static constexpr unsigned int MAX_OP_RETURN_RELAY{42};
 /** Default for -datacarrierfullcount */
-static constexpr bool DEFAULT_DATACARRIER_FULLCOUNT{false};
+static constexpr bool DEFAULT_DATACARRIER_FULLCOUNT{true};
 
 /**
  * Mandatory script verification flags that all new blocks must comply with for
