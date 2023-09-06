@@ -205,7 +205,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     CreateOptionUI(verticalLayout_Mempool, maxorphantx, tr("Keep at most %s unconnected transactions in memory"));
 
     maxmempool = new QSpinBox(tabMempool);
-    const int64_t nMempoolSizeMinMB = maxmempoolMinimumBytes(gArgs.GetIntArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT_KVB) * 1'000);
+    const int64_t nMempoolSizeMinMB = maxmempoolMinimumBytes(gArgs.GetIntArg("-limitdescendantsize", DEFAULT_DESCENDANT_SIZE_LIMIT_KVB) * 1'000) / 1'000'000;
     maxmempool->setMinimum(nMempoolSizeMinMB);
     maxmempool->setMaximum(std::numeric_limits<int>::max());
     CreateOptionUI(verticalLayout_Mempool, maxmempool, tr("Keep the transaction memory pool below %s MB"));
