@@ -13,6 +13,7 @@
 #include <qt/guiutil.h>
 
 #include <chainparams.h>
+#include <consensus/consensus.h>
 #include <index/blockfilterindex.h>
 #include <interfaces/node.h>
 #include <kernel/mempool_options.h> // for DEFAULT_MAX_MEMPOOL_SIZE_MB, DEFAULT_MEMPOOL_EXPIRY_HOURS
@@ -70,6 +71,7 @@ static const char* SettingName(OptionsModel::OptionID option)
     case OptionsModel::ProxyPortTor: return "onion";
     case OptionsModel::ProxyUseTor: return "onion";
     case OptionsModel::Language: return "lang";
+    case OptionsModel::datacarriercost: return "datacarriercost";
     default: throw std::logic_error(strprintf("GUI option %i has no corresponding node setting.", option));
     }
 }
@@ -293,6 +295,7 @@ bool OptionsModel::Init(bilingual_str& error)
     // These are shared with the core or have a command-line parameter
     // and we want command-line parameters to overwrite the GUI settings.
     for (OptionID option : {DatabaseCache, ThreadsScriptVerif, SpendZeroConfChange, ExternalSignerPath, MapPortUPnP,
+                            datacarriercost,
                             MapPortNatpmp, Listen, Server, PruneTristate, ProxyUse, ProxyUseTor, Language}) {
         // isSettingIgnored will have a false positive here during first-run prune changes
         if (option == PruneTristate && m_prune_forced_by_gui) continue;
@@ -648,6 +651,8 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return qlonglong(node().mempool().m_limits.descendant_size_vbytes / 1'000);
     case rejectbaremultisig:
         return !node().mempool().m_permit_bare_multisig;
+    case datacarriercost:
+        return double(::g_weight_per_data_byte) / WITNESS_SCALE_FACTOR;
     case datacarriersize:
         return qlonglong(node().mempool().m_max_datacarrier_bytes.value_or(0));
     case dustrelayfee:
@@ -1143,6 +1148,13 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
             const bool fNewValue = ! value.toBool();
             node().mempool().m_permit_bare_multisig = fNewValue;
             gArgs.ModifyRWConfigFile("permitbaremultisig", strprintf("%d", fNewValue));
+        }
+        break;
+    case datacarriercost:
+        if (changed()) {
+            const double nNewSize = value.toDouble();
+            update(nNewSize);
+            ::g_weight_per_data_byte = nNewSize * WITNESS_SCALE_FACTOR;
         }
         break;
     case datacarriersize:
