@@ -613,7 +613,7 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
     case maxorphantx:
         return qlonglong(gArgs.GetIntArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
     case maxmempool:
-        return qlonglong(node().mempool().m_max_size_bytes);
+        return qlonglong(node().mempool().m_max_size_bytes / 1'000'000);
     default:
         return QVariant();
     }
