@@ -211,7 +211,7 @@ RPCHelpMan importaddress()
             "\nNote: If you import a non-standard raw script in hex form, outputs sending to it will be treated\n"
             "as change, and not show up in many RPCs.\n"
             "Note: Use \"getwalletinfo\" to query the scanning progress.\n"
-            "Note: This command is only compatible with legacy wallets. Use \"importdescriptors\" for descriptor wallets.\n",
+            "Note: This command is only compatible with legacy wallets. Use \"importdescriptors\" with \"addr(X)\" for descriptor wallets.\n",
                 {
                     {"address", RPCArg::Type::STR, RPCArg::Optional::NO, "The Bitcoin address (or hex-encoded script)"},
                     {"label", RPCArg::Type::STR, RPCArg::Default{""}, "An optional label"},
