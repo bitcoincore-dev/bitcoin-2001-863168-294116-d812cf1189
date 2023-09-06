@@ -342,7 +342,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     blockmaxweight->setMinimum(1);
     blockmaxweight->setMaximum((MAX_BLOCK_WEIGHT-4000) / 1000);
     connect(blockmaxweight, SIGNAL(valueChanged(int)), this, SLOT(blockmaxweight_changed(int)));
-    CreateOptionUI(verticalLayout_Mining, blockmaxweight, tr("Never mine a block weighing more than %s,000."));
+    CreateOptionUI(verticalLayout_Mining, blockmaxweight, tr("Never mine a block weighing more than %s kWU."));
 
     verticalLayout_Mining->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
