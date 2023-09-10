@@ -1123,8 +1123,10 @@ void V2Transport::ProcessReceivedMaybeV1Bytes() noexcept
         SetReceiveState(RecvState::V1);
         SetSendState(SendState::V1);
         // Reset v2 transport buffers to save memory.
-        m_recv_buffer = {};
-        m_send_buffer = {};
+        m_recv_buffer.clear();
+        m_recv_buffer.shrink_to_fit();
+        m_send_buffer.clear();
+        m_send_buffer.shrink_to_fit();
     } else {
         // We have not received enough to distinguish v1 from v2 yet. Wait until more bytes come.
     }
@@ -1275,7 +1277,8 @@ bool V2Transport::ProcessReceivedPacketBytes() noexcept
             // Ignore flag does not matter for garbage authentication. Any valid packet functions
             // as authentication. Receive and process the version packet next.
             SetReceiveState(RecvState::VERSION);
-            m_recv_garbage = {};
+            m_recv_garbage.clear();
+            m_recv_garbage.shrink_to_fit();
             break;
         case RecvState::VERSION:
             if (!ignore) {
@@ -1295,9 +1298,13 @@ bool V2Transport::ProcessReceivedPacketBytes() noexcept
             Assume(false);
         }
         // Wipe the receive buffer where the next packet will be received into.
-        m_recv_buffer = {};
+        m_recv_buffer.clear();
+        m_recv_buffer.shrink_to_fit();
         // In all but APP_READY state, we can wipe the decoded contents.
-        if (m_recv_state != RecvState::APP_READY) m_recv_decode_buffer = {};
+        if (m_recv_state != RecvState::APP_READY) {
+            m_recv_decode_buffer.clear();
+            m_recv_decode_buffer.shrink_to_fit();
+        }
     } else {
         // We either have less than 3 bytes, so we don't know the packet's length yet, or more
         // than 3 bytes but less than the packet's full ciphertext. Wait until those arrive.
@@ -1511,7 +1518,8 @@ CNetMessage V2Transport::GetReceivedMessage(std::chrono::microseconds time, bool
         LogPrint(BCLog::NET, "V2 transport error: invalid message type (%u bytes contents), peer=%d\n", m_recv_decode_buffer.size(), m_nodeid);
         reject_message = true;
     }
-    m_recv_decode_buffer = {};
+    m_recv_decode_buffer.clear();
+    m_recv_decode_buffer.shrink_to_fit();
     SetReceiveState(RecvState::APP);
 
     return msg;
@@ -1545,7 +1553,8 @@ bool V2Transport::SetMessageToSend(CSerializedNetMsg& msg) noexcept
     m_cipher.Encrypt(MakeByteSpan(contents), {}, false, MakeWritableByteSpan(m_send_buffer));
     m_send_type = msg.m_type;
     // Release memory
-    msg.data = {};
+    msg.data.clear();
+    msg.data.shrink_to_fit();
     return true;
 }
 
@@ -1577,7 +1586,8 @@ void V2Transport::MarkBytesSent(size_t bytes_sent) noexcept
     // Wipe the buffer when everything is sent.
     if (m_send_pos == m_send_buffer.size()) {
         m_send_pos = 0;
-        m_send_buffer = {};
+        m_send_buffer.clear();
+        m_send_buffer.shrink_to_fit();
     }
 }
 
