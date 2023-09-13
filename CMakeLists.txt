@@ -69,6 +69,7 @@ endif()
 include(cmake/introspection.cmake)
 
 include(cmake/crc32c.cmake)
+include(cmake/leveldb.cmake)
 
 add_subdirectory(src)
 
