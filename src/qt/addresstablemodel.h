@@ -82,6 +82,8 @@ public:
 
     OutputType GetDefaultAddressType() const;
 
+    QString GetWalletDisplayName() const;
+
 private:
     WalletModel* const walletModel;
     AddressTablePriv *priv = nullptr;
