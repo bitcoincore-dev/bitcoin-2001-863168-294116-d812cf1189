@@ -120,3 +120,5 @@ if(HAVE_ARM_SHANI)
     APPEND PROPERTY COMPILE_OPTIONS ${ARM_SHANI_CXXFLAGS}
   )
 endif()
+
+target_link_libraries(bitcoin_crypto PRIVATE core)

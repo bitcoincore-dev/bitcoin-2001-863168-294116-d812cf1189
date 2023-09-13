@@ -50,3 +50,5 @@ target_compile_options(secp256k1
   PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/wd4146 /wd4334>
 )
+
+target_link_libraries(secp256k1 PRIVATE core)

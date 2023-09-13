@@ -80,6 +80,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(configure_warnings)
 
+# The core interface library aims to encapsulate all common build flags.
+# It is intended to be a usage requirement for all other targets.
+add_library(core INTERFACE)
+
+include(TryAppendCXXFlags)
+include(TryAppendLinkerFlag)
+
 if(WIN32)
   #[=[
   This build system supports two ways to build binaries for Windows.
@@ -97,29 +104,63 @@ if(WIN32)
   - A run-time library must be specified explicitly using _MT definition.
   ]=]
 
-  add_compile_definitions(_WIN32_WINNT=0x0601 _WIN32_IE=0x0501 WIN32_LEAN_AND_MEAN NOMINMAX)
+  target_compile_definitions(core INTERFACE
+    _WIN32_WINNT=0x0601
+    _WIN32_IE=0x0501
+    WIN32_LEAN_AND_MEAN
+    NOMINMAX
+  )
 
   if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-    add_compile_options(/utf-8 /Zc:__cplusplus)
+    target_compile_options(core INTERFACE
+      /utf-8
+      /Zc:__cplusplus
+    )
     # Improve parallelism in MSBuild.
     # See: https://devblogs.microsoft.com/cppblog/improved-parallelism-in-msbuild/.
     list(APPEND CMAKE_VS_GLOBALS "UseMultiToolTask=true")
   endif()
 
   if(MINGW)
-    add_compile_definitions(WIN32 _WINDOWS _MT)
+    target_compile_definitions(core INTERFACE
+      WIN32
+      _WINDOWS
+      _MT
+    )
     # We require Windows 7 (NT 6.1) or later.
-    add_link_options(-Wl,--major-subsystem-version,6 -Wl,--minor-subsystem-version,1)
+    try_append_linker_flag(core "-Wl,--major-subsystem-version,6")
+    try_append_linker_flag(core "-Wl,--minor-subsystem-version,1")
   endif()
 endif()
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  add_compile_definitions(MAC_OSX)
+# Use 64-bit off_t on 32-bit Linux.
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+  # Ensure 64-bit offsets are used for filesystem accesses for 32-bit compilation.
+  target_compile_definitions(core INTERFACE
+    _FILE_OFFSET_BITS=64
+  )
 endif()
 
-if(CMAKE_CROSSCOMPILING AND DEPENDS_ALLOW_HOST_PACKAGES)
-  list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_SYSTEM_PREFIX_PATH}")
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  target_compile_definitions(core INTERFACE
+    MAC_OSX
+  )
+  # These flags are specific to ld64, and may cause issues with other linkers.
+  # For example: GNU ld will interpret -dead_strip as -de and then try and use
+  # "ad_strip" as the symbol for the entry point.
+  try_append_linker_flag(core "-Wl,-dead_strip")
+  try_append_linker_flag(core "-Wl,-dead_strip_dylibs")
+  try_append_linker_flag(core "-Wl,-headerpad_max_install_names")
+endif()
+
+if(CMAKE_CROSSCOMPILING)
+  target_compile_definitions(core INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
+  target_compile_options(core INTERFACE "$<$<COMPILE_LANGUAGE:C>:${DEPENDS_C_COMPILER_FLAGS}>")
+  target_compile_options(core INTERFACE "$<$<COMPILE_LANGUAGE:CXX>:${DEPENDS_CXX_COMPILER_FLAGS}>")
+  if(DEPENDS_ALLOW_HOST_PACKAGES)
+    list(APPEND CMAKE_FIND_ROOT_PATH "${CMAKE_SYSTEM_PREFIX_PATH}")
+  endif()
 endif()
 
 include(AddThreadsIfNeeded)
@@ -139,6 +180,47 @@ include(cmake/crc32c.cmake)
 include(cmake/leveldb.cmake)
 include(cmake/minisketch.cmake)
 include(cmake/secp256k1.cmake)
+
+include(ProcessConfigurations)
+set_default_config(RelWithDebInfo)
+
+# Redefine configuration flags.
+target_compile_definitions(core INTERFACE
+  $<$<CONFIG:Debug>:DEBUG>
+  $<$<CONFIG:Debug>:DEBUG_LOCKORDER>
+  $<$<CONFIG:Debug>:DEBUG_LOCKCONTENTION>
+  $<$<CONFIG:Debug>:RPC_DOC_CHECK>
+  $<$<CONFIG:Debug>:ABORT_ON_FAILED_ASSUME>
+)
+# We leave assertions on.
+if(MSVC)
+  remove_c_flag_from_all_configs(/DNDEBUG)
+  remove_cxx_flag_from_all_configs(/DNDEBUG)
+else()
+  remove_c_flag_from_all_configs(-DNDEBUG)
+  remove_cxx_flag_from_all_configs(-DNDEBUG)
+
+  # Prefer -O2 optimization level. (-O3 is CMake's default for Release for many compilers.)
+  replace_c_flag_in_config(Release -O3 -O2)
+  replace_cxx_flag_in_config(Release -O3 -O2)
+
+  set(debug_c_flags "")
+  set(debug_cxx_flags "")
+  try_append_cxx_flags(debug_cxx_flags "-O0" RESULT_VAR compiler_supports_O0)
+  if(compiler_supports_O0)
+    string(STRIP "${debug_c_flags} -O0" debug_c_flags)
+  endif()
+  try_append_cxx_flags(debug_cxx_flags "-g3" RESULT_VAR compiler_supports_g3)
+  if(compiler_supports_g3)
+    string(STRIP "${debug_c_flags} -g3" debug_c_flags)
+  else()
+    try_append_cxx_flags(debug_cxx_flags "-g")
+    string(STRIP "${debug_c_flags} -g" debug_c_flags)
+  endif()
+  try_append_cxx_flags(debug_cxx_flags "-ftrapv")
+  set(CMAKE_C_FLAGS_DEBUG "${debug_c_flags}")
+  set(CMAKE_CXX_FLAGS_DEBUG "${debug_cxx_flags}")
+endif()
 
 include(cmake/optional.cmake)
 
@@ -162,6 +244,9 @@ add_subdirectory(src)
 add_subdirectory(test)
 
 include(cmake/tests.cmake)
+
+get_target_property(definitions core INTERFACE_COMPILE_DEFINITIONS)
+separate_by_configs(definitions)
 
 message("\n")
 message("Configure summary")
@@ -190,40 +275,33 @@ else()
   set(cross_status "FALSE")
 endif()
 message("Cross compiling ....................... ${cross_status}")
-get_directory_property(definitions COMPILE_DEFINITIONS)
-string(REPLACE ";" " " definitions "${definitions}")
-message("Preprocessor defined macros ........... ${definitions}")
+message("Preprocessor defined macros ........... ${definitions_ALL}")
 message("C compiler ............................ ${CMAKE_C_COMPILER}")
-message("CFLAGS ................................ ${CMAKE_C_FLAGS}")
+list(JOIN DEPENDS_C_COMPILER_FLAGS " " depends_c_flags)
+string(STRIP "${CMAKE_C_FLAGS} ${depends_c_flags}" combined_c_flags)
+message("CFLAGS ................................ ${combined_c_flags}")
 message("C++ compiler .......................... ${CMAKE_CXX_COMPILER}")
-message("CXXFLAGS .............................. ${CMAKE_CXX_FLAGS}")
-get_directory_property(common_compile_options COMPILE_OPTIONS)
-string(REPLACE ";" " " common_compile_options "${common_compile_options}")
-message("Common compile options ................ ${common_compile_options}")
-get_directory_property(common_link_options LINK_OPTIONS)
-string(REPLACE ";" " " common_link_options "${common_link_options}")
-message("Common link options ................... ${common_link_options}")
-if(DEFINED CMAKE_BUILD_TYPE)
-  message("Build type:")
-  message(" - CMAKE_BUILD_TYPE ................... ${CMAKE_BUILD_TYPE}")
-  string(TOUPPER "${CMAKE_BUILD_TYPE}" build_type)
-  message(" - CFLAGS ............................. ${CMAKE_C_FLAGS_${build_type}}")
-  message(" - CXXFLAGS ........................... ${CMAKE_CXX_FLAGS_${build_type}}")
-  message(" - LDFLAGS for executables ............ ${CMAKE_EXE_LINKER_FLAGS_${build_type}}")
-  message(" - LDFLAGS for shared libraries ....... ${CMAKE_SHARED_LINKER_FLAGS_${build_type}}")
+list(JOIN DEPENDS_CXX_COMPILER_FLAGS " " depends_cxx_flags)
+string(STRIP "${CMAKE_CXX_FLAGS} ${depends_cxx_flags}" combined_cxx_flags)
+message("CXXFLAGS .............................. ${combined_cxx_flags}")
+get_target_property(common_compile_options core INTERFACE_COMPILE_OPTIONS)
+if(common_compile_options)
+  list(JOIN common_compile_options " " common_compile_options)
 else()
-  message("Available configurations .............. ${CMAKE_CONFIGURATION_TYPES}")
-  message("Debug configuration:")
-  message(" - CFLAGS ............................. ${CMAKE_C_FLAGS_DEBUG}")
-  message(" - CXXFLAGS ........................... ${CMAKE_CXX_FLAGS_DEBUG}")
-  message(" - LDFLAGS for executables ............ ${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
-  message(" - LDFLAGS for shared libraries ....... ${CMAKE_SHARED_LINKER_FLAGS_DEBUG}")
-  message("Release configuration:")
-  message(" - CFLAGS ............................. ${CMAKE_C_FLAGS_RELEASE}")
-  message(" - CXXFLAGS ........................... ${CMAKE_CXX_FLAGS_RELEASE}")
-  message(" - LDFLAGS for executables ............ ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
-  message(" - LDFLAGS for shared libraries ....... ${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
+  set(common_compile_options)
 endif()
+string(GENEX_STRIP "${common_compile_options}" common_compile_options)
+message("Common compile options ................ ${common_compile_options}")
+get_target_property(common_link_options core INTERFACE_LINK_OPTIONS)
+if(common_link_options)
+  list(JOIN common_link_options " " common_link_options)
+else()
+  set(common_link_options)
+endif()
+message("Common link options ................... ${common_link_options}")
+message("Linker flags for executables .......... ${CMAKE_EXE_LINKER_FLAGS}")
+message("Linker flags for shared libraries ..... ${CMAKE_SHARED_LINKER_FLAGS}")
+print_config_flags()
 message("Use assembly routines ................. ${ASM}")
 message("Use ccache for compiling .............. ${CCACHE}")
 message("\n")
@@ -233,4 +311,18 @@ if(configure_warnings)
       message(WARNING "${warning}")
     endforeach()
     message("  ******\n")
+endif()
+
+# We want all build properties to be encapsulated properly.
+get_directory_property(global_compile_definitions COMPILE_DEFINITIONS)
+if(global_compile_definitions)
+  message(AUTHOR_WARNING "The directory's COMPILE_DEFINITIONS property is not empty: ${global_compile_definitions}")
+endif()
+get_directory_property(global_compile_options COMPILE_OPTIONS)
+if(global_compile_options)
+  message(AUTHOR_WARNING "The directory's COMPILE_OPTIONS property is not empty: ${global_compile_options}")
+endif()
+get_directory_property(global_link_options LINK_OPTIONS)
+if(global_link_options)
+  message(AUTHOR_WARNING "The directory's LINK_OPTIONS property is not empty: ${global_link_options}")
 endif()
