@@ -302,14 +302,12 @@ void ReceiveCoinsDialog::showMenu(const QPoint &point)
     }
 
     if (sel.size() == 1 && sel.at(0).isValid()) {
-        // disable context menu actions when appropriate
-        const RecentRequestsTableModel* const submodel = model->getRecentRequestsTableModel();
+    // disable context menu actions when appropriate
+    const RecentRequestsTableModel* const submodel = model->getRecentRequestsTableModel();
         const RecentRequestEntry& req = submodel->entry(sel.at(0).row());
-        copyLabelAction->setDisabled(req.recipient.label.isEmpty());
-        copyMessageAction->setDisabled(req.recipient.message.isEmpty());
-        copyAmountAction->setDisabled(req.recipient.amount == 0);
-
-        contextMenu->exec(QCursor::pos());
+    copyLabelAction->setDisabled(req.recipient.label.isEmpty());
+    copyMessageAction->setDisabled(req.recipient.message.isEmpty());
+    copyAmountAction->setDisabled(req.recipient.amount == 0);
     } else if (sel.size() > 1) {
         // multiple selection
 
@@ -335,8 +333,9 @@ void ReceiveCoinsDialog::showMenu(const QPoint &point)
                 copyAmountAction->setDisabled(false);
             }
         }
-        contextMenu->exec(QCursor::pos());
     }
+
+    contextMenu->exec(QCursor::pos());
 }
 
 // context menu action: copy URI
