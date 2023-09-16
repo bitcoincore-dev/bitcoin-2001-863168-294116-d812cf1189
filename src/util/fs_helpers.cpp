@@ -111,8 +111,14 @@ std::streampos GetFileSize(const char* path, std::streamsize max)
     return file.gcount();
 }
 
+std::function<bool(FILE* file)> g_mock_file_commit{nullptr};
+
 bool FileCommit(FILE* file)
 {
+    if (g_mock_file_commit) {
+        return g_mock_file_commit(file);
+    }
+
     if (fflush(file) != 0) { // harmless if redundantly called
         LogPrintf("fflush failed: %s\n", SysErrorString(errno));
         return false;
@@ -142,8 +148,14 @@ bool FileCommit(FILE* file)
     return true;
 }
 
+std::function<void(const fs::path&)> g_mock_dir_commit{nullptr};
+
 void DirectoryCommit(const fs::path& dirname)
 {
+    if (g_mock_dir_commit) {
+        return g_mock_dir_commit(dirname);
+    }
+
 #ifndef WIN32
     FILE* file = fsbridge::fopen(dirname, "r");
     if (file) {
@@ -153,8 +165,14 @@ void DirectoryCommit(const fs::path& dirname)
 #endif
 }
 
+std::function<bool(FILE*, unsigned int)> g_mock_truncate_file{nullptr};
+
 bool TruncateFile(FILE* file, unsigned int length)
 {
+    if (g_mock_truncate_file) {
+        return g_mock_truncate_file(file, length);
+    }
+
 #if defined(WIN32)
     return _chsize(_fileno(file), length) == 0;
 #else
@@ -186,12 +204,18 @@ int RaiseFileDescriptorLimit(int nMinFD)
 #endif
 }
 
+std::function<void(FILE*, unsigned int, unsigned int)> g_mock_allocate_file_range{nullptr};
+
 /**
  * this function tries to make a particular range of a file allocated (corresponding to disk space)
  * it is advisory, and the range specified in the arguments will never contain live data
  */
 void AllocateFileRange(FILE* file, unsigned int offset, unsigned int length)
 {
+    if (g_mock_allocate_file_range) {
+        return g_mock_allocate_file_range(file, offset, length);
+    }
+
 #if defined(WIN32)
     // Windows-specific version
     HANDLE hFile = (HANDLE)_get_osfhandle(_fileno(file));
