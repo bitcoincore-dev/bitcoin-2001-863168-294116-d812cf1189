@@ -38,6 +38,16 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 
 set(configure_warnings)
 
+include(CheckPIESupported)
+check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
+if(CMAKE_CXX_LINK_PIE_SUPPORTED)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+else()
+  message(WARNING "PIE is not supported at link time: ${check_pie_output}")
+  list(APPEND configure_warnings "Position independent code disabled.")
+endif()
+unset(check_pie_output)
+
 include(CheckSourceCompilesAndLinks)
 include(cmake/introspection.cmake)
 
