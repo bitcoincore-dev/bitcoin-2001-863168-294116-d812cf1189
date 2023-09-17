@@ -51,6 +51,21 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(configure_warnings)
 
 include(CheckSourceCompilesAndLinks)
+
+if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.14)
+  include(CheckPIESupported)
+  check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
+  if(CMAKE_CXX_LINK_PIE_SUPPORTED)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+else()
+  check_cxx_source_links_with_flags("-fPIE;-pie" "int main(){}" LINKER_SUPPORTS_PIE)
+  if(LINKER_SUPPORTS_PIE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie")
+  endif()
+endif()
+
 include(cmake/introspection.cmake)
 
 add_subdirectory(src)
