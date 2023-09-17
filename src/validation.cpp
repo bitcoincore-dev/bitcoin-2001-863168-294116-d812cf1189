@@ -5238,6 +5238,18 @@ bool ChainstateManager::ActivateSnapshot(
             snapshot_ok = false;
         }
     }
+
+    // Do a final check to ensure that the snapshot chainstate is actually at a more
+    // advanced height than the active chainstate; a user could have loaded a snapshot
+    // very late in the IBD process, and we wouldn't want to load a useless chainstate.
+    {
+        LOCK(::cs_main);
+        if (snapshot_chainstate->m_chain.Height() <= ActiveHeight()) {
+            LogPrintf("[snapshot] activation failed - height does not exceed active chainstate\n");
+            snapshot_ok = false;
+        }
+    }
+
     if (!snapshot_ok) {
         LOCK(::cs_main);
         this->MaybeRebalanceCaches();
@@ -5338,6 +5350,11 @@ bool ChainstateManager::PopulateAndValidateSnapshot(
     }
 
     const AssumeutxoData& au_data = *maybe_au_data;
+
+    if (au_data.height <= WITH_LOCK(::cs_main, return ActiveHeight())) {
+        LogPrintf("[snapshot] activation failed - height does not exceed active chainstate\n");
+        return false;
+    }
 
     COutPoint outpoint;
     Coin coin;
