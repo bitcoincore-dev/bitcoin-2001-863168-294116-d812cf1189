@@ -1,4 +1,4 @@
-// Copyright (c) 2012-2021 The Bitcoin Core developers
+// Copyright (c) 2012-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +8,7 @@
 #include <primitives/transaction.h>
 #include <random.h>
 #include <script/script.h>
-#include <script/standard.h>
+#include <script/solver.h>
 #include <span.h>
 #include <streams.h>
 #include <util/fastrange.h>
@@ -60,7 +60,7 @@ void CBloomFilter::insert(Span<const unsigned char> vKey)
 
 void CBloomFilter::insert(const COutPoint& outpoint)
 {
-    CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
+    DataStream stream{};
     stream << outpoint;
     insert(MakeUCharSpan(stream));
 }
@@ -81,7 +81,7 @@ bool CBloomFilter::contains(Span<const unsigned char> vKey) const
 
 bool CBloomFilter::contains(const COutPoint& outpoint) const
 {
-    CDataStream stream(SER_NETWORK, PROTOCOL_VERSION);
+    DataStream stream{};
     stream << outpoint;
     return contains(MakeUCharSpan(stream));
 }

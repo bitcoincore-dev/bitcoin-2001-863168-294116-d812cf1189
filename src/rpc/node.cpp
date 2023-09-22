@@ -1,5 +1,5 @@
 // Copyright (c) 2010 Satoshi Nakamoto
-// Copyright (c) 2009-2021 The Bitcoin Core developers
+// Copyright (c) 2009-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,15 +12,16 @@
 #include <interfaces/echo.h>
 #include <interfaces/init.h>
 #include <interfaces/ipc.h>
+#include <kernel/cs_main.h>
+#include <logging.h>
 #include <node/context.h>
 #include <rpc/server.h>
 #include <rpc/server_util.h>
 #include <rpc/util.h>
 #include <scheduler.h>
 #include <univalue.h>
+#include <util/any.h>
 #include <util/check.h>
-#include <util/syscall_sandbox.h>
-#include <util/system.h>
 
 #include <stdint.h>
 #ifdef HAVE_MALLOC_INFO
@@ -52,44 +53,20 @@ static RPCHelpMan setmocktime()
     // ensure all call sites of GetTime() are accessing this safely.
     LOCK(cs_main);
 
-    RPCTypeCheck(request.params, {UniValue::VNUM});
     const int64_t time{request.params[0].getInt<int64_t>()};
     if (time < 0) {
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("Mocktime cannot be negative: %s.", time));
     }
     SetMockTime(time);
-    auto node_context = util::AnyPtr<NodeContext>(request.context);
-    if (node_context) {
-        for (const auto& chain_client : node_context->chain_clients) {
-            chain_client->setMockTime(time);
-        }
+    const NodeContext& node_context{EnsureAnyNodeContext(request.context)};
+    for (const auto& chain_client : node_context.chain_clients) {
+        chain_client->setMockTime(time);
     }
 
     return UniValue::VNULL;
 },
     };
 }
-
-#if defined(USE_SYSCALL_SANDBOX)
-static RPCHelpMan invokedisallowedsyscall()
-{
-    return RPCHelpMan{
-        "invokedisallowedsyscall",
-        "\nInvoke a disallowed syscall to trigger a syscall sandbox violation. Used for testing purposes.\n",
-        {},
-        RPCResult{RPCResult::Type::NONE, "", ""},
-        RPCExamples{
-            HelpExampleCli("invokedisallowedsyscall", "") + HelpExampleRpc("invokedisallowedsyscall", "")},
-        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue {
-            if (!Params().IsTestChain()) {
-                throw std::runtime_error("invokedisallowedsyscall is used for testing only.");
-            }
-            TestDisallowedSandboxCall();
-            return UniValue::VNULL;
-        },
-    };
-}
-#endif // USE_SYSCALL_SANDBOX
 
 static RPCHelpMan mockscheduler()
 {
@@ -106,17 +83,14 @@ static RPCHelpMan mockscheduler()
         throw std::runtime_error("mockscheduler is for regression testing (-regtest mode) only");
     }
 
-    // check params are valid values
-    RPCTypeCheck(request.params, {UniValue::VNUM});
     int64_t delta_seconds = request.params[0].getInt<int64_t>();
     if (delta_seconds <= 0 || delta_seconds > 3600) {
         throw std::runtime_error("delta_time must be between 1 and 3600 seconds (1 hr)");
     }
 
-    auto node_context = CHECK_NONFATAL(util::AnyPtr<NodeContext>(request.context));
-    // protect against null pointer dereference
-    CHECK_NONFATAL(node_context->scheduler);
-    node_context->scheduler->MockForward(std::chrono::seconds(delta_seconds));
+    const NodeContext& node_context{EnsureAnyNodeContext(request.context)};
+    CHECK_NONFATAL(node_context.scheduler)->MockForward(std::chrono::seconds{delta_seconds});
+    SyncWithValidationInterfaceQueue();
 
     return UniValue::VNULL;
 },
@@ -165,7 +139,7 @@ static RPCHelpMan getmemoryinfo()
                 {
                     {"mode", RPCArg::Type::STR, RPCArg::Default{"stats"}, "determines what kind of information is returned.\n"
             "  - \"stats\" returns general statistics about memory usage in the daemon.\n"
-            "  - \"mallocinfo\" returns an XML string describing low-level heap state (only available if compiled with glibc 2.10+)."},
+            "  - \"mallocinfo\" returns an XML string describing low-level heap state (only available if compiled with glibc)."},
                 },
                 {
                     RPCResult{"mode \"stats\"",
@@ -242,11 +216,11 @@ static RPCHelpMan logging()
             "  - \"none\", \"0\" : even if other logging categories are specified, ignore all of them.\n"
             ,
                 {
-                    {"include", RPCArg::Type::ARR, RPCArg::Optional::OMITTED_NAMED_ARG, "The categories to add to debug logging",
+                    {"include", RPCArg::Type::ARR, RPCArg::Optional::OMITTED, "The categories to add to debug logging",
                         {
                             {"include_category", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "the valid logging category"},
                         }},
-                    {"exclude", RPCArg::Type::ARR, RPCArg::Optional::OMITTED_NAMED_ARG, "The categories to remove from debug logging",
+                    {"exclude", RPCArg::Type::ARR, RPCArg::Optional::OMITTED, "The categories to remove from debug logging",
                         {
                             {"exclude_category", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "the valid logging category"},
                         }},
@@ -295,18 +269,18 @@ static RPCHelpMan echo(const std::string& name)
                 "\nIt will return an internal bug report when arg9='trigger_internal_bug' is passed.\n"
                 "\nThe difference between echo and echojson is that echojson has argument conversion enabled in the client-side table in "
                 "bitcoin-cli and the GUI. There is no server-side difference.",
-                {
-                    {"arg0", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg1", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg2", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg3", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg4", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg5", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg6", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg7", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg8", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                    {"arg9", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, ""},
-                },
+        {
+            {"arg0", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg1", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg2", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg3", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg4", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg5", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg6", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg7", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg8", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+            {"arg9", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "", RPCArgOptions{.skip_type_check = true}},
+        },
                 RPCResult{RPCResult::Type::ANY, "", "Returns whatever was passed in"},
                 RPCExamples{""},
         [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
@@ -378,7 +352,7 @@ static RPCHelpMan getindexinfo()
     return RPCHelpMan{"getindexinfo",
                 "\nReturns the status of one or all available indices currently running in the node.\n",
                 {
-                    {"index_name", RPCArg::Type::STR, RPCArg::Optional::OMITTED_NAMED_ARG, "Filter results for an index with a specific name."},
+                    {"index_name", RPCArg::Type::STR, RPCArg::Optional::OMITTED, "Filter results for an index with a specific name."},
                 },
                 RPCResult{
                     RPCResult::Type::OBJ_DYN, "", "", {
@@ -430,9 +404,6 @@ void RegisterNodeRPCCommands(CRPCTable& t)
         {"hidden", &echo},
         {"hidden", &echojson},
         {"hidden", &echoipc},
-#if defined(USE_SYSCALL_SANDBOX)
-        {"hidden", &invokedisallowedsyscall},
-#endif // USE_SYSCALL_SANDBOX
     };
     for (const auto& c : commands) {
         t.appendCommand(c.name, &c);

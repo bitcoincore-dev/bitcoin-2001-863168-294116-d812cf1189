@@ -1,44 +1,36 @@
-(use-modules (gnu)
-             (gnu packages)
+(use-modules (gnu packages)
              (gnu packages autotools)
-             (gnu packages base)
-             (gnu packages bash)
+             ((gnu packages bash) #:select (bash-minimal))
              (gnu packages bison)
-             (gnu packages certs)
-             (gnu packages cdrom)
-             (gnu packages check)
-             (gnu packages cmake)
+             ((gnu packages certs) #:select (nss-certs))
+             ((gnu packages cmake) #:select (cmake-minimal))
              (gnu packages commencement)
              (gnu packages compression)
              (gnu packages cross-base)
-             (gnu packages curl)
              (gnu packages file)
              (gnu packages gawk)
              (gnu packages gcc)
-             (gnu packages gnome)
-             (gnu packages installers)
-             (gnu packages linux)
+             ((gnu packages installers) #:select (nsis-x86_64))
+             ((gnu packages linux) #:select (linux-libre-headers-5.15 util-linux))
              (gnu packages llvm)
              (gnu packages mingw)
              (gnu packages moreutils)
-             (gnu packages perl)
              (gnu packages pkg-config)
-             (gnu packages python)
-             (gnu packages python-crypto)
-             (gnu packages python-web)
-             (gnu packages shells)
-             (gnu packages tls)
-             (gnu packages version-control)
+             ((gnu packages python) #:select (python-minimal))
+             ((gnu packages python-build) #:select (python-tomli))
+             ((gnu packages python-crypto) #:select (python-asn1crypto))
+             ((gnu packages python-web) #:select (python-requests))
+             ((gnu packages tls) #:select (openssl))
+             ((gnu packages version-control) #:select (git-minimal))
+             (guix build-system cmake)
              (guix build-system gnu)
              (guix build-system python)
              (guix build-system trivial)
-             (guix download)
              (guix gexp)
              (guix git-download)
              ((guix licenses) #:prefix license:)
              (guix packages)
-             (guix profiles)
-             (guix utils))
+             ((guix utils) #:select (substitute-keyword-arguments)))
 
 (define-syntax-rule (search-our-patches file-name ...)
   "Return the list of absolute file names corresponding to each
@@ -47,36 +39,7 @@ FILE-NAME found in ./patches relative to the current file."
       ((%patch-path (list (string-append (dirname (current-filename)) "/patches"))))
     (list (search-patch file-name) ...)))
 
-(define (make-ssp-fixed-gcc xgcc)
-  "Given a XGCC package, return a modified package that uses the SSP function
-from glibc instead of from libssp.so. Our `symbol-check' script will complain if
-we link against libssp.so, and thus will ensure that this works properly.
-
-Taken from:
-http://www.linuxfromscratch.org/hlfs/view/development/chapter05/gcc-pass1.html"
-  (package
-    (inherit xgcc)
-    (arguments
-     (substitute-keyword-arguments (package-arguments xgcc)
-       ((#:make-flags flags)
-        `(cons "gcc_cv_libc_provides_ssp=yes" ,flags))))))
-
-(define (make-gcc-rpath-link xgcc)
-  "Given a XGCC package, return a modified package that replace each instance of
--rpath in the default system spec that's inserted by Guix with -rpath-link"
-  (package
-    (inherit xgcc)
-    (arguments
-     (substitute-keyword-arguments (package-arguments xgcc)
-       ((#:phases phases)
-        `(modify-phases ,phases
-           (add-after 'pre-configure 'replace-rpath-with-rpath-link
-             (lambda _
-               (substitute* (cons "gcc/config/rs6000/sysv4.h"
-                                  (find-files "gcc/config"
-                                              "^gnu-user.*\\.h$"))
-                 (("-rpath=") "-rpath-link="))
-               #t))))))))
+(define building-on (string-append "--build=" (list-ref (string-split (%current-system) #\-) 0) "-guix-linux-gnu"))
 
 (define (make-cross-toolchain target
                               base-gcc-for-libc
@@ -93,16 +56,16 @@ http://www.linuxfromscratch.org/hlfs/view/development/chapter05/gcc-pass1.html"
          ;; 2. Build cross-compiled kernel headers with XGCC-SANS-LIBC, derived
          ;; from BASE-KERNEL-HEADERS
          (xkernel (cross-kernel-headers target
-                                        base-kernel-headers
-                                        xgcc-sans-libc
-                                        xbinutils))
+                                        #:linux-headers base-kernel-headers
+                                        #:xgcc xgcc-sans-libc
+                                        #:xbinutils xbinutils))
          ;; 3. Build a cross-compiled libc with XGCC-SANS-LIBC and XKERNEL,
          ;; derived from BASE-LIBC
          (xlibc (cross-libc target
-                            base-libc
-                            xgcc-sans-libc
-                            xbinutils
-                            xkernel))
+                            #:libc base-libc
+                            #:xgcc xgcc-sans-libc
+                            #:xbinutils xbinutils
+                            #:xheaders xkernel))
          ;; 4. Build a cross-compiling gcc targeting XLIBC, derived from
          ;; BASE-GCC
          (xgcc (cross-gcc target
@@ -134,10 +97,10 @@ chain for " target " development."))
 
 (define* (make-bitcoin-cross-toolchain target
                                        #:key
-                                       (base-gcc-for-libc base-gcc)
+                                       (base-gcc-for-libc linux-base-gcc)
                                        (base-kernel-headers base-linux-kernel-headers)
-                                       (base-libc (make-glibc-without-werror glibc-2.24))
-                                       (base-gcc (make-gcc-rpath-link base-gcc)))
+                                       (base-libc glibc-2.27)
+                                       (base-gcc linux-base-gcc))
   "Convenience wrapper around MAKE-CROSS-TOOLCHAIN with default values
 desirable for building Bitcoin Core release binaries."
   (make-cross-toolchain target
@@ -146,26 +109,19 @@ desirable for building Bitcoin Core release binaries."
                         base-libc
                         base-gcc))
 
-(define (make-gcc-with-pthreads gcc)
-  (package-with-extra-configure-variable
-    (package-with-extra-patches gcc
-      (search-our-patches "gcc-10-remap-guix-store.patch"))
-    "--enable-threads" "posix"))
-
-(define (make-mingw-w64-cross-gcc cross-gcc)
-  (package-with-extra-patches cross-gcc
-    (search-our-patches "vmov-alignment.patch"
-                        "gcc-broken-longjmp.patch")))
+(define (gcc-mingw-patches gcc)
+  (package-with-extra-patches gcc
+    (search-our-patches "gcc-remap-guix-store.patch"
+                        "vmov-alignment.patch")))
 
 (define (make-mingw-pthreads-cross-toolchain target)
   "Create a cross-compilation toolchain package for TARGET"
   (let* ((xbinutils (cross-binutils target))
          (pthreads-xlibc mingw-w64-x86_64-winpthreads)
-         (pthreads-xgcc (make-gcc-with-pthreads
-                         (cross-gcc target
-                                    #:xgcc (make-ssp-fixed-gcc (make-mingw-w64-cross-gcc base-gcc))
+         (pthreads-xgcc (cross-gcc target
+                                    #:xgcc (gcc-mingw-patches mingw-w64-base-gcc)
                                     #:xbinutils xbinutils
-                                    #:libc pthreads-xlibc))))
+                                    #:libc pthreads-xlibc)))
     ;; Define a meta-package that propagates the resulting XBINUTILS, XLIBC, and
     ;; XGCC
     (package
@@ -185,68 +141,66 @@ chain for " target " development."))
       (home-page (package-home-page pthreads-xgcc))
       (license (package-license pthreads-xgcc)))))
 
-(define (make-nsis-for-gcc-10 base-nsis)
-  (package-with-extra-patches base-nsis
-    (search-our-patches "nsis-gcc-10-memmove.patch")))
-
-(define (fix-ppc64-nx-default lief)
-  (package-with-extra-patches lief
-    (search-our-patches "lief-fix-ppc64-nx-default.patch")))
-
-(define-public lief
+;; While LIEF is packaged in Guix, we maintain our own package,
+;; to simplify building, and more easily apply updates.
+;; Moreover, the Guix's package uses cmake, which caused build
+;; failure; see https://github.com/bitcoin/bitcoin/pull/27296.
+(define-public python-lief
   (package
-   (name "python-lief")
-   (version "0.12.1")
-   (source
-    (origin
-     (method git-fetch)
-     (uri (git-reference
-           (url "https://github.com/lief-project/LIEF.git")
-           (commit version)))
-     (file-name (git-file-name name version))
-     (sha256
-      (base32
-       "1xzbh3bxy4rw1yamnx68da1v5s56ay4g081cyamv67256g0qy2i1"))))
-   (build-system python-build-system)
-   (arguments
-    `(#:phases
-      (modify-phases %standard-phases
-        (add-after 'unpack 'parallel-jobs
-          ;; build with multiple cores
-          (lambda _
-            (substitute* "setup.py" (("self.parallel if self.parallel else 1") (number->string (parallel-job-count)))))))))
-   (native-inputs
-    `(("cmake" ,cmake)))
-   (home-page "https://github.com/lief-project/LIEF")
-   (synopsis "Library to Instrument Executable Formats")
-   (description "Python library to to provide a cross platform library which can
-parse, modify and abstract ELF, PE and MachO formats.")
-   (license license:asl2.0)))
+    (name "python-lief")
+    (version "0.13.2")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/lief-project/LIEF")
+                    (commit version)))
+              (file-name (git-file-name name version))
+              (modules '((guix build utils)))
+              (snippet
+               '(begin
+                  ;; Configure build for Python bindings.
+                  (substitute* "api/python/config-default.toml"
+                    (("(ninja         = )true" all m)
+                     (string-append m "false"))
+                    (("(parallel-jobs = )0" all m)
+                     (string-append m (number->string (parallel-job-count)))))))
+              (sha256
+               (base32
+                "0y48x358ppig5xp97ahcphfipx7cg9chldj2q5zrmn610fmi4zll"))))
+    (build-system python-build-system)
+    (native-inputs (list cmake-minimal python-tomli))
+    (arguments
+     (list
+      #:tests? #f                  ;needs network
+      #:phases #~(modify-phases %standard-phases
+                   (add-before 'build 'change-directory
+                     (lambda _
+                       (chdir "api/python")))
+                   (replace 'build
+                     (lambda _
+                       (invoke "python" "setup.py" "build"))))))
+    (home-page "https://github.com/lief-project/LIEF")
+    (synopsis "Library to instrument executable formats")
+    (description
+     "@code{python-lief} is a cross platform library which can parse, modify
+and abstract ELF, PE and MachO formats.")
+    (license license:asl2.0)))
 
 (define osslsigncode
   (package
     (name "osslsigncode")
-    (version "2.0")
+    (version "2.5")
     (source (origin
-              (method url-fetch)
-              (uri (string-append "https://github.com/mtrojnar/"
-                                  name "/archive/" version ".tar.gz"))
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/mtrojnar/osslsigncode")
+                    (commit version)))
               (sha256
                (base32
-                "0byri6xny770wwb2nciq44j5071122l14bvv65axdd70nfjf0q2s"))))
-    (build-system gnu-build-system)
-    (native-inputs
-     `(("pkg-config" ,pkg-config)
-       ("autoconf" ,autoconf)
-       ("automake" ,automake)
-       ("libtool" ,libtool)))
+                "1j47vwq4caxfv0xw68kw5yh00qcpbd56d7rq6c483ma3y7s96yyz"))))
+    (build-system cmake-build-system)
     (inputs
-     `(("openssl" ,openssl)))
-    (arguments
-     `(#:configure-flags
-       `("--without-gsf"
-         "--without-curl"
-         "--disable-dependency-tracking")))
+     `(("openssl", openssl)))
     (home-page "https://github.com/mtrojnar/osslsigncode")
     (synopsis "Authenticode signing and timestamping tool")
     (description "osslsigncode is a small tool that implements part of the
@@ -282,7 +236,7 @@ thus should be able to compile on most platforms where these exist.")
 (define-public python-oscrypto
   (package
     (name "python-oscrypto")
-    (version "1.2.1")
+    (version "1.3.0")
     (source
      (origin
        (method git-fetch)
@@ -292,7 +246,7 @@ thus should be able to compile on most platforms where these exist.")
        (file-name (git-file-name name version))
        (sha256
         (base32
-         "1d4d8s4z340qhvb3g5m5v3436y3a71yc26wk4749q64m09kxqc3l"))
+         "1v5wkmzcyiqy39db8j2dvkdrv2nlsc48556h73x4dzjwd6kg4q0a"))
        (patches (search-our-patches "oscrypto-hard-code-openssl.patch"))))
     (build-system python-build-system)
     (native-search-paths
@@ -399,6 +353,11 @@ thus should be able to compile on most platforms where these exist.")
                                  line)))
                (substitute* "tests/test_validate.py"
                  (("^(.*)def test_revocation_mode_hard" line indent)
+                  (string-append indent
+                                 "@unittest.skip(\"Disabled by Guix\")\n"
+                                 line)))
+               (substitute* "tests/test_validate.py"
+                 (("^(.*)def test_revocation_mode_soft" line indent)
                   (string-append indent
                                  "@unittest.skip(\"Disabled by Guix\")\n"
                                  line)))
@@ -517,30 +476,47 @@ and endian independent.")
 inspecting signatures in Mach-O binaries.")
       (license license:expat))))
 
-(define (make-glibc-without-werror glibc)
-  (package-with-extra-configure-variable glibc "enable_werror" "no"))
-
-(define-public glibc-2.24
+(define-public mingw-w64-base-gcc
   (package
-    (inherit glibc-2.31)
-    (version "2.24")
-    (source (origin
-              (method git-fetch)
-              (uri (git-reference
-                    (url "https://sourceware.org/git/glibc.git")
-                    (commit "0d7f1ed30969886c8dde62fbf7d2c79967d4bace")))
-              (file-name (git-file-name "glibc" "0d7f1ed30969886c8dde62fbf7d2c79967d4bace"))
-              (sha256
-               (base32
-                "0g5hryia5v1k0qx97qffgwzrz4lr4jw3s5kj04yllhswsxyjbic3"))
-              (patches (search-our-patches "glibc-ldd-x86_64.patch"
-                                           "glibc-versioned-locpath.patch"
-                                           "glibc-2.24-elfm-loadaddr-dynamic-rewrite.patch"
-                                           "glibc-2.24-no-build-time-cxx-header-run.patch"
-                                           "glibc-2.24-fcommon.patch"
-                                           "glibc-2.24-guix-prefix.patch"))))))
+    (inherit base-gcc)
+    (arguments
+      (substitute-keyword-arguments (package-arguments base-gcc)
+        ((#:configure-flags flags)
+          `(append ,flags
+            ;; https://gcc.gnu.org/install/configure.html
+            (list "--enable-threads=posix",
+                  building-on)))
+        ((#:make-flags flags)
+          ;; Uses the SSP functions from glibc instead of from libssp.so.
+          ;; Our 'symbol-check' script will complain if we link against libssp.so,
+          ;; and thus will ensure that this works properly.
+          `(cons "gcc_cv_libc_provides_ssp=yes" ,flags))))))
 
-(define-public glibc-2.27/bitcoin-patched
+(define-public linux-base-gcc
+  (package
+    (inherit base-gcc)
+    (arguments
+      (substitute-keyword-arguments (package-arguments base-gcc)
+        ((#:configure-flags flags)
+          `(append ,flags
+            ;; https://gcc.gnu.org/install/configure.html
+            (list "--enable-initfini-array=yes",
+                  "--enable-default-ssp=yes",
+                  "--enable-default-pie=yes",
+                  building-on)))
+        ((#:phases phases)
+          `(modify-phases ,phases
+            ;; Given a XGCC package, return a modified package that replace each instance of
+            ;; -rpath in the default system spec that's inserted by Guix with -rpath-link
+            (add-after 'pre-configure 'replace-rpath-with-rpath-link
+             (lambda _
+               (substitute* (cons "gcc/config/rs6000/sysv4.h"
+                                  (find-files "gcc/config"
+                                              "^gnu-user.*\\.h$"))
+                 (("-rpath=") "-rpath-link="))
+               #t))))))))
+
+(define-public glibc-2.27
   (package
     (inherit glibc-2.31)
     (version "2.27")
@@ -548,22 +524,44 @@ inspecting signatures in Mach-O binaries.")
               (method git-fetch)
               (uri (git-reference
                     (url "https://sourceware.org/git/glibc.git")
-                    (commit "23158b08a0908f381459f273a984c6fd328363cb")))
-              (file-name (git-file-name "glibc" "23158b08a0908f381459f273a984c6fd328363cb"))
+                    (commit "73886db6218e613bd6d4edf529f11e008a6c2fa6")))
+              (file-name (git-file-name "glibc" "73886db6218e613bd6d4edf529f11e008a6c2fa6"))
               (sha256
                (base32
-                "1b2n1gxv9f4fd5yy68qjbnarhf8mf4vmlxk10i3328c1w5pmp0ca"))
-              (patches (search-our-patches "glibc-ldd-x86_64.patch"
-                                           "glibc-2.27-riscv64-Use-__has_include-to-include-asm-syscalls.h.patch"
-                                           "glibc-2.27-dont-redefine-nss-database.patch"
-                                           "glibc-2.27-guix-prefix.patch"))))))
+                "0azpb9cvnbv25zg8019rqz48h8i2257ngyjg566dlnp74ivrs9vq"))
+              (patches (search-our-patches "glibc-2.27-riscv64-Use-__has_include-to-include-asm-syscalls.h.patch"
+                                           "glibc-2.27-fcommon.patch"
+                                           "glibc-2.27-guix-prefix.patch"
+                                           "glibc-2.27-no-librt.patch"
+                                           "glibc-2.27-powerpc-ldbrx.patch"))))
+    (arguments
+      (substitute-keyword-arguments (package-arguments glibc)
+        ((#:configure-flags flags)
+          `(append ,flags
+            ;; https://www.gnu.org/software/libc/manual/html_node/Configuring-and-compiling.html
+            (list "--enable-stack-protector=all",
+                  "--enable-bind-now",
+                  "--disable-werror",
+                  building-on)))
+    ((#:phases phases)
+        `(modify-phases ,phases
+           (add-before 'configure 'set-etc-rpc-installation-directory
+             (lambda* (#:key outputs #:allow-other-keys)
+               ;; Install the rpc data base file under `$out/etc/rpc'.
+               ;; Otherwise build will fail with "Permission denied."
+               (let ((out (assoc-ref outputs "out")))
+                 (substitute* "sunrpc/Makefile"
+                   (("^\\$\\(inst_sysconfdir\\)/rpc(.*)$" _ suffix)
+                    (string-append out "/etc/rpc" suffix "\n"))
+                   (("^install-others =.*$")
+                    (string-append "install-others = " out "/etc/rpc\n"))))))))))))
 
 (packages->manifest
  (append
   (list ;; The Basics
-        bash
+        bash-minimal
         which
-        coreutils
+        coreutils-minimal
         util-linux
         ;; File(system) inspection
         file
@@ -582,7 +580,7 @@ inspecting signatures in Mach-O binaries.")
         xz
         ;; Build tools
         gnu-make
-        libtool-2.4.7
+        libtool
         autoconf-2.71
         automake
         pkg-config
@@ -591,25 +589,21 @@ inspecting signatures in Mach-O binaries.")
         gcc-toolchain-10
         (list gcc-toolchain-10 "static")
         ;; Scripting
-        perl
-        python-3
+        python-minimal ;; (3.10)
         ;; Git
-        git
+        git-minimal
         ;; Tests
-        (fix-ppc64-nx-default lief))
+        python-lief)
   (let ((target (getenv "HOST")))
     (cond ((string-suffix? "-mingw32" target)
            ;; Windows
            (list zip
                  (make-mingw-pthreads-cross-toolchain "x86_64-w64-mingw32")
-                 (make-nsis-for-gcc-10 nsis-x86_64)
+                 nsis-x86_64
+                 nss-certs
                  osslsigncode))
           ((string-contains target "-linux-")
-           (list (cond ((string-contains target "riscv64-")
-                        (make-bitcoin-cross-toolchain target
-                                                      #:base-libc (make-glibc-without-werror glibc-2.27/bitcoin-patched)))
-                       (else
-                        (make-bitcoin-cross-toolchain target)))))
+           (list (make-bitcoin-cross-toolchain target)))
           ((string-contains target "darwin")
-           (list clang-toolchain-10 binutils cmake xorriso python-signapple))
+           (list clang-toolchain-15 binutils cmake-minimal python-signapple zip))
           (else '())))))

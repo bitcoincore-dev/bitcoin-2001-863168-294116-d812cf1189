@@ -1,15 +1,15 @@
-// Copyright (c) 2017-2021 The Bitcoin Core developers
+// Copyright (c) 2017-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <index/txindex.h>
 
+#include <clientversion.h>
+#include <common/args.h>
 #include <index/disktxpos.h>
+#include <logging.h>
 #include <node/blockstorage.h>
-#include <util/system.h>
 #include <validation.h>
-
-using node::OpenBlockFile;
 
 constexpr uint8_t DB_TXINDEX{'t'};
 
@@ -27,7 +27,7 @@ public:
     bool ReadTxPos(const uint256& txid, CDiskTxPos& pos) const;
 
     /// Write a batch of transaction positions to the DB.
-    bool WriteTxs(const std::vector<std::pair<uint256, CDiskTxPos>>& v_pos);
+    [[nodiscard]] bool WriteTxs(const std::vector<std::pair<uint256, CDiskTxPos>>& v_pos);
 };
 
 TxIndex::DB::DB(size_t n_cache_size, bool f_memory, bool f_wipe) :
@@ -49,7 +49,7 @@ bool TxIndex::DB::WriteTxs(const std::vector<std::pair<uint256, CDiskTxPos>>& v_
 }
 
 TxIndex::TxIndex(std::unique_ptr<interfaces::Chain> chain, size_t n_cache_size, bool f_memory, bool f_wipe)
-    : BaseIndex(std::move(chain)), m_db(std::make_unique<TxIndex::DB>(n_cache_size, f_memory, f_wipe))
+    : BaseIndex(std::move(chain), "txindex"), m_db(std::make_unique<TxIndex::DB>(n_cache_size, f_memory, f_wipe))
 {}
 
 TxIndex::~TxIndex() = default;
@@ -79,7 +79,7 @@ bool TxIndex::FindTx(const uint256& tx_hash, uint256& block_hash, CTransactionRe
         return false;
     }
 
-    CAutoFile file(OpenBlockFile(postx, true), SER_DISK, CLIENT_VERSION);
+    CAutoFile file{m_chainstate->m_blockman.OpenBlockFile(postx, true), CLIENT_VERSION};
     if (file.IsNull()) {
         return error("%s: OpenBlockFile failed", __func__);
     }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2019-2021 The Bitcoin Core developers
+# Copyright (c) 2019-2022 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -23,6 +23,9 @@ from test_framework.util import (
 )
 
 class ReorgsRestoreTest(BitcoinTestFramework):
+    def add_options(self, parser):
+        self.add_wallet_options(parser)
+
     def set_test_params(self):
         self.num_nodes = 3
 
@@ -86,16 +89,16 @@ class ReorgsRestoreTest(BitcoinTestFramework):
         # Node0 wallet file is loaded on longest sync'ed node1
         self.stop_node(1)
         self.nodes[0].backupwallet(os.path.join(self.nodes[0].datadir, 'wallet.bak'))
-        shutil.copyfile(os.path.join(self.nodes[0].datadir, 'wallet.bak'), os.path.join(self.nodes[1].datadir, self.chain, self.default_wallet_name, self.wallet_data_filename))
+        shutil.copyfile(os.path.join(self.nodes[0].datadir, 'wallet.bak'), os.path.join(self.nodes[1].chain_path, self.default_wallet_name, self.wallet_data_filename))
         self.start_node(1)
         tx_after_reorg = self.nodes[1].gettransaction(txid)
         # Check that normal confirmed tx is confirmed again but with different blockhash
         assert_equal(tx_after_reorg["confirmations"], 2)
-        assert(tx_before_reorg["blockhash"] != tx_after_reorg["blockhash"])
+        assert tx_before_reorg["blockhash"] != tx_after_reorg["blockhash"]
         conflicted_after_reorg = self.nodes[1].gettransaction(conflicted_txid)
         # Check that conflicted tx is confirmed again with blockhash different than previously conflicting tx
         assert_equal(conflicted_after_reorg["confirmations"], 1)
-        assert(conflicting["blockhash"] != conflicted_after_reorg["blockhash"])
+        assert conflicting["blockhash"] != conflicted_after_reorg["blockhash"]
 
 if __name__ == '__main__':
     ReorgsRestoreTest().main()

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-2020 The Bitcoin Core developers
+// Copyright (c) 2015-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,7 +6,7 @@
 #define BITCOIN_PREVECTOR_H
 
 #include <assert.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <stdint.h>
 #include <string.h>
 
@@ -264,8 +264,10 @@ public:
         fill(item_ptr(0), other.begin(),  other.end());
     }
 
-    prevector(prevector<N, T, Size, Diff>&& other) {
-        swap(other);
+    prevector(prevector<N, T, Size, Diff>&& other) noexcept
+        : _union(std::move(other._union)), _size(other._size)
+    {
+        other._size = 0;
     }
 
     prevector& operator=(const prevector<N, T, Size, Diff>& other) {
@@ -276,8 +278,13 @@ public:
         return *this;
     }
 
-    prevector& operator=(prevector<N, T, Size, Diff>&& other) {
-        swap(other);
+    prevector& operator=(prevector<N, T, Size, Diff>&& other) noexcept {
+        if (!is_direct()) {
+            free(_union.indirect_contents.indirect);
+        }
+        _union = std::move(other._union);
+        _size = other._size;
+        other._size = 0;
         return *this;
     }
 

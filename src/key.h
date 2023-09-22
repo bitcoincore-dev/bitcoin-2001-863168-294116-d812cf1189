@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2021 The Bitcoin Core developers
+// Copyright (c) 2009-2022 The Bitcoin Core developers
 // Copyright (c) 2017 The Zcash developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -22,6 +22,12 @@
  */
 typedef std::vector<unsigned char, secure_allocator<unsigned char> > CPrivKey;
 
+/** Size of ECDH shared secrets. */
+constexpr static size_t ECDH_SECRET_SIZE = CSHA256::OUTPUT_SIZE;
+
+// Used to represent ECDH shared secret (ECDH_SECRET_SIZE bytes)
+using ECDHSecret = std::array<std::byte, ECDH_SECRET_SIZE>;
+
 /** An encapsulated private key. */
 class CKey
 {
@@ -42,10 +48,10 @@ public:
 private:
     //! Whether this private key is valid. We check for correctness when modifying the key
     //! data, so fValid should always correspond to the actual state.
-    bool fValid;
+    bool fValid{false};
 
     //! Whether the public key corresponding to this private key is (to be) compressed.
-    bool fCompressed;
+    bool fCompressed{false};
 
     //! The actual byte data
     std::vector<unsigned char, secure_allocator<unsigned char> > keydata;
@@ -55,7 +61,7 @@ private:
 
 public:
     //! Construct an invalid private key.
-    CKey() : fValid(false), fCompressed(false)
+    CKey()
     {
         // Important: vch must be 32 bytes in length to not break serialization
         keydata.resize(32);
@@ -146,7 +152,7 @@ public:
     bool SignSchnorr(const uint256& hash, Span<unsigned char> sig, const uint256* merkle_root, const uint256& aux) const;
 
     //! Derive BIP32 child key.
-    bool Derive(CKey& keyChild, ChainCode &ccChild, unsigned int nChild, const ChainCode& cc) const;
+    [[nodiscard]] bool Derive(CKey& keyChild, ChainCode &ccChild, unsigned int nChild, const ChainCode& cc) const;
 
     /**
      * Verify thoroughly whether a private key and a public key match.
@@ -156,6 +162,27 @@ public:
 
     //! Load private key and check that public key matches.
     bool Load(const CPrivKey& privkey, const CPubKey& vchPubKey, bool fSkipCheck);
+
+    /** Create an ellswift-encoded public key for this key, with specified entropy.
+     *
+     *  entropy must be a 32-byte span with additional entropy to use in the encoding. Every
+     *  public key has ~2^256 different encodings, and this function will deterministically pick
+     *  one of them, based on entropy. Note that even without truly random entropy, the
+     *  resulting encoding will be indistinguishable from uniform to any adversary who does not
+     *  know the private key (because the private key itself is always used as entropy as well).
+     */
+    EllSwiftPubKey EllSwiftCreate(Span<const std::byte> entropy) const;
+
+    /** Compute a BIP324-style ECDH shared secret.
+     *
+     *  - their_ellswift: EllSwiftPubKey that was received from the other side.
+     *  - our_ellswift: EllSwiftPubKey that was sent to the other side (must have been generated
+     *                  from *this using EllSwiftCreate()).
+     *  - initiating: whether we are the initiating party (true) or responding party (false).
+     */
+    ECDHSecret ComputeBIP324ECDHSecret(const EllSwiftPubKey& their_ellswift,
+                                       const EllSwiftPubKey& our_ellswift,
+                                       bool initiating) const;
 };
 
 struct CExtKey {
@@ -176,7 +203,7 @@ struct CExtKey {
 
     void Encode(unsigned char code[BIP32_EXTKEY_SIZE]) const;
     void Decode(const unsigned char code[BIP32_EXTKEY_SIZE]);
-    bool Derive(CExtKey& out, unsigned int nChild) const;
+    [[nodiscard]] bool Derive(CExtKey& out, unsigned int nChild) const;
     CExtPubKey Neuter() const;
     void SetSeed(Span<const std::byte> seed);
 };

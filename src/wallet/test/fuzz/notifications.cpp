@@ -1,4 +1,4 @@
-// Copyright (c) 2021 The Bitcoin Core developers
+// Copyright (c) 2021-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -69,18 +69,17 @@ struct FuzzedWallet {
     CScript GetScriptPubKey(FuzzedDataProvider& fuzzed_data_provider)
     {
         auto type{fuzzed_data_provider.PickValueInArray(OUTPUT_TYPES)};
-        BResult<CTxDestination> op_dest;
+        util::Result<CTxDestination> op_dest{util::Error{}};
         if (fuzzed_data_provider.ConsumeBool()) {
             op_dest = wallet->GetNewDestination(type, "");
         } else {
             op_dest = wallet->GetNewChangeDestination(type);
         }
-        assert(op_dest.HasRes());
-        return GetScriptForDestination(op_dest.GetObj());
+        return GetScriptForDestination(*Assert(op_dest));
     }
 };
 
-FUZZ_TARGET_INIT(wallet_notifications, initialize_setup)
+FUZZ_TARGET(wallet_notifications, .init = initialize_setup)
 {
     FuzzedDataProvider fuzzed_data_provider{buffer.data(), buffer.size()};
     // The total amount, to be distributed to the wallets a and b in txs
@@ -142,6 +141,10 @@ FUZZ_TARGET_INIT(wallet_notifications, initialize_setup)
                 info.prev_hash = &block.hashPrevBlock;
                 info.height = chain.size();
                 info.data = &block;
+                // Ensure that no blocks are skipped by the wallet by setting the chain's accumulated
+                // time to the maximum value. This ensures that the wallet's birth time is always
+                // earlier than this maximum time.
+                info.chain_time_max = std::numeric_limits<unsigned int>::max();
                 a.wallet->blockConnected(info);
                 b.wallet->blockConnected(info);
                 // Store the coins for the next block

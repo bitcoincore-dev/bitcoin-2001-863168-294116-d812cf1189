@@ -144,7 +144,6 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
 
     def run_test(self):
         self.wallet = MiniWallet(self.nodes[0])
-        self.generate(self.wallet, 101)
 
         self.test_uncache()
         self.test_add_spent()
@@ -173,7 +172,7 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
         invalid_tx.vin[0].prevout.hash = int(block_1_coinbase_txid, 16)
 
         self.log.info("hooking into the utxocache:uncache tracepoint")
-        ctx = USDT(path=str(self.options.bitcoind))
+        ctx = USDT(pid=self.nodes[0].process.pid)
         ctx.enable_probe(probe="utxocache:uncache",
                          fn_name="trace_utxocache_uncache")
         bpf = BPF(text=utxocache_changes_program, usdt_contexts=[ctx], debug=0)
@@ -189,13 +188,16 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
             nonlocal handle_uncache_succeeds
             event = ctypes.cast(data, ctypes.POINTER(UTXOCacheChange)).contents
             self.log.info(f"handle_utxocache_uncache(): {event}")
-            assert_equal(block_1_coinbase_txid, bytes(event.txid[::-1]).hex())
-            assert_equal(0, event.index)  # prevout index
-            assert_equal(EARLY_BLOCK_HEIGHT, event.height)
-            assert_equal(50 * COIN, event.value)
-            assert_equal(True, event.is_coinbase)
-
-            handle_uncache_succeeds += 1
+            try:
+                assert_equal(block_1_coinbase_txid, bytes(event.txid[::-1]).hex())
+                assert_equal(0, event.index)  # prevout index
+                assert_equal(EARLY_BLOCK_HEIGHT, event.height)
+                assert_equal(50 * COIN, event.value)
+                assert_equal(True, event.is_coinbase)
+            except AssertionError:
+                self.log.exception("Assertion failed")
+            else:
+                handle_uncache_succeeds += 1
 
         bpf["utxocache_uncache"].open_perf_buffer(handle_utxocache_uncache)
 
@@ -238,7 +240,7 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
 
         self.log.info(
             "hook into the utxocache:add and utxocache:spent tracepoints")
-        ctx = USDT(path=str(self.options.bitcoind))
+        ctx = USDT(pid=self.nodes[0].process.pid)
         ctx.enable_probe(probe="utxocache:add", fn_name="trace_utxocache_add")
         ctx.enable_probe(probe="utxocache:spent",
                          fn_name="trace_utxocache_spent")
@@ -250,35 +252,30 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
         # that the handle_* functions succeeded.
         EXPECTED_HANDLE_ADD_SUCCESS = 2
         EXPECTED_HANDLE_SPENT_SUCCESS = 1
-        handle_add_succeeds = 0
-        handle_spent_succeeds = 0
 
-        expected_utxocache_spents = []
         expected_utxocache_adds = []
+        expected_utxocache_spents = []
+
+        actual_utxocache_adds = []
+        actual_utxocache_spents = []
+
+        def compare_utxo_with_event(utxo, event):
+            """Compare a utxo dict to the event produced by BPF"""
+            assert_equal(utxo["txid"], bytes(event.txid[::-1]).hex())
+            assert_equal(utxo["index"], event.index)
+            assert_equal(utxo["height"], event.height)
+            assert_equal(utxo["value"], event.value)
+            assert_equal(utxo["is_coinbase"], event.is_coinbase)
 
         def handle_utxocache_add(_, data, __):
-            nonlocal handle_add_succeeds
             event = ctypes.cast(data, ctypes.POINTER(UTXOCacheChange)).contents
             self.log.info(f"handle_utxocache_add(): {event}")
-            add = expected_utxocache_adds.pop(0)
-            assert_equal(add["txid"], bytes(event.txid[::-1]).hex())
-            assert_equal(add["index"], event.index)
-            assert_equal(add["height"], event.height)
-            assert_equal(add["value"], event.value)
-            assert_equal(add["is_coinbase"], event.is_coinbase)
-            handle_add_succeeds += 1
+            actual_utxocache_adds.append(event)
 
         def handle_utxocache_spent(_, data, __):
-            nonlocal handle_spent_succeeds
             event = ctypes.cast(data, ctypes.POINTER(UTXOCacheChange)).contents
             self.log.info(f"handle_utxocache_spent(): {event}")
-            spent = expected_utxocache_spents.pop(0)
-            assert_equal(spent["txid"], bytes(event.txid[::-1]).hex())
-            assert_equal(spent["index"], event.index)
-            assert_equal(spent["height"], event.height)
-            assert_equal(spent["value"], event.value)
-            assert_equal(spent["is_coinbase"], event.is_coinbase)
-            handle_spent_succeeds += 1
+            actual_utxocache_spents.append(event)
 
         bpf["utxocache_add"].open_perf_buffer(handle_utxocache_add)
         bpf["utxocache_spent"].open_perf_buffer(handle_utxocache_spent)
@@ -314,19 +311,18 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
                         "is_coinbase": block_index == 0,
                     })
 
-        assert_equal(EXPECTED_HANDLE_ADD_SUCCESS, len(expected_utxocache_adds))
-        assert_equal(EXPECTED_HANDLE_SPENT_SUCCESS,
-                     len(expected_utxocache_spents))
-
         bpf.perf_buffer_poll(timeout=200)
-        bpf.cleanup()
+
+        assert_equal(EXPECTED_HANDLE_ADD_SUCCESS, len(expected_utxocache_adds), len(actual_utxocache_adds))
+        assert_equal(EXPECTED_HANDLE_SPENT_SUCCESS, len(expected_utxocache_spents), len(actual_utxocache_spents))
 
         self.log.info(
             f"check that we successfully traced {EXPECTED_HANDLE_ADD_SUCCESS} adds and {EXPECTED_HANDLE_SPENT_SUCCESS} spent")
-        assert_equal(0, len(expected_utxocache_adds))
-        assert_equal(0, len(expected_utxocache_spents))
-        assert_equal(EXPECTED_HANDLE_ADD_SUCCESS, handle_add_succeeds)
-        assert_equal(EXPECTED_HANDLE_SPENT_SUCCESS, handle_spent_succeeds)
+        for expected_utxo, actual_event in zip(expected_utxocache_adds + expected_utxocache_spents,
+                                               actual_utxocache_adds + actual_utxocache_spents):
+            compare_utxo_with_event(expected_utxo, actual_event)
+
+        bpf.cleanup()
 
     def test_flush(self):
         """ Tests the utxocache:flush tracepoint API.
@@ -334,7 +330,7 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
 
         self.log.info("test the utxocache:flush tracepoint API")
         self.log.info("hook into the utxocache:flush tracepoint")
-        ctx = USDT(path=str(self.options.bitcoind))
+        ctx = USDT(pid=self.nodes[0].process.pid)
         ctx.enable_probe(probe="utxocache:flush",
                          fn_name="trace_utxocache_flush")
         bpf = BPF(text=utxocache_flushes_program, usdt_contexts=[ctx], debug=0)
@@ -345,38 +341,42 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
         # that the handle_* functions succeeded.
         EXPECTED_HANDLE_FLUSH_SUCCESS = 3
         handle_flush_succeeds = 0
-        possible_cache_sizes = set()
-        expected_flushes = []
+        expected_flushes = list()
 
         def handle_utxocache_flush(_, data, __):
             nonlocal handle_flush_succeeds
             event = ctypes.cast(data, ctypes.POINTER(UTXOCacheFlush)).contents
             self.log.info(f"handle_utxocache_flush(): {event}")
-            expected = expected_flushes.pop(0)
-            assert_equal(expected["mode"], FLUSHMODE_NAME[event.mode])
-            possible_cache_sizes.remove(event.size)  # fails if size not in set
+            expected_flushes.remove({
+                "mode": FLUSHMODE_NAME[event.mode],
+                "for_prune": event.for_prune,
+                "size": event.size
+            })
             # sanity checks only
-            assert(event.memory > 0)
-            assert(event.duration > 0)
-            handle_flush_succeeds += 1
+            try:
+                assert event.memory > 0
+                assert event.duration > 0
+            except AssertionError:
+                self.log.exception("Assertion error")
+            else:
+                handle_flush_succeeds += 1
 
         bpf["utxocache_flush"].open_perf_buffer(handle_utxocache_flush)
 
         self.log.info("stop the node to flush the UTXO cache")
-        UTXOS_IN_CACHE = 104  # might need to be changed if the eariler tests are modified
+        UTXOS_IN_CACHE = 2 # might need to be changed if the earlier tests are modified
         # A node shutdown causes two flushes. One that flushes UTXOS_IN_CACHE
         # UTXOs and one that flushes 0 UTXOs. Normally the 0-UTXO-flush is the
         # second flush, however it can happen that the order changes.
-        possible_cache_sizes = {UTXOS_IN_CACHE, 0}
-        flush_for_shutdown = {"mode": "ALWAYS", "for_prune": False}
-        expected_flushes.extend([flush_for_shutdown, flush_for_shutdown])
+        expected_flushes.append({"mode": "ALWAYS", "for_prune": False, "size": UTXOS_IN_CACHE})
+        expected_flushes.append({"mode": "ALWAYS", "for_prune": False, "size": 0})
         self.stop_node(0)
 
         bpf.perf_buffer_poll(timeout=200)
+        bpf.cleanup()
 
         self.log.info("check that we don't expect additional flushes")
         assert_equal(0, len(expected_flushes))
-        assert_equal(0, len(possible_cache_sizes))
 
         self.log.info("restart the node with -prune")
         self.start_node(0, ["-fastprune=1", "-prune=1"])
@@ -384,12 +384,17 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
         BLOCKS_TO_MINE = 350
         self.log.info(f"mine {BLOCKS_TO_MINE} blocks to be able to prune")
         self.generate(self.wallet, BLOCKS_TO_MINE)
-        # we added BLOCKS_TO_MINE coinbase UTXOs to the cache
-        possible_cache_sizes = {BLOCKS_TO_MINE}
-        expected_flushes.append(
-            {"mode": "NONE", "for_prune": True, "size_fn": lambda x: x == BLOCKS_TO_MINE})
+
+        self.log.info("test the utxocache:flush tracepoint API with pruning")
+        self.log.info("hook into the utxocache:flush tracepoint")
+        ctx = USDT(pid=self.nodes[0].process.pid)
+        ctx.enable_probe(probe="utxocache:flush",
+                         fn_name="trace_utxocache_flush")
+        bpf = BPF(text=utxocache_flushes_program, usdt_contexts=[ctx], debug=0)
+        bpf["utxocache_flush"].open_perf_buffer(handle_utxocache_flush)
 
         self.log.info(f"prune blockchain to trigger a flush for pruning")
+        expected_flushes.append({"mode": "NONE", "for_prune": True, "size": 0})
         self.nodes[0].pruneblockchain(315)
 
         bpf.perf_buffer_poll(timeout=500)
@@ -398,7 +403,6 @@ class UTXOCacheTracepointTest(BitcoinTestFramework):
         self.log.info(
             f"check that we don't expect additional flushes and that the handle_* function succeeded")
         assert_equal(0, len(expected_flushes))
-        assert_equal(0, len(possible_cache_sizes))
         assert_equal(EXPECTED_HANDLE_FLUSH_SUCCESS, handle_flush_succeeds)
 
 

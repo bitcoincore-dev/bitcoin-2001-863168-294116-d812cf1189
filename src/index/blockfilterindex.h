@@ -1,15 +1,20 @@
-// Copyright (c) 2018-2021 The Bitcoin Core developers
+// Copyright (c) 2018-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_INDEX_BLOCKFILTERINDEX_H
 #define BITCOIN_INDEX_BLOCKFILTERINDEX_H
 
+#include <attributes.h>
 #include <blockfilter.h>
 #include <chain.h>
 #include <flatfile.h>
 #include <index/base.h>
 #include <util/hasher.h>
+
+#include <unordered_map>
+
+static const char* const DEFAULT_BLOCKFILTERINDEX = "0";
 
 /** Interval between compact filter checkpoints. See BIP 157. */
 static constexpr int CFCHECKPT_INTERVAL = 1000;
@@ -25,7 +30,6 @@ class BlockFilterIndex final : public BaseIndex
 {
 private:
     BlockFilterType m_filter_type;
-    std::string m_name;
     std::unique_ptr<BaseIndex::DB> m_db;
 
     FlatFilePos m_next_filter_pos;
@@ -49,9 +53,7 @@ protected:
 
     bool CustomRewind(const interfaces::BlockKey& current_tip, const interfaces::BlockKey& new_tip) override;
 
-    BaseIndex::DB& GetDB() const override { return *m_db; }
-
-    const char* GetName() const override { return m_name.c_str(); }
+    BaseIndex::DB& GetDB() const LIFETIMEBOUND override { return *m_db; }
 
 public:
     /** Constructs the index, which becomes available to be queried. */

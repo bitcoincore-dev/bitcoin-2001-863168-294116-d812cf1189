@@ -1,23 +1,24 @@
-// Copyright (c) 2020-2021 The Bitcoin Core developers
+// Copyright (c) 2020-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include <common/args.h>
 #include <i2p.h>
 #include <netaddress.h>
 #include <netbase.h>
 #include <test/fuzz/FuzzedDataProvider.h>
 #include <test/fuzz/fuzz.h>
 #include <test/fuzz/util.h>
+#include <test/fuzz/util/net.h>
 #include <test/util/setup_common.h>
-#include <threadinterrupt.h>
-#include <util/system.h>
+#include <util/threadinterrupt.h>
 
 void initialize_i2p()
 {
     static const auto testing_setup = MakeNoLogFileContext<>();
 }
 
-FUZZ_TARGET_INIT(i2p, initialize_i2p)
+FUZZ_TARGET(i2p, .init = initialize_i2p)
 {
     FuzzedDataProvider fuzzed_data_provider{buffer.data(), buffer.size()};
 

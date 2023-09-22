@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2015-2021 The Bitcoin Core developers
+# Copyright (c) 2015-2022 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test multisig RPCs"""
@@ -8,38 +8,39 @@ import itertools
 import json
 import os
 
+from test_framework.address import address_to_scriptpubkey
 from test_framework.blocktools import COINBASE_MATURITY
 from test_framework.authproxy import JSONRPCException
 from test_framework.descriptors import descsum_create, drop_origins
-from test_framework.key import ECPubKey, ECKey
+from test_framework.key import ECPubKey
 from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import (
     assert_raises_rpc_error,
     assert_equal,
 )
-from test_framework.wallet_util import bytes_to_wif
+from test_framework.wallet_util import generate_keypair
 from test_framework.wallet import (
     MiniWallet,
     getnewdestination,
 )
 
 class RpcCreateMultiSigTest(BitcoinTestFramework):
+    def add_options(self, parser):
+        self.add_wallet_options(parser)
+
     def set_test_params(self):
         self.setup_clean_chain = True
         self.num_nodes = 3
         self.supports_cli = False
-        if self.is_bdb_compiled():
-            self.requires_wallet = True
 
     def get_keys(self):
         self.pub = []
         self.priv = []
         node0, node1, node2 = self.nodes
         for _ in range(self.nkeys):
-            k = ECKey()
-            k.generate()
-            self.pub.append(k.get_pubkey().get_bytes().hex())
-            self.priv.append(bytes_to_wif(k.get_bytes(), k.is_compressed))
+            privkey, pubkey = generate_keypair(wif=True)
+            self.pub.append(pubkey.hex())
+            self.priv.append(privkey)
         if self.is_bdb_compiled():
             self.final = node2.getnewaddress()
         else:
@@ -50,6 +51,7 @@ class RpcCreateMultiSigTest(BitcoinTestFramework):
         self.wallet = MiniWallet(test_node=node0)
 
         if self.is_bdb_compiled():
+            self.import_deterministic_coinbase_privkeys()
             self.check_addmultisigaddress_errors()
 
         self.log.info('Generating blocks ...')
@@ -155,7 +157,7 @@ class RpcCreateMultiSigTest(BitcoinTestFramework):
                 try:
                     node1.loadwallet('wmulti')
                 except JSONRPCException as e:
-                    path = os.path.join(self.options.tmpdir, "node1", "regtest", "wallets", "wmulti")
+                    path = self.nodes[1].wallets_path / "wmulti"
                     if e.error['code'] == -18 and "Wallet file verification failed. Failed to load database path '{}'. Path does not exist.".format(path) in e.error['message']:
                         node1.createwallet(wallet_name='wmulti', disable_private_keys=True)
                     else:
@@ -191,8 +193,8 @@ class RpcCreateMultiSigTest(BitcoinTestFramework):
             assert mredeemw == mredeem
             wmulti.unloadwallet()
 
-        spk = bytes.fromhex(node0.validateaddress(madd)["scriptPubKey"])
-        txid, _ = self.wallet.send_to(from_node=self.nodes[0], scriptPubKey=spk, amount=1300)
+        spk = address_to_scriptpubkey(madd)
+        txid = self.wallet.send_to(from_node=self.nodes[0], scriptPubKey=spk, amount=1300)["txid"]
         tx = node0.getrawtransaction(txid, True)
         vout = [v["n"] for v in tx["vout"] if madd == v["scriptPubKey"]["address"]]
         assert len(vout) == 1

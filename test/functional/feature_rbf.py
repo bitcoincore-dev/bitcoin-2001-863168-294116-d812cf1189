@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2021 The Bitcoin Core developers
+# Copyright (c) 2014-2022 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 """Test the RBF code."""
@@ -21,6 +21,9 @@ from test_framework.address import ADDRESS_BCRT1_UNSPENDABLE
 
 MAX_REPLACEMENT_LIMIT = 100
 class ReplaceByFeeTest(BitcoinTestFramework):
+    def add_options(self, parser):
+        self.add_wallet_options(parser)
+
     def set_test_params(self):
         self.num_nodes = 2
         self.extra_args = [
@@ -39,10 +42,6 @@ class ReplaceByFeeTest(BitcoinTestFramework):
 
     def run_test(self):
         self.wallet = MiniWallet(self.nodes[0])
-        # the pre-mined test framework chain contains coinbase outputs to the
-        # MiniWallet's default address in blocks 76-100 (see method
-        # BitcoinTestFramework._initialize_chain())
-        self.wallet.rescan_utxos()
 
         self.log.info("Running test simple doublespend...")
         self.test_simple_doublespend()
@@ -94,7 +93,7 @@ class ReplaceByFeeTest(BitcoinTestFramework):
         confirmed - txout created will be confirmed in the blockchain;
                     unconfirmed otherwise.
         """
-        txid, n = self.wallet.send_to(from_node=node, scriptPubKey=scriptPubKey or self.wallet.get_scriptPubKey(), amount=amount)
+        tx = self.wallet.send_to(from_node=node, scriptPubKey=scriptPubKey or self.wallet.get_scriptPubKey(), amount=amount)
 
         if confirmed:
             mempool_size = len(node.getrawmempool())
@@ -106,7 +105,7 @@ class ReplaceByFeeTest(BitcoinTestFramework):
                 assert new_size < mempool_size
                 mempool_size = new_size
 
-        return self.wallet.get_utxo(txid=txid, vout=n)
+        return self.wallet.get_utxo(txid=tx["txid"], vout=tx["sent_vout"])
 
     def test_simple_doublespend(self):
         """Simple doublespend"""
@@ -386,26 +385,25 @@ class ReplaceByFeeTest(BitcoinTestFramework):
 
     def test_too_many_replacements_with_default_mempool_params(self):
         """
-        Test rule 5 of BIP125 (do not allow replacements that cause more than 100
+        Test rule 5 (do not allow replacements that cause more than 100
         evictions) without having to rely on non-default mempool parameters.
 
         In order to do this, create a number of "root" UTXOs, and then hang
         enough transactions off of each root UTXO to exceed the MAX_REPLACEMENT_LIMIT.
         Then create a conflicting RBF replacement transaction.
         """
-        normal_node = self.nodes[1]
-        wallet = MiniWallet(normal_node)
-        wallet.rescan_utxos()
         # Clear mempools to avoid cross-node sync failure.
         for node in self.nodes:
             self.generate(node, 1)
+        normal_node = self.nodes[1]
+        wallet = MiniWallet(normal_node)
 
         # This has to be chosen so that the total number of transactions can exceed
         # MAX_REPLACEMENT_LIMIT without having any one tx graph run into the descendant
         # limit; 10 works.
         num_tx_graphs = 10
 
-        # (Number of transactions per graph, BIP125 rule 5 failure expected)
+        # (Number of transactions per graph, rule 5 failure expected)
         cases = [
             # Test the base case of evicting fewer than MAX_REPLACEMENT_LIMIT
             # transactions.

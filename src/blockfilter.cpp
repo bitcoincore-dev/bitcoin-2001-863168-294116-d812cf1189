@@ -1,18 +1,20 @@
-// Copyright (c) 2018-2021 The Bitcoin Core developers
+// Copyright (c) 2018-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <mutex>
-#include <sstream>
 #include <set>
 
 #include <blockfilter.h>
 #include <crypto/siphash.h>
 #include <hash.h>
+#include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <script/script.h>
 #include <streams.h>
+#include <undo.h>
 #include <util/golombrice.h>
+#include <util/string.h>
 
 /// SerType used to serialize parameters in GCS filter encoding.
 static constexpr int GCS_SER_TYPE = SER_NETWORK;
@@ -27,7 +29,7 @@ static const std::map<BlockFilterType, std::string> g_filter_types = {
 uint64_t GCSFilter::HashToRange(const Element& element) const
 {
     uint64_t hash = CSipHasher(m_params.m_siphash_k0, m_params.m_siphash_k1)
-        .Write(element.data(), element.size())
+        .Write(element)
         .Finalize();
     return FastRange64(hash, m_F);
 }
@@ -169,7 +171,7 @@ const std::set<BlockFilterType>& AllBlockFilterTypes()
 
     static std::once_flag flag;
     std::call_once(flag, []() {
-            for (auto entry : g_filter_types) {
+            for (const auto& entry : g_filter_types) {
                 types.insert(entry.first);
             }
         });
@@ -179,19 +181,7 @@ const std::set<BlockFilterType>& AllBlockFilterTypes()
 
 const std::string& ListBlockFilterTypes()
 {
-    static std::string type_list;
-
-    static std::once_flag flag;
-    std::call_once(flag, []() {
-            std::stringstream ret;
-            bool first = true;
-            for (auto entry : g_filter_types) {
-                if (!first) ret << ", ";
-                ret << entry.second;
-                first = false;
-            }
-            type_list = ret.str();
-        });
+    static std::string type_list{Join(g_filter_types, ", ", [](const auto& entry) { return entry.second; })};
 
     return type_list;
 }
@@ -259,21 +249,10 @@ bool BlockFilter::BuildParams(GCSFilter::Params& params) const
 
 uint256 BlockFilter::GetHash() const
 {
-    const std::vector<unsigned char>& data = GetEncodedFilter();
-
-    uint256 result;
-    CHash256().Write(data).Finalize(result);
-    return result;
+    return Hash(GetEncodedFilter());
 }
 
 uint256 BlockFilter::ComputeHeader(const uint256& prev_header) const
 {
-    const uint256& filter_hash = GetHash();
-
-    uint256 result;
-    CHash256()
-        .Write(filter_hash)
-        .Write(prev_header)
-        .Finalize(result);
-    return result;
+    return Hash(GetHash(), prev_header);
 }

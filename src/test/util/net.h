@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2021 The Bitcoin Core developers
+// Copyright (c) 2020-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -29,7 +29,10 @@ struct ConnmanTestMsg : public CConnman {
     {
         LOCK(m_nodes_mutex);
         m_nodes.push_back(&node);
+
+        if (node.IsManualOrFullOutboundConn()) ++m_network_conn_counts[node.addr.GetNetwork()];
     }
+
     void ClearTestNodes()
     {
         LOCK(m_nodes_mutex);
@@ -43,15 +46,16 @@ struct ConnmanTestMsg : public CConnman {
                    bool successfully_connected,
                    ServiceFlags remote_services,
                    ServiceFlags local_services,
-                   NetPermissionFlags permission_flags,
                    int32_t version,
-                   bool relay_txs);
+                   bool relay_txs)
+        EXCLUSIVE_LOCKS_REQUIRED(NetEventsInterface::g_msgproc_mutex);
 
-    void ProcessMessagesOnce(CNode& node) { m_msgproc->ProcessMessages(&node, flagInterruptMsgProc); }
+    void ProcessMessagesOnce(CNode& node) EXCLUSIVE_LOCKS_REQUIRED(NetEventsInterface::g_msgproc_mutex) { m_msgproc->ProcessMessages(&node, flagInterruptMsgProc); }
 
     void NodeReceiveMsgBytes(CNode& node, Span<const uint8_t> msg_bytes, bool& complete) const;
 
-    bool ReceiveMsgFrom(CNode& node, CSerializedNetMsg& ser_msg) const;
+    bool ReceiveMsgFrom(CNode& node, CSerializedNetMsg&& ser_msg) const;
+    void FlushSendBuffer(CNode& node) const;
 };
 
 constexpr ServiceFlags ALL_SERVICE_FLAGS[]{
@@ -103,7 +107,7 @@ constexpr auto ALL_NETWORKS = std::array{
 class StaticContentsSock : public Sock
 {
 public:
-    explicit StaticContentsSock(const std::string& contents) : m_contents{contents}, m_consumed{0}
+    explicit StaticContentsSock(const std::string& contents) : m_contents{contents}
     {
         // Just a dummy number that is not INVALID_SOCKET.
         m_socket = INVALID_SOCKET - 1;
@@ -166,6 +170,10 @@ public:
         return 0;
     }
 
+    bool SetNonBlocking() const override { return true; }
+
+    bool IsSelectable() const override { return true; }
+
     bool Wait(std::chrono::milliseconds timeout,
               Event requested,
               Event* occurred = nullptr) const override
@@ -187,7 +195,7 @@ public:
 
 private:
     const std::string m_contents;
-    mutable size_t m_consumed;
+    mutable size_t m_consumed{0};
 };
 
 std::vector<NodeEvictionCandidate> GetRandomNodeEvictionCandidates(int n_candidates, FastRandomContext& random_context);

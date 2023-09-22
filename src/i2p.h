@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2021 The Bitcoin Core developers
+// Copyright (c) 2020-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,11 +6,11 @@
 #define BITCOIN_I2P_H
 
 #include <compat/compat.h>
-#include <fs.h>
 #include <netaddress.h>
 #include <sync.h>
-#include <threadinterrupt.h>
+#include <util/fs.h>
 #include <util/sock.h>
+#include <util/threadinterrupt.h>
 
 #include <memory>
 #include <optional>
@@ -69,6 +69,19 @@ public:
     Session(const fs::path& private_key_file,
             const CService& control_host,
             CThreadInterrupt* interrupt);
+
+    /**
+     * Construct a transient session which will generate its own I2P private key
+     * rather than read the one from disk (it will not be saved on disk either and
+     * will be lost once this object is destroyed). This will not initiate any IO,
+     * the session will be lazily created later when first used.
+     * @param[in] control_host Location of the SAM proxy.
+     * @param[in,out] interrupt If this is signaled then all operations are canceled as soon as
+     * possible and executing methods throw an exception. Notice: only a pointer to the
+     * `CThreadInterrupt` object is saved, so it must not be destroyed earlier than this
+     * `Session` object.
+     */
+    Session(const CService& control_host, CThreadInterrupt* interrupt);
 
     /**
      * Destroy the session, closing the internally used sockets. The sockets that have been
@@ -262,6 +275,12 @@ private:
      * SAM session id.
      */
     std::string m_session_id GUARDED_BY(m_mutex);
+
+    /**
+     * Whether this is a transient session (the I2P private key will not be
+     * read or written to disk).
+     */
+    const bool m_transient;
 };
 
 } // namespace sam

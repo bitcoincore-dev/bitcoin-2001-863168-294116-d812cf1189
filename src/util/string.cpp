@@ -1,14 +1,14 @@
-// Copyright (c) 2019 The Bitcoin Core developers
+// Copyright (c) 2019-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <util/string.h>
 
-#include <boost/algorithm/string/replace.hpp>
-
+#include <regex>
 #include <string>
 
-void ReplaceAll(std::string& in_out, std::string_view search, std::string_view substitute)
+void ReplaceAll(std::string& in_out, const std::string& search, const std::string& substitute)
 {
-    boost::replace_all(in_out, search, substitute);
+    if (search.empty()) return;
+    in_out = std::regex_replace(in_out, std::regex(search), substitute);
 }

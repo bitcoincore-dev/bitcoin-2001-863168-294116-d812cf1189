@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2021 The Bitcoin Core developers
+// Copyright (c) 2020-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -23,7 +23,7 @@ namespace {
 uint64_t HashToRange(const std::vector<uint8_t>& element, const uint64_t f)
 {
     const uint64_t hash = CSipHasher(0x0706050403020100ULL, 0x0F0E0D0C0B0A0908ULL)
-                              .Write(element.data(), element.size())
+                              .Write(element)
                               .Finalize();
     return FastRange64(hash, f);
 }

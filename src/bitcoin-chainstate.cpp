@@ -11,26 +11,32 @@
 //
 // It is part of the libbitcoinkernel project.
 
+#include <kernel/chainparams.h>
+#include <kernel/chainstatemanager_opts.h>
 #include <kernel/checks.h>
 #include <kernel/context.h>
+#include <kernel/validation_cache_sizes.h>
 
-#include <chainparams.h>
 #include <consensus/validation.h>
 #include <core_io.h>
 #include <node/blockstorage.h>
 #include <node/caches.h>
 #include <node/chainstate.h>
+#include <random.h>
 #include <scheduler.h>
 #include <script/sigcache.h>
-#include <util/system.h>
+#include <util/chaintype.h>
 #include <util/thread.h>
 #include <validation.h>
 #include <validationinterface.h>
 
 #include <cassert>
+#include <cstdint>
 #include <filesystem>
 #include <functional>
 #include <iosfwd>
+#include <memory>
+#include <string>
 
 int main(int argc, char* argv[])
 {
@@ -46,24 +52,21 @@ int main(int argc, char* argv[])
     }
     std::filesystem::path abs_datadir = std::filesystem::absolute(argv[1]);
     std::filesystem::create_directories(abs_datadir);
-    gArgs.ForceSetArg("-datadir", abs_datadir.string());
 
 
-    // SETUP: Misc Globals
-    SelectParams(CBaseChainParams::MAIN);
-    const CChainParams& chainparams = Params();
-
+    // SETUP: Context
     kernel::Context kernel_context{};
     // We can't use a goto here, but we can use an assert since none of the
     // things instantiated so far requires running the epilogue to be torn down
     // properly
-    assert(!kernel::SanityChecks(kernel_context).has_value());
+    assert(kernel::SanityChecks(kernel_context));
 
     // Necessary for CheckInputScripts (eventually called by ProcessNewBlock),
     // which will try the script cache first and fall back to actually
     // performing the check with the signature cache.
-    InitSignatureCache();
-    InitScriptExecutionCache();
+    kernel::ValidationCacheSizes validation_cache_sizes{};
+    Assert(InitSignatureCache(validation_cache_sizes.signature_cache_bytes));
+    Assert(InitScriptExecutionCache(validation_cache_sizes.script_execution_cache_bytes));
 
 
     // SETUP: Scheduling and Background Signals
@@ -76,13 +79,53 @@ int main(int argc, char* argv[])
 
     GetMainSignals().RegisterBackgroundSignalScheduler(scheduler);
 
+    class KernelNotifications : public kernel::Notifications
+    {
+    public:
+        kernel::InterruptResult blockTip(SynchronizationState, CBlockIndex&) override
+        {
+            std::cout << "Block tip changed" << std::endl;
+            return {};
+        }
+        void headerTip(SynchronizationState, int64_t height, int64_t timestamp, bool presync) override
+        {
+            std::cout << "Header tip changed: " << height << ", " << timestamp << ", " << presync << std::endl;
+        }
+        void progress(const bilingual_str& title, int progress_percent, bool resume_possible) override
+        {
+            std::cout << "Progress: " << title.original << ", " << progress_percent << ", " << resume_possible << std::endl;
+        }
+        void warning(const bilingual_str& warning) override
+        {
+            std::cout << "Warning: " << warning.original << std::endl;
+        }
+        void flushError(const std::string& debug_message) override
+        {
+            std::cerr << "Error flushing block data to disk: " << debug_message << std::endl;
+        }
+        void fatalError(const std::string& debug_message, const bilingual_str& user_message) override
+        {
+            std::cerr << "Error: " << debug_message << std::endl;
+            std::cerr << (user_message.empty() ? "A fatal internal error occurred." : user_message.original) << std::endl;
+        }
+    };
+    auto notifications = std::make_unique<KernelNotifications>();
+
 
     // SETUP: Chainstate
+    auto chainparams = CChainParams::Main();
     const ChainstateManager::Options chainman_opts{
-        .chainparams = chainparams,
-        .adjusted_time_callback = static_cast<int64_t (*)()>(GetTime),
+        .chainparams = *chainparams,
+        .datadir = abs_datadir,
+        .adjusted_time_callback = NodeClock::now,
+        .notifications = *notifications,
     };
-    ChainstateManager chainman{chainman_opts};
+    const node::BlockManager::Options blockman_opts{
+        .chainparams = chainman_opts.chainparams,
+        .blocks_dir = abs_datadir / "blocks",
+        .notifications = chainman_opts.notifications,
+    };
+    ChainstateManager chainman{kernel_context.interrupt, chainman_opts, blockman_opts};
 
     node::CacheSizes cache_sizes;
     cache_sizes.block_tree_db = 2 << 20;
@@ -102,7 +145,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    for (CChainState* chainstate : WITH_LOCK(::cs_main, return chainman.GetAll())) {
+    for (Chainstate* chainstate : WITH_LOCK(::cs_main, return chainman.GetAll())) {
         BlockValidationState state;
         if (!chainstate->ActivateBestChain(state, nullptr)) {
             std::cerr << "Failed to connect best block (" << state.ToString() << ")" << std::endl;
@@ -113,12 +156,15 @@ int main(int argc, char* argv[])
     // Main program logic starts here
     std::cout
         << "Hello! I'm going to print out some information about your datadir." << std::endl
-        << "\t" << "Path: " << gArgs.GetDataDirNet() << std::endl
+        << "\t"
+        << "Path: " << abs_datadir << std::endl;
+    {
+        LOCK(chainman.GetMutex());
+        std::cout
         << "\t" << "Reindexing: " << std::boolalpha << node::fReindex.load() << std::noboolalpha << std::endl
         << "\t" << "Snapshot Active: " << std::boolalpha << chainman.IsSnapshotActive() << std::noboolalpha << std::endl
         << "\t" << "Active Height: " << chainman.ActiveHeight() << std::endl
-        << "\t" << "Active IBD: " << std::boolalpha << chainman.ActiveChainstate().IsInitialBlockDownload() << std::noboolalpha << std::endl;
-    {
+        << "\t" << "Active IBD: " << std::boolalpha << chainman.IsInitialBlockDownload() << std::noboolalpha << std::endl;
         CBlockIndex* tip = chainman.ActiveTip();
         if (tip) {
             std::cout << "\t" << tip->ToString() << std::endl;
@@ -191,7 +237,7 @@ int main(int argc, char* argv[])
         bool new_block;
         auto sc = std::make_shared<submitblock_StateCatcher>(block.GetHash());
         RegisterSharedValidationInterface(sc);
-        bool accepted = chainman.ProcessNewBlock(blockptr, /*force_processing=*/true, /*new_block=*/&new_block);
+        bool accepted = chainman.ProcessNewBlock(blockptr, /*force_processing=*/true, /*min_pow_checked=*/true, /*new_block=*/&new_block);
         UnregisterSharedValidationInterface(sc);
         if (!new_block && accepted) {
             std::cerr << "duplicate" << std::endl;
@@ -205,6 +251,9 @@ int main(int argc, char* argv[])
         switch (sc->state.GetResult()) {
         case BlockValidationResult::BLOCK_RESULT_UNSET:
             std::cerr << "initial value. Block has not yet been rejected" << std::endl;
+            break;
+        case BlockValidationResult::BLOCK_HEADER_LOW_WORK:
+            std::cerr << "the block header may be on a too-little-work chain" << std::endl;
             break;
         case BlockValidationResult::BLOCK_CONSENSUS:
             std::cerr << "invalid by consensus rules (excluding any below reasons)" << std::endl;
@@ -240,13 +289,13 @@ epilogue:
     // Without this precise shutdown sequence, there will be a lot of nullptr
     // dereferencing and UB.
     scheduler.stop();
-    if (chainman.m_load_block.joinable()) chainman.m_load_block.join();
+    if (chainman.m_thread_load.joinable()) chainman.m_thread_load.join();
     StopScriptCheckWorkerThreads();
 
     GetMainSignals().FlushBackgroundCallbacks();
     {
         LOCK(cs_main);
-        for (CChainState* chainstate : chainman.GetAll()) {
+        for (Chainstate* chainstate : chainman.GetAll()) {
             if (chainstate->CanFlushToDisk()) {
                 chainstate->ForceFlushStateToDisk();
                 chainstate->ResetCoinsViews();

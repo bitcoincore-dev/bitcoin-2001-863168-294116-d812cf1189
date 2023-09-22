@@ -96,14 +96,6 @@ Skip if you don't intend to use the GUI.
 brew install qt@5
 ```
 
-Ensure that the `qt@5` package is installed, not the `qt` package.
-If 'qt' is installed, the build process will fail.
-if installed, remove the `qt` package with the following command:
-
-``` bash
-brew uninstall qt
-```
-
 Note: Building with Qt binaries downloaded from the Qt website is not officially supported.
 See the notes in [#7714](https://github.com/bitcoin/bitcoin/issues/7714).
 
@@ -171,14 +163,8 @@ brew install python
 
 #### Deploy Dependencies
 
-You can deploy a `.dmg` containing the Bitcoin Core application using `make deploy`.
-This command depends on a couple of python packages, so it is required that you have `python` installed.
-
-Ensuring that `python` is installed, you can install the deploy dependencies by running the following commands in your terminal:
-
-``` bash
-pip3 install ds_store mac_alias
-```
+You can deploy a `.zip` containing the Bitcoin Core application using `make deploy`.
+It is required that you have `python` installed.
 
 ## Building Bitcoin Core
 
@@ -238,7 +224,7 @@ make check  # Run tests if Python 3 is available
 
 ### 3. Deploy (optional)
 
-You can also create a  `.dmg` containing the `.app` bundle by running the following command:
+You can also create a  `.zip` containing the `.app` bundle by running the following command:
 
 ``` bash
 make deploy
