@@ -955,7 +955,7 @@ op_success_overrides = {
 
 
 def pprint_tx(tx: CTransaction, should_print: bool = True) -> str:
-    s = f"CTransaction: (nVersion={tx.nVersion})\n"
+    s = f"CTransaction: (nVersion={tx.nVersion}, {int(len(tx.serialize().hex()) / 2)} bytes)\n"
     s += "  vin:\n"
     for i, inp in enumerate(tx.vin):
         s += f"    - [{i}] {inp}\n"
@@ -965,7 +965,8 @@ def pprint_tx(tx: CTransaction, should_print: bool = True) -> str:
 
     s += "  witnesses:\n"
     for i, wit in enumerate(tx.wit.vtxinwit):
-        s += f"    - [{i}]\n"
+        witbytes = sum(len(s) or 1 for s in wit.scriptWitness.stack)
+        s += f"    - [{i}] ({witbytes} bytes, {witbytes / 4} vB)\n"
         for j, item in enumerate(wit.scriptWitness.stack):
             if type(item) == bytes:
                 scriptstr = repr(CScript([item]))
@@ -974,7 +975,7 @@ def pprint_tx(tx: CTransaction, should_print: bool = True) -> str:
             else:
                 raise NotImplementedError
 
-            s += f"      - [{i}.{j}] {scriptstr}\n"
+            s += f"      - [{i}.{j}] ({len(item)} bytes) {scriptstr}\n"
 
     s += f"  nLockTime: {tx.nLockTime}\n"
 
