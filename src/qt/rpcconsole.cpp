@@ -1202,6 +1202,7 @@ void RPCConsole::updateDetailWidget()
     }
     ui->peerConnectionType->setText(GUIUtil::ConnectionTypeToQString(stats->nodeStats.m_conn_type, /*prepend_direction=*/true));
     ui->peerTransportType->setText(QString::fromStdString(TransportTypeAsString(stats->nodeStats.m_transport_type)));
+    ui->peerSessionId->setText(QString::fromStdString(stats->nodeStats.m_session_id));
     ui->peerNetwork->setText(GUIUtil::NetworkToQString(stats->nodeStats.m_network));
     if (stats->nodeStats.m_permission_flags == NetPermissionFlags::None) {
         ui->peerPermissions->setText(ts.na);
