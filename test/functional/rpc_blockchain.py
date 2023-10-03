@@ -437,6 +437,7 @@ class BlockchainTest(BitcoinTestFramework):
 
     def _test_getnetworkhashps(self):
         self.log.info("Test getnetworkhashps")
+        hashes_per_second = self.nodes[0].getnetworkhashps()
         assert_raises_rpc_error(
             -3,
             textwrap.dedent("""
@@ -448,6 +449,9 @@ class BlockchainTest(BitcoinTestFramework):
             """).strip(),
             lambda: self.nodes[0].getnetworkhashps("a", []),
         )
+        # This should be 2 hashes every 10 minutes or 1/300
+        assert abs(hashes_per_second * 300 - 1) < 0.0001
+
         assert_raises_rpc_error(
             -8,
             "Block does not exist at specified height",
@@ -472,10 +476,6 @@ class BlockchainTest(BitcoinTestFramework):
         # Genesis block height estimate should return 0
         hashes_per_second = self.nodes[0].getnetworkhashps(100, 0)
         assert_equal(hashes_per_second, 0)
-
-        # This should be 2 hashes every 10 minutes or 1/300
-        hashes_per_second = self.nodes[0].getnetworkhashps()
-        assert abs(hashes_per_second * 300 - 1) < 0.0001
 
         # Ensure long lookups get truncated to chain length
         hashes_per_second = self.nodes[0].getnetworkhashps(self.nodes[0].getblockcount() + 1000)
