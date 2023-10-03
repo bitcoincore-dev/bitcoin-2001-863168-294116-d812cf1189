@@ -1104,29 +1104,27 @@ CWalletTx* CWallet::AddToWallet(CTransactionRef tx, const TxState& state, const 
 
 #if HAVE_SYSTEM
     // notify an external script when a wallet transaction comes in or is updated
-    std::string strCmd = m_notify_tx_changed_script;
-
-    if (!strCmd.empty())
-    {
-        ReplaceAll(strCmd, "%s", hash.GetHex());
-        if (auto* conf = wtx.state<TxStateConfirmed>())
-        {
-            ReplaceAll(strCmd, "%b", conf->confirmed_block_hash.GetHex());
-            ReplaceAll(strCmd, "%h", ToString(conf->confirmed_block_height));
+    if (!m_notify_tx_changed_scripts.empty()) {
+        const std::string walletname_escaped = ShellEscape(GetName());
+        const std::string txid_hex = hash.GetHex();
+        std::string blockhash_hex, blockheight_str;
+        if (auto* conf = wtx.state<TxStateConfirmed>()) {
+            blockhash_hex = conf->confirmed_block_hash.GetHex();
+            blockheight_str = ToString(conf->confirmed_block_height);
         } else {
-            ReplaceAll(strCmd, "%b", "unconfirmed");
-            ReplaceAll(strCmd, "%h", "-1");
+            blockhash_hex = "unconfirmed";
+            blockheight_str = "-1";
         }
-#ifndef WIN32
-        // Substituting the wallet name isn't currently supported on windows
-        // because windows shell escaping has not been implemented yet:
-        // https://github.com/bitcoin/bitcoin/pull/13339#issuecomment-537384875
-        // A few ways it could be implemented in the future are described in:
-        // https://github.com/bitcoin/bitcoin/pull/13339#issuecomment-461288094
-        ReplaceAll(strCmd, "%w", ShellEscape(GetName()));
-#endif
-        std::thread t(runCommand, strCmd);
-        t.detach(); // thread runs free
+
+        for (std::string command : m_notify_tx_changed_scripts) {
+            ReplaceAll(command, "%s", txid_hex);
+            ReplaceAll(command, "%b", blockhash_hex);
+            ReplaceAll(command, "%h", blockheight_str);
+            ReplaceAll(command, "%w", walletname_escaped);
+
+            std::thread t(runCommand, command);
+            t.detach(); // thread runs free
+        }
     }
 #endif
 
@@ -2916,7 +2914,7 @@ std::shared_ptr<CWallet> CWallet::Create(WalletContext& context, const std::stri
     // should be possible to use std::allocate_shared.
     std::shared_ptr<CWallet> walletInstance(new CWallet(chain, name, std::move(database)), ReleaseWallet);
     walletInstance->m_keypool_size = std::max(args.GetIntArg("-keypool", DEFAULT_KEYPOOL_SIZE), int64_t{1});
-    walletInstance->m_notify_tx_changed_script = args.GetArg("-walletnotify", "");
+    walletInstance->m_notify_tx_changed_scripts = args.GetArgs("-walletnotify");
 
     // Load wallet
     bool rescan_required = false;
@@ -4009,7 +4007,7 @@ bool CWallet::ApplyMigrationData(MigrationData& data, bilingual_str& error)
                 return false;
             }
         } else {
-            // Labels for everything else (send) should be cloned to all
+            // Labels for everything else ("send") should be cloned to all
             if (data.watchonly_wallet) {
                 LOCK(data.watchonly_wallet->cs_wallet);
                 // Add to the watchonly. Preserve the labels, purpose, and change-ness
@@ -4018,7 +4016,6 @@ bool CWallet::ApplyMigrationData(MigrationData& data, bilingual_str& error)
                 if (!addr_pair.second.IsChange()) {
                     data.watchonly_wallet->m_address_book[addr_pair.first].SetLabel(label);
                 }
-                continue;
             }
             if (data.solvable_wallet) {
                 LOCK(data.solvable_wallet->cs_wallet);
@@ -4028,7 +4025,6 @@ bool CWallet::ApplyMigrationData(MigrationData& data, bilingual_str& error)
                 if (!addr_pair.second.IsChange()) {
                     data.solvable_wallet->m_address_book[addr_pair.first].SetLabel(label);
                 }
-                continue;
             }
         }
     }
@@ -4039,10 +4035,10 @@ bool CWallet::ApplyMigrationData(MigrationData& data, bilingual_str& error)
         WalletBatch batch{wallet.GetDatabase()};
         for (const auto& [destination, addr_book_data] : wallet.m_address_book) {
             auto address{EncodeDestination(destination)};
-            auto label{addr_book_data.GetLabel()};
-            // don't bother writing default values (unknown purpose, empty label)
+            std::optional<std::string> label = addr_book_data.IsChange() ? std::nullopt : std::make_optional(addr_book_data.GetLabel());
+            // don't bother writing default values (unknown purpose)
             if (addr_book_data.purpose) batch.WritePurpose(address, PurposeToString(*addr_book_data.purpose));
-            if (!label.empty()) batch.WriteName(address, label);
+            if (label) batch.WriteName(address, *label);
         }
     };
     if (data.watchonly_wallet) persist_address_book(*data.watchonly_wallet);
