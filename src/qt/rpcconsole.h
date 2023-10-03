@@ -185,6 +185,8 @@ private:
         return time_at_event.count() ? GUIUtil::formatDurationStr(time_now - time_at_event) : tr("Never");
     }
 
+    void updateWindowTitle();
+
 private Q_SLOTS:
     void updateAlerts(const QString& warnings);
 };
