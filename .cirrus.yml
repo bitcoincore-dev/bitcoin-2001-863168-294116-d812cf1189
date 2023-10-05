@@ -232,10 +232,15 @@ task:
   previous_releases_cache:
     folder: "releases"
   << : *GLOBAL_TASK_TEMPLATE
-  << : *PERSISTENT_WORKER_TEMPLATE
+  container:
+    cpu: 4
+    memory: 16G
+    docker_arguments:
+      CI_IMAGE_NAME_TAG: ubuntu:focal
+      FILE_ENV: "./ci/test/00_setup_env_native_qt5.sh"
   env:
-    << : *PERSISTENT_WORKER_TEMPLATE_ENV
-    FILE_ENV: "./ci/test/00_setup_env_native_qt5.sh"
+    << : *CIRRUS_EPHEMERAL_WORKER_TEMPLATE_ENV
+
 
 task:
   name: '[TSan, depends, gui] [lunar]'
