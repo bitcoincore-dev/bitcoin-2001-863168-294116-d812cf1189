@@ -126,7 +126,7 @@ static constexpr std::chrono::seconds AVG_ADDRESS_BROADCAST_INTERVAL{30};
 static const unsigned int INVENTORY_BROADCAST_INTERVAL = 5;
 /** Maximum rate of inventory items to send per second.
  *  Limits the impact of low-fee transaction floods. */
-static constexpr unsigned int INVENTORY_BROADCAST_PER_SECOND = 7;
+static constexpr unsigned int INVENTORY_BROADCAST_PER_SECOND{14};
 /** Maximum number of inventory items to send per transmission. */
 static constexpr unsigned int INVENTORY_BROADCAST_MAX = INVENTORY_BROADCAST_PER_SECOND * INVENTORY_BROADCAST_INTERVAL;
 /** The number of most recently announced transactions a peer can request. */
