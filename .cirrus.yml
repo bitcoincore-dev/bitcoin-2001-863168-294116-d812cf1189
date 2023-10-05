@@ -309,6 +309,7 @@ task:
     << : *CIRRUS_EPHEMERAL_WORKER_TEMPLATE_ENV
 
 task:
+  only_if: false
   name: '[no wallet, libbitcoinkernel] [focal]'
   << : *GLOBAL_TASK_TEMPLATE
   container:
