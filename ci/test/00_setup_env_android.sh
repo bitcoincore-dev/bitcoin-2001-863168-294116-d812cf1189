@@ -14,8 +14,8 @@ export CI_IMAGE_NAME_TAG="docker.io/amd64/ubuntu:22.04"
 export RUN_UNIT_TESTS=false
 export RUN_FUNCTIONAL_TESTS=false
 
-export ANDROID_API_LEVEL=28
-export ANDROID_BUILD_TOOLS_VERSION=28.0.3
+export ANDROID_API_LEVEL=31
+export ANDROID_BUILD_TOOLS_VERSION=31.0.0
 export ANDROID_NDK_VERSION=23.2.8568313
 export ANDROID_TOOLS_URL=https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
 export ANDROID_HOME="${DEPENDS_DIR}/SDKs/android"
