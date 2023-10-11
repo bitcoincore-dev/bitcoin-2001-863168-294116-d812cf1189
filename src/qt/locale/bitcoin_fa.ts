@@ -2,6 +2,10 @@
 <context>
     <name>AddressBookPage</name>
     <message>
+        <source>Create a new address</source>
+        <translation type="unfinished">یک آدرس جدید ایجاد کنید</translation>
+    </message>
+    <message>
         <source>&amp;New</source>
         <translation type="unfinished">&amp;جدید</translation>
     </message>
@@ -2517,8 +2521,17 @@ If you are receiving this error you should request the merchant provide a BIP21 
         <translation type="unfinished">آدرس سازگار با کیف‌پول‌های قدیمی‌تر تولید می‌کند</translation>
     </message>
     <message>
+        <source>Generates a native segwit address (BIP-173). Some old wallets don't support it.</source>
+        <translation type="unfinished">یک آدرس سگویت بومی (BIP-173) ایجاد کنید.
+برخی از کیف پول های قدیمی از آن پشتیبانی نمی کنند.</translation>
+    </message>
+    <message>
         <source>Bech32m (Taproot)</source>
         <translation type="unfinished">Bech32m (تپ‌روت)</translation>
+    </message>
+    <message>
+        <source>Bech32m (BIP-350) is an upgrade to Bech32, wallet support is still limited.</source>
+        <translation type="unfinished">Bech32m(BIP-350) یک آپدیت برای Bech32 است، پشتیبانی کیف پول هنوز محدود شده است.</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
@@ -2870,6 +2883,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
         <translation type="unfinished">تراکنش امضا نشده</translation>
     </message>
     <message>
+        <source>The PSBT has been copied to the clipboard. You can also save it.</source>
+        <translation type="unfinished">تراکنش بیت کوین با امضای جزئی (PSBT) در کلیپ بورد کپی شده است. همچنین شما می‌توانید آن را ذخیره کنید.</translation>
+    </message>
+    <message>
         <source>PSBT saved to disk</source>
         <translation type="unfinished">فایل PSBT در دیسک ذخیره شد</translation>
     </message>
@@ -2905,6 +2922,10 @@ Note:  Since the fee is calculated on a per-byte basis, a fee rate of "100 satos
     <message>
         <source>A fee higher than %1 is considered an absurdly high fee.</source>
         <translation type="unfinished">کارمزد بیشتر از %1 است,این یعنی کارمزد خیلی زیادی در نظر گرفته شده است.</translation>
+    </message>
+    <message>
+        <source>%1/kvB</source>
+        <translation type="unfinished">%1 kvB</translation>
     </message>
     <message numerus="yes">
         <source>Estimated to begin confirmation within %n block(s).</source>

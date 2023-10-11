@@ -24,7 +24,9 @@ BOOST_FIXTURE_TEST_SUITE(netbase_tests, BasicTestingSetup)
 
 static CNetAddr ResolveIP(const std::string& ip)
 {
-    return LookupHost(ip, false).value_or(CNetAddr{});
+    CNetAddr addr;
+    LookupHost(ip, addr, false);
+    return addr;
 }
 
 static CSubNet ResolveSubNet(const std::string& subnet)
@@ -475,10 +477,11 @@ BOOST_AUTO_TEST_CASE(netpermissions_test)
 
 BOOST_AUTO_TEST_CASE(netbase_dont_resolve_strings_with_embedded_nul_characters)
 {
-    BOOST_CHECK(LookupHost("127.0.0.1"s, false).has_value());
-    BOOST_CHECK(!LookupHost("127.0.0.1\0"s, false).has_value());
-    BOOST_CHECK(!LookupHost("127.0.0.1\0example.com"s, false).has_value());
-    BOOST_CHECK(!LookupHost("127.0.0.1\0example.com\0"s, false).has_value());
+    CNetAddr addr;
+    BOOST_CHECK(LookupHost("127.0.0.1"s, addr, false));
+    BOOST_CHECK(!LookupHost("127.0.0.1\0"s, addr, false));
+    BOOST_CHECK(!LookupHost("127.0.0.1\0example.com"s, addr, false));
+    BOOST_CHECK(!LookupHost("127.0.0.1\0example.com\0"s, addr, false));
     CSubNet ret;
     BOOST_CHECK(LookupSubNet("1.2.3.0/24"s, ret));
     BOOST_CHECK(!LookupSubNet("1.2.3.0/24\0"s, ret));
@@ -559,35 +562,35 @@ static constexpr const char* stream_addrv2_hex =
 
 BOOST_AUTO_TEST_CASE(caddress_serialize_v1)
 {
-    DataStream s{};
+    CDataStream s(SER_NETWORK, PROTOCOL_VERSION);
 
-    s << CAddress::V1_NETWORK(fixture_addresses);
+    s << fixture_addresses;
     BOOST_CHECK_EQUAL(HexStr(s), stream_addrv1_hex);
 }
 
 BOOST_AUTO_TEST_CASE(caddress_unserialize_v1)
 {
-    DataStream s{ParseHex(stream_addrv1_hex)};
+    CDataStream s(ParseHex(stream_addrv1_hex), SER_NETWORK, PROTOCOL_VERSION);
     std::vector<CAddress> addresses_unserialized;
 
-    s >> CAddress::V1_NETWORK(addresses_unserialized);
+    s >> addresses_unserialized;
     BOOST_CHECK(fixture_addresses == addresses_unserialized);
 }
 
 BOOST_AUTO_TEST_CASE(caddress_serialize_v2)
 {
-    DataStream s{};
+    CDataStream s(SER_NETWORK, PROTOCOL_VERSION | ADDRV2_FORMAT);
 
-    s << CAddress::V2_NETWORK(fixture_addresses);
+    s << fixture_addresses;
     BOOST_CHECK_EQUAL(HexStr(s), stream_addrv2_hex);
 }
 
 BOOST_AUTO_TEST_CASE(caddress_unserialize_v2)
 {
-    DataStream s{ParseHex(stream_addrv2_hex)};
+    CDataStream s(ParseHex(stream_addrv2_hex), SER_NETWORK, PROTOCOL_VERSION | ADDRV2_FORMAT);
     std::vector<CAddress> addresses_unserialized;
 
-    s >> CAddress::V2_NETWORK(addresses_unserialized);
+    s >> addresses_unserialized;
     BOOST_CHECK(fixture_addresses == addresses_unserialized);
 }
 

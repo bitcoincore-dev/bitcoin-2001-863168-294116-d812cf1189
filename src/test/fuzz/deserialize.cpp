@@ -9,7 +9,6 @@
 #include <blockfilter.h>
 #include <chain.h>
 #include <coins.h>
-#include <common/args.h>
 #include <compressor.h>
 #include <consensus/merkle.h>
 #include <key.h>
@@ -24,10 +23,9 @@
 #include <pubkey.h>
 #include <script/keyorigin.h>
 #include <streams.h>
-#include <test/fuzz/fuzz.h>
-#include <test/fuzz/util.h>
 #include <test/util/setup_common.h>
 #include <undo.h>
+#include <util/system.h>
 #include <version.h>
 
 #include <exception>
@@ -35,6 +33,8 @@
 #include <stdexcept>
 #include <stdint.h>
 #include <unistd.h>
+
+#include <test/fuzz/fuzz.h>
 
 using node::SnapshotMetadata;
 
@@ -49,7 +49,7 @@ void initialize_deserialize()
 }
 
 #define FUZZ_TARGET_DESERIALIZE(name, code)                \
-    FUZZ_TARGET(name, .init = initialize_deserialize)         \
+    FUZZ_TARGET_INIT(name, initialize_deserialize)         \
     {                                                      \
         try {                                              \
             code                                           \
@@ -62,38 +62,10 @@ namespace {
 struct invalid_fuzzing_input_exception : public std::exception {
 };
 
-template <typename T, typename P>
-DataStream Serialize(const T& obj, const P& params)
-{
-    DataStream ds{};
-    ds << WithParams(params, obj);
-    return ds;
-}
-
-template <typename T, typename P>
-T Deserialize(DataStream&& ds, const P& params)
-{
-    T obj;
-    ds >> WithParams(params, obj);
-    return obj;
-}
-
-template <typename T, typename P>
-void DeserializeFromFuzzingInput(FuzzBufferType buffer, T&& obj, const P& params)
-{
-    DataStream ds{buffer};
-    try {
-        ds >> WithParams(params, obj);
-    } catch (const std::ios_base::failure&) {
-        throw invalid_fuzzing_input_exception();
-    }
-    assert(buffer.empty() || !Serialize(obj, params).empty());
-}
-
 template <typename T>
-CDataStream Serialize(const T& obj)
+CDataStream Serialize(const T& obj, const int version = INIT_PROTO_VERSION, const int ser_type = SER_NETWORK)
 {
-    CDataStream ds{SER_NETWORK, INIT_PROTO_VERSION};
+    CDataStream ds(ser_type, version);
     ds << obj;
     return ds;
 }
@@ -107,10 +79,12 @@ T Deserialize(CDataStream ds)
 }
 
 template <typename T>
-void DeserializeFromFuzzingInput(FuzzBufferType buffer, T&& obj)
+void DeserializeFromFuzzingInput(FuzzBufferType buffer, T& obj, const std::optional<int> protocol_version = std::nullopt, const int ser_type = SER_NETWORK)
 {
-    CDataStream ds{buffer, SER_NETWORK, INIT_PROTO_VERSION};
-    {
+    CDataStream ds(buffer, ser_type, INIT_PROTO_VERSION);
+    if (protocol_version) {
+        ds.SetVersion(*protocol_version);
+    } else {
         try {
             int version;
             ds >> version;
@@ -127,15 +101,10 @@ void DeserializeFromFuzzingInput(FuzzBufferType buffer, T&& obj)
     assert(buffer.empty() || !Serialize(obj).empty());
 }
 
-template <typename T, typename P>
-void AssertEqualAfterSerializeDeserialize(const T& obj, const P& params)
-{
-    assert(Deserialize<T>(Serialize(obj, params), params) == obj);
-}
 template <typename T>
-void AssertEqualAfterSerializeDeserialize(const T& obj)
+void AssertEqualAfterSerializeDeserialize(const T& obj, const int version = INIT_PROTO_VERSION, const int ser_type = SER_NETWORK)
 {
-    assert(Deserialize<T>(Serialize(obj)) == obj);
+    assert(Deserialize<T>(Serialize(obj, version, ser_type)) == obj);
 }
 
 } // namespace
@@ -144,11 +113,10 @@ FUZZ_TARGET_DESERIALIZE(block_filter_deserialize, {
     BlockFilter block_filter;
     DeserializeFromFuzzingInput(buffer, block_filter);
 })
-FUZZ_TARGET(addr_info_deserialize, .init = initialize_deserialize)
-{
-    FuzzedDataProvider fdp{buffer.data(), buffer.size()};
-    (void)ConsumeDeserializable<AddrInfo>(fdp, ConsumeDeserializationParams<CAddress::SerParams>(fdp));
-}
+FUZZ_TARGET_DESERIALIZE(addr_info_deserialize, {
+    AddrInfo addr_info;
+    DeserializeFromFuzzingInput(buffer, addr_info);
+})
 FUZZ_TARGET_DESERIALIZE(block_file_info_deserialize, {
     CBlockFileInfo block_file_info;
     DeserializeFromFuzzingInput(buffer, block_file_info);
@@ -229,6 +197,13 @@ FUZZ_TARGET_DESERIALIZE(blockmerkleroot, {
     bool mutated;
     BlockMerkleRoot(block, &mutated);
 })
+FUZZ_TARGET_DESERIALIZE(addrman_deserialize, {
+    NetGroupManager netgroupman{std::vector<bool>()};
+    AddrMan am(netgroupman,
+               /*deterministic=*/false,
+               g_setup->m_node.args->GetIntArg("-checkaddrman", 0));
+    DeserializeFromFuzzingInput(buffer, am);
+})
 FUZZ_TARGET_DESERIALIZE(blockheader_deserialize, {
     CBlockHeader bh;
     DeserializeFromFuzzingInput(buffer, bh);
@@ -245,62 +220,66 @@ FUZZ_TARGET_DESERIALIZE(coins_deserialize, {
     Coin coin;
     DeserializeFromFuzzingInput(buffer, coin);
 })
-FUZZ_TARGET(netaddr_deserialize, .init = initialize_deserialize)
-{
-    FuzzedDataProvider fdp{buffer.data(), buffer.size()};
-    const auto maybe_na{ConsumeDeserializable<CNetAddr>(fdp, ConsumeDeserializationParams<CNetAddr::SerParams>(fdp))};
-    if (!maybe_na) return;
-    const CNetAddr& na{*maybe_na};
+FUZZ_TARGET_DESERIALIZE(netaddr_deserialize, {
+    CNetAddr na;
+    DeserializeFromFuzzingInput(buffer, na);
     if (na.IsAddrV1Compatible()) {
-        AssertEqualAfterSerializeDeserialize(na, CNetAddr::V1);
+        AssertEqualAfterSerializeDeserialize(na);
     }
-    AssertEqualAfterSerializeDeserialize(na, CNetAddr::V2);
-}
-FUZZ_TARGET(service_deserialize, .init = initialize_deserialize)
-{
-    FuzzedDataProvider fdp{buffer.data(), buffer.size()};
-    const auto ser_params{ConsumeDeserializationParams<CNetAddr::SerParams>(fdp)};
-    const auto maybe_s{ConsumeDeserializable<CService>(fdp, ser_params)};
-    if (!maybe_s) return;
-    const CService& s{*maybe_s};
+    AssertEqualAfterSerializeDeserialize(na, INIT_PROTO_VERSION | ADDRV2_FORMAT);
+})
+FUZZ_TARGET_DESERIALIZE(service_deserialize, {
+    CService s;
+    DeserializeFromFuzzingInput(buffer, s);
     if (s.IsAddrV1Compatible()) {
-        AssertEqualAfterSerializeDeserialize(s, CNetAddr::V1);
+        AssertEqualAfterSerializeDeserialize(s);
     }
-    AssertEqualAfterSerializeDeserialize(s, CNetAddr::V2);
-    if (ser_params.enc == CNetAddr::Encoding::V1) {
-        assert(s.IsAddrV1Compatible());
-    }
-}
+    AssertEqualAfterSerializeDeserialize(s, INIT_PROTO_VERSION | ADDRV2_FORMAT);
+    CService s1;
+    DeserializeFromFuzzingInput(buffer, s1, INIT_PROTO_VERSION);
+    AssertEqualAfterSerializeDeserialize(s1, INIT_PROTO_VERSION);
+    assert(s1.IsAddrV1Compatible());
+    CService s2;
+    DeserializeFromFuzzingInput(buffer, s2, INIT_PROTO_VERSION | ADDRV2_FORMAT);
+    AssertEqualAfterSerializeDeserialize(s2, INIT_PROTO_VERSION | ADDRV2_FORMAT);
+})
 FUZZ_TARGET_DESERIALIZE(messageheader_deserialize, {
     CMessageHeader mh;
     DeserializeFromFuzzingInput(buffer, mh);
     (void)mh.IsCommandValid();
 })
-FUZZ_TARGET(address_deserialize, .init = initialize_deserialize)
-{
-    FuzzedDataProvider fdp{buffer.data(), buffer.size()};
-    const auto ser_enc{ConsumeDeserializationParams<CAddress::SerParams>(fdp)};
-    const auto maybe_a{ConsumeDeserializable<CAddress>(fdp, ser_enc)};
-    if (!maybe_a) return;
-    const CAddress& a{*maybe_a};
-    // A CAddress in V1 mode will roundtrip
-    // in all 4 formats (v1/v2, network/disk)
-    if (ser_enc.enc == CNetAddr::Encoding::V1) {
-        AssertEqualAfterSerializeDeserialize(a, CAddress::V1_NETWORK);
-        AssertEqualAfterSerializeDeserialize(a, CAddress::V1_DISK);
-        AssertEqualAfterSerializeDeserialize(a, CAddress::V2_NETWORK);
-        AssertEqualAfterSerializeDeserialize(a, CAddress::V2_DISK);
-    } else {
-        // A CAddress in V2 mode will roundtrip in both V2 formats, and also in the V1 formats
-        // if it's V1 compatible.
-        if (a.IsAddrV1Compatible()) {
-            AssertEqualAfterSerializeDeserialize(a, CAddress::V1_DISK);
-            AssertEqualAfterSerializeDeserialize(a, CAddress::V1_NETWORK);
-        }
-        AssertEqualAfterSerializeDeserialize(a, CAddress::V2_NETWORK);
-        AssertEqualAfterSerializeDeserialize(a, CAddress::V2_DISK);
+FUZZ_TARGET_DESERIALIZE(address_deserialize_v1_notime, {
+    CAddress a;
+    DeserializeFromFuzzingInput(buffer, a, INIT_PROTO_VERSION);
+    // A CAddress without nTime (as is expected under INIT_PROTO_VERSION) will roundtrip
+    // in all 5 formats (with/without nTime, v1/v2, network/disk)
+    AssertEqualAfterSerializeDeserialize(a, INIT_PROTO_VERSION);
+    AssertEqualAfterSerializeDeserialize(a, PROTOCOL_VERSION);
+    AssertEqualAfterSerializeDeserialize(a, 0, SER_DISK);
+    AssertEqualAfterSerializeDeserialize(a, PROTOCOL_VERSION | ADDRV2_FORMAT);
+    AssertEqualAfterSerializeDeserialize(a, ADDRV2_FORMAT, SER_DISK);
+})
+FUZZ_TARGET_DESERIALIZE(address_deserialize_v1_withtime, {
+    CAddress a;
+    DeserializeFromFuzzingInput(buffer, a, PROTOCOL_VERSION);
+    // A CAddress in V1 mode will roundtrip in all 4 formats that have nTime.
+    AssertEqualAfterSerializeDeserialize(a, PROTOCOL_VERSION);
+    AssertEqualAfterSerializeDeserialize(a, 0, SER_DISK);
+    AssertEqualAfterSerializeDeserialize(a, PROTOCOL_VERSION | ADDRV2_FORMAT);
+    AssertEqualAfterSerializeDeserialize(a, ADDRV2_FORMAT, SER_DISK);
+})
+FUZZ_TARGET_DESERIALIZE(address_deserialize_v2, {
+    CAddress a;
+    DeserializeFromFuzzingInput(buffer, a, PROTOCOL_VERSION | ADDRV2_FORMAT);
+    // A CAddress in V2 mode will roundtrip in both V2 formats, and also in the V1 formats
+    // with time if it's V1 compatible.
+    if (a.IsAddrV1Compatible()) {
+        AssertEqualAfterSerializeDeserialize(a, PROTOCOL_VERSION);
+        AssertEqualAfterSerializeDeserialize(a, 0, SER_DISK);
     }
-}
+    AssertEqualAfterSerializeDeserialize(a, PROTOCOL_VERSION | ADDRV2_FORMAT);
+    AssertEqualAfterSerializeDeserialize(a, ADDRV2_FORMAT, SER_DISK);
+})
 FUZZ_TARGET_DESERIALIZE(inv_deserialize, {
     CInv i;
     DeserializeFromFuzzingInput(buffer, i);

@@ -6,62 +6,12 @@
 #include <test/util/random.h>
 #include <test/util/setup_common.h>
 #include <util/fs.h>
-#include <util/strencodings.h>
 
 #include <boost/test/unit_test.hpp>
 
 using namespace std::string_literals;
 
 BOOST_FIXTURE_TEST_SUITE(streams_tests, BasicTestingSetup)
-
-BOOST_AUTO_TEST_CASE(xor_file)
-{
-    fs::path xor_path{m_args.GetDataDirBase() / "test_xor.bin"};
-    auto raw_file{[&](const auto& mode) { return fsbridge::fopen(xor_path, mode); }};
-    const std::vector<uint8_t> test1{1, 2, 3};
-    const std::vector<uint8_t> test2{4, 5};
-    const std::vector<std::byte> xor_pat{std::byte{0xff}, std::byte{0x00}};
-    {
-        // Check errors for missing file
-        AutoFile xor_file{raw_file("rb"), xor_pat};
-        BOOST_CHECK_EXCEPTION(xor_file << std::byte{}, std::ios_base::failure, HasReason{"AutoFile::write: file handle is nullpt"});
-        BOOST_CHECK_EXCEPTION(xor_file >> std::byte{}, std::ios_base::failure, HasReason{"AutoFile::read: file handle is nullpt"});
-        BOOST_CHECK_EXCEPTION(xor_file.ignore(1), std::ios_base::failure, HasReason{"AutoFile::ignore: file handle is nullpt"});
-    }
-    {
-        AutoFile xor_file{raw_file("wbx"), xor_pat};
-        xor_file << test1 << test2;
-    }
-    {
-        // Read raw from disk
-        AutoFile non_xor_file{raw_file("rb")};
-        std::vector<std::byte> raw(7);
-        non_xor_file >> Span{raw};
-        BOOST_CHECK_EQUAL(HexStr(raw), "fc01fd03fd04fa");
-        // Check that no padding exists
-        BOOST_CHECK_EXCEPTION(non_xor_file.ignore(1), std::ios_base::failure, HasReason{"AutoFile::ignore: end of file"});
-    }
-    {
-        AutoFile xor_file{raw_file("rb"), xor_pat};
-        std::vector<std::byte> read1, read2;
-        xor_file >> read1 >> read2;
-        BOOST_CHECK_EQUAL(HexStr(read1), HexStr(test1));
-        BOOST_CHECK_EQUAL(HexStr(read2), HexStr(test2));
-        // Check that eof was reached
-        BOOST_CHECK_EXCEPTION(xor_file >> std::byte{}, std::ios_base::failure, HasReason{"AutoFile::read: end of file"});
-    }
-    {
-        AutoFile xor_file{raw_file("rb"), xor_pat};
-        std::vector<std::byte> read2;
-        // Check that ignore works
-        xor_file.ignore(4);
-        xor_file >> read2;
-        BOOST_CHECK_EQUAL(HexStr(read2), HexStr(test2));
-        // Check that ignore and read fail now
-        BOOST_CHECK_EXCEPTION(xor_file.ignore(1), std::ios_base::failure, HasReason{"AutoFile::ignore: end of file"});
-        BOOST_CHECK_EXCEPTION(xor_file >> std::byte{}, std::ios_base::failure, HasReason{"AutoFile::read: end of file"});
-    }
-}
 
 BOOST_AUTO_TEST_CASE(streams_vector_writer)
 {
@@ -260,7 +210,7 @@ BOOST_AUTO_TEST_CASE(streams_buffered_file)
     // The buffer size (second arg) must be greater than the rewind
     // amount (third arg).
     try {
-        BufferedFile bfbad{file, 25, 25, 333};
+        CBufferedFile bfbad(file, 25, 25, 222, 333);
         BOOST_CHECK(false);
     } catch (const std::exception& e) {
         BOOST_CHECK(strstr(e.what(),
@@ -268,10 +218,11 @@ BOOST_AUTO_TEST_CASE(streams_buffered_file)
     }
 
     // The buffer is 25 bytes, allow rewinding 10 bytes.
-    BufferedFile bf{file, 25, 10, 333};
+    CBufferedFile bf(file, 25, 10, 222, 333);
     BOOST_CHECK(!bf.eof());
 
-    // This member has no functional effect.
+    // These two members have no functional effect.
+    BOOST_CHECK_EQUAL(bf.GetType(), 222);
     BOOST_CHECK_EQUAL(bf.GetVersion(), 333);
 
     uint8_t i;
@@ -356,7 +307,7 @@ BOOST_AUTO_TEST_CASE(streams_buffered_file)
         BOOST_CHECK(false);
     } catch (const std::exception& e) {
         BOOST_CHECK(strstr(e.what(),
-                        "BufferedFile::Fill: end of file") != nullptr);
+                        "CBufferedFile::Fill: end of file") != nullptr);
     }
     // Attempting to read beyond the end sets the EOF indicator.
     BOOST_CHECK(bf.eof());
@@ -391,7 +342,7 @@ BOOST_AUTO_TEST_CASE(streams_buffered_file_skip)
     rewind(file);
 
     // The buffer is 25 bytes, allow rewinding 10 bytes.
-    BufferedFile bf{file, 25, 10, 333};
+    CBufferedFile bf(file, 25, 10, 222, 333);
 
     uint8_t i;
     // This is like bf >> (7-byte-variable), in that it will cause data
@@ -445,7 +396,7 @@ BOOST_AUTO_TEST_CASE(streams_buffered_file_rand)
 
         size_t bufSize = InsecureRandRange(300) + 1;
         size_t rewindSize = InsecureRandRange(bufSize);
-        BufferedFile bf{file, bufSize, rewindSize, 333};
+        CBufferedFile bf(file, bufSize, rewindSize, 222, 333);
         size_t currentPos = 0;
         size_t maxPos = 0;
         for (int step = 0; step < 100; ++step) {
@@ -512,7 +463,7 @@ BOOST_AUTO_TEST_CASE(streams_buffered_file_rand)
                 size_t find = currentPos + InsecureRandRange(8);
                 if (find >= fileSize)
                     find = fileSize - 1;
-                bf.FindByte(std::byte(find));
+                bf.FindByte(uint8_t(find));
                 // The value at each offset is the offset.
                 BOOST_CHECK_EQUAL(bf.GetPos(), find);
                 currentPos = find;
@@ -552,12 +503,12 @@ BOOST_AUTO_TEST_CASE(streams_buffered_file_rand)
 
 BOOST_AUTO_TEST_CASE(streams_hashed)
 {
-    DataStream stream{};
+    CDataStream stream(SER_NETWORK, INIT_PROTO_VERSION);
     HashedSourceWriter hash_writer{stream};
     const std::string data{"bitcoin"};
     hash_writer << data;
 
-    HashVerifier hash_verifier{stream};
+    CHashVerifier hash_verifier{&stream};
     std::string result;
     hash_verifier >> result;
     BOOST_CHECK_EQUAL(data, result);

@@ -6,23 +6,23 @@
 #ifndef BITCOIN_ADDRDB_H
 #define BITCOIN_ADDRDB_H
 
-#include <net_types.h>
+#include <net_types.h> // For banmap_t
+#include <univalue.h>
 #include <util/fs.h>
-#include <util/result.h>
 
-#include <memory>
+#include <optional>
 #include <vector>
 
 class ArgsManager;
 class AddrMan;
 class CAddress;
-class DataStream;
+class CDataStream;
 class NetGroupManager;
-
-/** Only used by tests. */
-void ReadFromStream(AddrMan& addr, DataStream& ssPeers);
+struct bilingual_str;
 
 bool DumpPeerAddresses(const ArgsManager& args, const AddrMan& addr);
+/** Only used by tests. */
+void ReadFromStream(AddrMan& addr, CDataStream& ssPeers);
 
 /** Access to the banlist database (banlist.json) */
 class CBanDB
@@ -49,7 +49,7 @@ public:
 };
 
 /** Returns an error string on failure */
-util::Result<std::unique_ptr<AddrMan>> LoadAddrman(const NetGroupManager& netgroupman, const ArgsManager& args);
+std::optional<bilingual_str> LoadAddrman(const NetGroupManager& netgroupman, const ArgsManager& args, std::unique_ptr<AddrMan>& addrman);
 
 /**
  * Dump the anchor IP address database (anchors.dat)

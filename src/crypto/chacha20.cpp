@@ -7,8 +7,6 @@
 
 #include <crypto/common.h>
 #include <crypto/chacha20.h>
-#include <support/cleanse.h>
-#include <span.h>
 
 #include <algorithm>
 #include <string.h>
@@ -23,47 +21,46 @@ constexpr static inline uint32_t rotl32(uint32_t v, int c) { return (v << c) | (
 
 #define REPEAT10(a) do { {a}; {a}; {a}; {a}; {a}; {a}; {a}; {a}; {a}; {a}; } while(0)
 
-void ChaCha20Aligned::SetKey(Span<const std::byte> key) noexcept
+void ChaCha20Aligned::SetKey32(const unsigned char* k)
 {
-    assert(key.size() == KEYLEN);
-    input[0] = ReadLE32(UCharCast(key.data() + 0));
-    input[1] = ReadLE32(UCharCast(key.data() + 4));
-    input[2] = ReadLE32(UCharCast(key.data() + 8));
-    input[3] = ReadLE32(UCharCast(key.data() + 12));
-    input[4] = ReadLE32(UCharCast(key.data() + 16));
-    input[5] = ReadLE32(UCharCast(key.data() + 20));
-    input[6] = ReadLE32(UCharCast(key.data() + 24));
-    input[7] = ReadLE32(UCharCast(key.data() + 28));
+    input[0] = ReadLE32(k + 0);
+    input[1] = ReadLE32(k + 4);
+    input[2] = ReadLE32(k + 8);
+    input[3] = ReadLE32(k + 12);
+    input[4] = ReadLE32(k + 16);
+    input[5] = ReadLE32(k + 20);
+    input[6] = ReadLE32(k + 24);
+    input[7] = ReadLE32(k + 28);
     input[8] = 0;
     input[9] = 0;
     input[10] = 0;
     input[11] = 0;
 }
 
-ChaCha20Aligned::~ChaCha20Aligned()
+ChaCha20Aligned::ChaCha20Aligned()
 {
-    memory_cleanse(input, sizeof(input));
+    memset(input, 0, sizeof(input));
 }
 
-ChaCha20Aligned::ChaCha20Aligned(Span<const std::byte> key) noexcept
+ChaCha20Aligned::ChaCha20Aligned(const unsigned char* key32)
 {
-    SetKey(key);
+    SetKey32(key32);
 }
 
-void ChaCha20Aligned::Seek(Nonce96 nonce, uint32_t block_counter) noexcept
+void ChaCha20Aligned::SetIV(uint64_t iv)
 {
-    input[8] = block_counter;
-    input[9] = nonce.first;
-    input[10] = nonce.second;
-    input[11] = nonce.second >> 32;
+    input[10] = iv;
+    input[11] = iv >> 32;
 }
 
-inline void ChaCha20Aligned::Keystream(Span<std::byte> output) noexcept
+void ChaCha20Aligned::Seek64(uint64_t pos)
 {
-    unsigned char* c = UCharCast(output.data());
-    size_t blocks = output.size() / BLOCKLEN;
-    assert(blocks * BLOCKLEN == output.size());
+    input[8] = pos;
+    input[9] = pos >> 32;
+}
 
+inline void ChaCha20Aligned::Keystream64(unsigned char* c, size_t blocks)
+{
     uint32_t x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15;
     uint32_t j4, j5, j6, j7, j8, j9, j10, j11, j12, j13, j14, j15;
 
@@ -155,18 +152,12 @@ inline void ChaCha20Aligned::Keystream(Span<std::byte> output) noexcept
             return;
         }
         blocks -= 1;
-        c += BLOCKLEN;
+        c += 64;
     }
 }
 
-inline void ChaCha20Aligned::Crypt(Span<const std::byte> in_bytes, Span<std::byte> out_bytes) noexcept
+inline void ChaCha20Aligned::Crypt64(const unsigned char* m, unsigned char* c, size_t blocks)
 {
-    assert(in_bytes.size() == out_bytes.size());
-    const unsigned char* m = UCharCast(in_bytes.data());
-    unsigned char* c = UCharCast(out_bytes.data());
-    size_t blocks = out_bytes.size() / BLOCKLEN;
-    assert(blocks * BLOCKLEN == out_bytes.size());
-
     uint32_t x0, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15;
     uint32_t j4, j5, j6, j7, j8, j9, j10, j11, j12, j13, j14, j15;
 
@@ -275,99 +266,59 @@ inline void ChaCha20Aligned::Crypt(Span<const std::byte> in_bytes, Span<std::byt
             return;
         }
         blocks -= 1;
-        c += BLOCKLEN;
-        m += BLOCKLEN;
+        c += 64;
+        m += 64;
     }
 }
 
-void ChaCha20::Keystream(Span<std::byte> out) noexcept
+void ChaCha20::Keystream(unsigned char* c, size_t bytes)
 {
-    if (out.empty()) return;
+    if (!bytes) return;
     if (m_bufleft) {
-        unsigned reuse = std::min<size_t>(m_bufleft, out.size());
-        std::copy(m_buffer.end() - m_bufleft, m_buffer.end() - m_bufleft + reuse, out.begin());
+        unsigned reuse = std::min<size_t>(m_bufleft, bytes);
+        memcpy(c, m_buffer + 64 - m_bufleft, reuse);
         m_bufleft -= reuse;
-        out = out.subspan(reuse);
+        bytes -= reuse;
+        c += reuse;
     }
-    if (out.size() >= m_aligned.BLOCKLEN) {
-        size_t blocks = out.size() / m_aligned.BLOCKLEN;
-        m_aligned.Keystream(out.first(blocks * m_aligned.BLOCKLEN));
-        out = out.subspan(blocks * m_aligned.BLOCKLEN);
+    if (bytes >= 64) {
+        size_t blocks = bytes / 64;
+        m_aligned.Keystream64(c, blocks);
+        c += blocks * 64;
+        bytes -= blocks * 64;
     }
-    if (!out.empty()) {
-        m_aligned.Keystream(m_buffer);
-        std::copy(m_buffer.begin(), m_buffer.begin() + out.size(), out.begin());
-        m_bufleft = m_aligned.BLOCKLEN - out.size();
+    if (bytes) {
+        m_aligned.Keystream64(m_buffer, 1);
+        memcpy(c, m_buffer, bytes);
+        m_bufleft = 64 - bytes;
     }
 }
 
-void ChaCha20::Crypt(Span<const std::byte> input, Span<std::byte> output) noexcept
+void ChaCha20::Crypt(const unsigned char* m, unsigned char* c, size_t bytes)
 {
-    assert(input.size() == output.size());
-
-    if (!input.size()) return;
+    if (!bytes) return;
     if (m_bufleft) {
-        unsigned reuse = std::min<size_t>(m_bufleft, input.size());
+        unsigned reuse = std::min<size_t>(m_bufleft, bytes);
         for (unsigned i = 0; i < reuse; i++) {
-            output[i] = input[i] ^ m_buffer[m_aligned.BLOCKLEN - m_bufleft + i];
+            c[i] = m[i] ^ m_buffer[64 - m_bufleft + i];
         }
         m_bufleft -= reuse;
-        output = output.subspan(reuse);
-        input = input.subspan(reuse);
+        bytes -= reuse;
+        c += reuse;
+        m += reuse;
     }
-    if (input.size() >= m_aligned.BLOCKLEN) {
-        size_t blocks = input.size() / m_aligned.BLOCKLEN;
-        m_aligned.Crypt(input.first(blocks * m_aligned.BLOCKLEN), output.first(blocks * m_aligned.BLOCKLEN));
-        output = output.subspan(blocks * m_aligned.BLOCKLEN);
-        input = input.subspan(blocks * m_aligned.BLOCKLEN);
+    if (bytes >= 64) {
+        size_t blocks = bytes / 64;
+        m_aligned.Crypt64(m, c, blocks);
+        c += blocks * 64;
+        m += blocks * 64;
+        bytes -= blocks * 64;
     }
-    if (!input.empty()) {
-        m_aligned.Keystream(m_buffer);
-        for (unsigned i = 0; i < input.size(); i++) {
-            output[i] = input[i] ^ m_buffer[i];
+    if (bytes) {
+        m_aligned.Keystream64(m_buffer, 1);
+        for (unsigned i = 0; i < bytes; i++) {
+            c[i] = m[i] ^ m_buffer[i];
         }
-        m_bufleft = m_aligned.BLOCKLEN - input.size();
-    }
-}
-
-ChaCha20::~ChaCha20()
-{
-    memory_cleanse(m_buffer.data(), m_buffer.size());
-}
-
-void ChaCha20::SetKey(Span<const std::byte> key) noexcept
-{
-    m_aligned.SetKey(key);
-    m_bufleft = 0;
-    memory_cleanse(m_buffer.data(), m_buffer.size());
-}
-
-FSChaCha20::FSChaCha20(Span<const std::byte> key, uint32_t rekey_interval) noexcept :
-    m_chacha20(key), m_rekey_interval(rekey_interval)
-{
-    assert(key.size() == KEYLEN);
-}
-
-void FSChaCha20::Crypt(Span<const std::byte> input, Span<std::byte> output) noexcept
-{
-    assert(input.size() == output.size());
-
-    // Invoke internal stream cipher for actual encryption/decryption.
-    m_chacha20.Crypt(input, output);
-
-    // Rekey after m_rekey_interval encryptions/decryptions.
-    if (++m_chunk_counter == m_rekey_interval) {
-        // Get new key from the stream cipher.
-        std::byte new_key[KEYLEN];
-        m_chacha20.Keystream(new_key);
-        // Update its key.
-        m_chacha20.SetKey(new_key);
-        // Wipe the key (a copy remains inside m_chacha20, where it'll be wiped on the next rekey
-        // or on destruction).
-        memory_cleanse(new_key, sizeof(new_key));
-        // Set the nonce for the new section of output.
-        m_chacha20.Seek({0, ++m_rekey_counter}, 0);
-        // Reset the chunk counter.
-        m_chunk_counter = 0;
+        m_bufleft = 64 - bytes;
     }
 }

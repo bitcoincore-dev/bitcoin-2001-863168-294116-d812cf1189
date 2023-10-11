@@ -40,7 +40,6 @@ class path;
 class AskPassphraseDialog;
 class CreateWalletActivity;
 class CreateWalletDialog;
-class MigrateWalletActivity;
 class OpenWalletActivity;
 class WalletControllerActivity;
 
@@ -66,8 +65,6 @@ public:
     void closeWallet(WalletModel* wallet_model, QWidget* parent = nullptr);
     void closeAllWallets(QWidget* parent = nullptr);
 
-    void migrateWallet(WalletModel* wallet_model, QWidget* parent = nullptr);
-
 Q_SIGNALS:
     void walletAdded(WalletModel* wallet_model);
     void walletRemoved(WalletModel* wallet_model);
@@ -86,7 +83,6 @@ private:
     std::unique_ptr<interfaces::Handler> m_handler_load_wallet;
 
     friend class WalletControllerActivity;
-    friend class MigrateWalletActivity;
 };
 
 class WalletControllerActivity : public QObject
@@ -104,7 +100,7 @@ protected:
     interfaces::Node& node() const { return m_wallet_controller->m_node; }
     QObject* worker() const { return m_wallet_controller->m_activity_worker; }
 
-    void showProgressDialog(const QString& title_text, const QString& label_text, bool show_minimized=false);
+    void showProgressDialog(const QString& title_text, const QString& label_text);
 
     WalletController* const m_wallet_controller;
     QWidget* const m_parent_widget;
@@ -160,7 +156,7 @@ class LoadWalletsActivity : public WalletControllerActivity
 public:
     LoadWalletsActivity(WalletController* wallet_controller, QWidget* parent_widget);
 
-    void load(bool show_loading_minimized);
+    void load();
 };
 
 class RestoreWalletActivity : public WalletControllerActivity
@@ -176,24 +172,6 @@ Q_SIGNALS:
     void restored(WalletModel* wallet_model);
 
 private:
-    void finish();
-};
-
-class MigrateWalletActivity : public WalletControllerActivity
-{
-    Q_OBJECT
-
-public:
-    MigrateWalletActivity(WalletController* wallet_controller, QWidget* parent) : WalletControllerActivity(wallet_controller, parent) {}
-
-    void migrate(WalletModel* wallet_model);
-
-Q_SIGNALS:
-    void migrated(WalletModel* wallet_model);
-
-private:
-    QString m_success_message;
-
     void finish();
 };
 

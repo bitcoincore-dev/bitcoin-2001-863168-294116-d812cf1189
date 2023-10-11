@@ -7,15 +7,13 @@
 #define BITCOIN_UNIVALUE_INCLUDE_UNIVALUE_H
 
 #include <charconv>
-#include <cstddef>
 #include <cstdint>
+#include <cstring>
 #include <map>
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <system_error>
 #include <type_traits>
-#include <utility>
 #include <vector>
 
 class UniValue {
@@ -89,14 +87,16 @@ public:
     template <class It>
     void push_backV(It first, It last);
 
-    void pushKVEnd(std::string key, UniValue val);
+    void __pushKV(std::string key, UniValue val);
     void pushKV(std::string key, UniValue val);
     void pushKVs(UniValue obj);
 
     std::string write(unsigned int prettyIndent = 0,
                       unsigned int indentLevel = 0) const;
 
-    bool read(std::string_view raw);
+    bool read(const char *raw, size_t len);
+    bool read(const char *raw) { return read(raw, strlen(raw)); }
+    bool read(std::string_view raw) { return read(raw.data(), raw.size()); }
 
 private:
     UniValue::VType typ;
@@ -123,7 +123,7 @@ public:
     const UniValue& get_array() const;
 
     enum VType type() const { return getType(); }
-    const UniValue& find_value(std::string_view key) const;
+    friend const UniValue& find_value( const UniValue& obj, const std::string& name);
 };
 
 template <class It>
@@ -200,5 +200,7 @@ static inline bool json_isspace(int ch)
 }
 
 extern const UniValue NullUniValue;
+
+const UniValue& find_value( const UniValue& obj, const std::string& name);
 
 #endif // BITCOIN_UNIVALUE_INCLUDE_UNIVALUE_H

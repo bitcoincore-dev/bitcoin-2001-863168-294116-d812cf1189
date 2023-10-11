@@ -25,6 +25,14 @@
 #include <vector>
 
 /**
+ * A flag that is ORed into the protocol version to designate that addresses
+ * should be serialized in (unserialized from) v2 format (BIP155).
+ * Make sure that this does not collide with any of the values in `version.h`
+ * or with `SERIALIZE_TRANSACTION_NO_WITNESS`.
+ */
+static constexpr int ADDRV2_FORMAT = 0x20000000;
+
+/**
  * A network type.
  * @note An address may belong to more than one network, for example `10.0.0.1`
  * belongs to both `NET_UNROUTABLE` and `NET_IPV4`.
@@ -154,8 +162,8 @@ public:
     bool SetSpecial(const std::string& addr);
 
     bool IsBindAny() const; // INADDR_ANY equivalent
-    [[nodiscard]] bool IsIPv4() const { return m_net == NET_IPV4; } // IPv4 mapped address (::FFFF:0:0/96, 0.0.0.0/0)
-    [[nodiscard]] bool IsIPv6() const { return m_net == NET_IPV6; } // IPv6 address (not mapped IPv4, not Tor)
+    bool IsIPv4() const;    // IPv4 mapped address (::FFFF:0:0/96, 0.0.0.0/0)
+    bool IsIPv6() const;    // IPv6 address (not mapped IPv4, not Tor)
     bool IsRFC1918() const; // IPv4 private networks (10.0.0.0/8, 192.168.0.0/16, 172.16.0.0/12)
     bool IsRFC2544() const; // IPv4 inter-network communications (198.18.0.0/15)
     bool IsRFC6598() const; // IPv4 ISP-level NAT (100.64.0.0/10)
@@ -171,21 +179,13 @@ public:
     bool IsRFC6052() const; // IPv6 well-known prefix for IPv4-embedded address (64:FF9B::/96)
     bool IsRFC6145() const; // IPv6 IPv4-translated address (::FFFF:0:0:0/96) (actually defined in RFC2765)
     bool IsHeNet() const;   // IPv6 Hurricane Electric - https://he.net (2001:0470::/36)
-    [[nodiscard]] bool IsTor() const { return m_net == NET_ONION; }
-    [[nodiscard]] bool IsI2P() const { return m_net == NET_I2P; }
-    [[nodiscard]] bool IsCJDNS() const { return m_net == NET_CJDNS; }
-    [[nodiscard]] bool HasCJDNSPrefix() const { return m_addr[0] == 0xfc; }
+    bool IsTor() const;
+    bool IsI2P() const;
+    bool IsCJDNS() const;
     bool IsLocal() const;
     bool IsRoutable() const;
     bool IsInternal() const;
     bool IsValid() const;
-
-    /**
-     * Whether this object is a privacy network.
-     * TODO: consider adding IsCJDNS() here when more peers adopt CJDNS, see:
-     * https://github.com/bitcoin/bitcoin/pull/27411#issuecomment-1497176155
-     */
-    [[nodiscard]] bool IsPrivacyNet() const { return IsTor() || IsI2P(); }
 
     /**
      * Check if the current object can be serialized in pre-ADDRv2/BIP155 format.
@@ -203,7 +203,7 @@ public:
     bool HasLinkedIPv4() const;
 
     std::vector<unsigned char> GetAddrBytes() const;
-    int GetReachabilityFrom(const CNetAddr& paddrPartner) const;
+    int GetReachabilityFrom(const CNetAddr* paddrPartner = nullptr) const;
 
     explicit CNetAddr(const struct in6_addr& pipv6Addr, const uint32_t scope = 0);
     bool GetIn6Addr(struct in6_addr* pipv6Addr) const;
@@ -220,24 +220,13 @@ public:
         return IsIPv4() || IsIPv6() || IsTor() || IsI2P() || IsCJDNS();
     }
 
-    enum class Encoding {
-        V1,
-        V2, //!< BIP155 encoding
-    };
-    struct SerParams {
-        const Encoding enc;
-        SER_PARAMS_OPFUNC
-    };
-    static constexpr SerParams V1{Encoding::V1};
-    static constexpr SerParams V2{Encoding::V2};
-
     /**
      * Serialize to a stream.
      */
     template <typename Stream>
     void Serialize(Stream& s) const
     {
-        if (s.GetParams().enc == Encoding::V2) {
+        if (s.GetVersion() & ADDRV2_FORMAT) {
             SerializeV2Stream(s);
         } else {
             SerializeV1Stream(s);
@@ -250,7 +239,7 @@ public:
     template <typename Stream>
     void Unserialize(Stream& s)
     {
-        if (s.GetParams().enc == Encoding::V2) {
+        if (s.GetVersion() & ADDRV2_FORMAT) {
             UnserializeV2Stream(s);
         } else {
             UnserializeV1Stream(s);
@@ -551,7 +540,8 @@ public:
 
     SERIALIZE_METHODS(CService, obj)
     {
-        READWRITE(AsBase<CNetAddr>(obj), Using<BigEndianFormatter<2>>(obj.port));
+        READWRITEAS(CNetAddr, obj);
+        READWRITE(Using<BigEndianFormatter<2>>(obj.port));
     }
 
     friend class CServiceHash;
@@ -574,7 +564,7 @@ public:
         CSipHasher hasher(m_salt_k0, m_salt_k1);
         hasher.Write(a.m_net);
         hasher.Write(a.port);
-        hasher.Write(a.m_addr);
+        hasher.Write(a.m_addr.data(), a.m_addr.size());
         return static_cast<size_t>(hasher.Finalize());
     }
 
