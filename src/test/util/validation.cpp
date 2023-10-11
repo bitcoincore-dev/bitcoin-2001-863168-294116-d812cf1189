@@ -9,13 +9,13 @@
 #include <validation.h>
 #include <validationinterface.h>
 
-void TestChainstateManager::ResetIbd()
+void TestChainState::ResetIbd()
 {
     m_cached_finished_ibd = false;
     assert(IsInitialBlockDownload());
 }
 
-void TestChainstateManager::JumpOutOfIbd()
+void TestChainState::JumpOutOfIbd()
 {
     Assert(IsInitialBlockDownload());
     m_cached_finished_ibd = true;

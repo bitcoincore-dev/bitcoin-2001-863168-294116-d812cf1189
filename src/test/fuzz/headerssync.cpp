@@ -6,7 +6,6 @@
 #include <test/fuzz/util.h>
 #include <test/util/setup_common.h>
 #include <uint256.h>
-#include <util/chaintype.h>
 #include <util/time.h>
 #include <validation.h>
 
@@ -16,7 +15,7 @@
 static void initialize_headers_sync_state_fuzz()
 {
     static const auto testing_setup = MakeNoLogFileContext<>(
-        /*chain_type=*/ChainType::MAIN);
+        /*chain_name=*/CBaseChainParams::MAIN);
 }
 
 void MakeHeadersContinuous(
@@ -46,7 +45,7 @@ public:
     }
 };
 
-FUZZ_TARGET(headers_sync_state, .init = initialize_headers_sync_state_fuzz)
+FUZZ_TARGET_INIT(headers_sync_state, initialize_headers_sync_state_fuzz)
 {
     FuzzedDataProvider fuzzed_data_provider(buffer.data(), buffer.size());
     auto mock_time{ConsumeTime(fuzzed_data_provider)};

@@ -10,14 +10,13 @@
 #include <consensus/merkle.h>
 #include <consensus/params.h>
 #include <hash.h>
-#include <kernel/messagestartchars.h>
+#include <chainparamsbase.h>
 #include <logging.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <script/interpreter.h>
 #include <script/script.h>
 #include <uint256.h>
-#include <util/chaintype.h>
 #include <util/strencodings.h>
 
 #include <algorithm>
@@ -71,7 +70,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 class CMainParams : public CChainParams {
 public:
     CMainParams() {
-        m_chain_type = ChainType::MAIN;
+        strNetworkID = CBaseChainParams::MAIN;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 210000;
@@ -152,6 +151,8 @@ public:
         vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_main), std::end(chainparams_seed_main));
 
         fDefaultConsistencyChecks = false;
+        fRequireStandard = true;
+        m_is_test_chain = false;
         m_is_mockable_chain = false;
 
         checkpointData = {
@@ -191,7 +192,7 @@ public:
 class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
-        m_chain_type = ChainType::TESTNET;
+        strNetworkID = CBaseChainParams::TESTNET;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 210000;
@@ -258,6 +259,8 @@ public:
         vFixedSeeds = std::vector<uint8_t>(std::begin(chainparams_seed_test), std::end(chainparams_seed_test));
 
         fDefaultConsistencyChecks = false;
+        fRequireStandard = false;
+        m_is_test_chain = true;
         m_is_mockable_chain = false;
 
         checkpointData = {
@@ -325,7 +328,7 @@ public:
             vSeeds = *options.seeds;
         }
 
-        m_chain_type = ChainType::SIGNET;
+        strNetworkID = CBaseChainParams::SIGNET;
         consensus.signet_blocks = true;
         consensus.signet_challenge.assign(bin.begin(), bin.end());
         consensus.nSubsidyHalvingInterval = 210000;
@@ -358,7 +361,7 @@ public:
         HashWriter h{};
         h << consensus.signet_challenge;
         uint256 hash = h.GetHash();
-        std::copy_n(hash.begin(), 4, pchMessageStart.begin());
+        memcpy(pchMessageStart, hash.begin(), 4);
 
         nDefaultPort = 38333;
         nPruneAfterHeight = 1000;
@@ -379,6 +382,8 @@ public:
         bech32_hrp = "tb";
 
         fDefaultConsistencyChecks = false;
+        fRequireStandard = true;
+        m_is_test_chain = true;
         m_is_mockable_chain = false;
     }
 };
@@ -392,7 +397,7 @@ class CRegTestParams : public CChainParams
 public:
     explicit CRegTestParams(const RegTestOptions& opts)
     {
-        m_chain_type = ChainType::REGTEST;
+        strNetworkID =  CBaseChainParams::REGTEST;
         consensus.signet_blocks = false;
         consensus.signet_challenge.clear();
         consensus.nSubsidyHalvingInterval = 150;
@@ -469,6 +474,8 @@ public:
         vSeeds.emplace_back("dummySeed.invalid.");
 
         fDefaultConsistencyChecks = true;
+        fRequireStandard = true;
+        m_is_test_chain = true;
         m_is_mockable_chain = true;
 
         checkpointData = {

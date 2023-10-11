@@ -4,12 +4,13 @@
 
 #include <index/txindex.h>
 
-#include <clientversion.h>
-#include <common/args.h>
 #include <index/disktxpos.h>
 #include <logging.h>
 #include <node/blockstorage.h>
+#include <util/system.h>
 #include <validation.h>
+
+using node::OpenBlockFile;
 
 constexpr uint8_t DB_TXINDEX{'t'};
 
@@ -27,7 +28,7 @@ public:
     bool ReadTxPos(const uint256& txid, CDiskTxPos& pos) const;
 
     /// Write a batch of transaction positions to the DB.
-    [[nodiscard]] bool WriteTxs(const std::vector<std::pair<uint256, CDiskTxPos>>& v_pos);
+    bool WriteTxs(const std::vector<std::pair<uint256, CDiskTxPos>>& v_pos);
 };
 
 TxIndex::DB::DB(size_t n_cache_size, bool f_memory, bool f_wipe) :
@@ -79,7 +80,7 @@ bool TxIndex::FindTx(const uint256& tx_hash, uint256& block_hash, CTransactionRe
         return false;
     }
 
-    CAutoFile file{m_chainstate->m_blockman.OpenBlockFile(postx, true), CLIENT_VERSION};
+    CAutoFile file(OpenBlockFile(postx, true), SER_DISK, CLIENT_VERSION);
     if (file.IsNull()) {
         return error("%s: OpenBlockFile failed", __func__);
     }

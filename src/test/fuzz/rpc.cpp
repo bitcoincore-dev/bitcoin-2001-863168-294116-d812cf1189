@@ -23,7 +23,6 @@
 #include <test/util/setup_common.h>
 #include <tinyformat.h>
 #include <univalue.h>
-#include <util/chaintype.h>
 #include <util/strencodings.h>
 #include <util/string.h>
 #include <util/time.h>
@@ -38,7 +37,7 @@
 
 namespace {
 struct RPCFuzzTestingSetup : public TestingSetup {
-    RPCFuzzTestingSetup(const ChainType chain_type, const std::vector<const char*>& extra_args) : TestingSetup{chain_type, extra_args}
+    RPCFuzzTestingSetup(const std::string& chain_name, const std::vector<const char*>& extra_args) : TestingSetup{chain_name, extra_args}
     {
     }
 
@@ -71,16 +70,16 @@ const std::vector<std::string> RPC_COMMANDS_NOT_SAFE_FOR_FUZZING{
     "addconnection",  // avoid DNS lookups
     "addnode",        // avoid DNS lookups
     "addpeeraddress", // avoid DNS lookups
+    "analyzepsbt",    // avoid signed integer overflow in CFeeRate::GetFee(unsigned long) (https://github.com/bitcoin/bitcoin/issues/20607)
     "dumptxoutset",   // avoid writing to disk
     "dumpwallet", // avoid writing to disk
-    "enumeratesigners",
     "echoipc",              // avoid assertion failure (Assertion `"EnsureAnyNodeContext(request.context).init" && check' failed.)
     "generatetoaddress",    // avoid prohibitively slow execution (when `num_blocks` is large)
     "generatetodescriptor", // avoid prohibitively slow execution (when `nblocks` is large)
     "gettxoutproof",        // avoid prohibitively slow execution
-    "importmempool", // avoid reading from disk
     "importwallet", // avoid reading from disk
     "loadwallet",   // avoid reading from disk
+    "prioritisetransaction", // avoid signed integer overflow in CTxMemPool::PrioritiseTransaction(uint256 const&, long const&) (https://github.com/bitcoin/bitcoin/issues/20626)
     "savemempool",           // disabled as a precautionary measure: may take a file path argument in the future
     "setban",                // avoid DNS lookups
     "stop",                  // avoid shutdown state
@@ -88,7 +87,6 @@ const std::vector<std::string> RPC_COMMANDS_NOT_SAFE_FOR_FUZZING{
 
 // RPC commands which are safe for fuzzing.
 const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
-    "analyzepsbt",
     "clearbanned",
     "combinepsbt",
     "combinerawtransaction",
@@ -100,7 +98,6 @@ const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
     "decoderawtransaction",
     "decodescript",
     "deriveaddresses",
-    "descriptorprocesspsbt",
     "disconnectnode",
     "echo",
     "echojson",
@@ -110,15 +107,14 @@ const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
     "generate",
     "generateblock",
     "getaddednodeinfo",
-    "getaddrmaninfo",
     "getbestblockhash",
     "getblock",
     "getblockchaininfo",
     "getblockcount",
     "getblockfilter",
-    "getblockfrompeer", // when no peers are connected, no p2p message is sent
     "getblockhash",
     "getblockheader",
+    "getblockfrompeer", // when no peers are connected, no p2p message is sent
     "getblockstats",
     "getblocktemplate",
     "getchaintips",
@@ -132,6 +128,7 @@ const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
     "getmempoolancestors",
     "getmempooldescendants",
     "getmempoolentry",
+    "gettxspendingprevout",
     "getmempoolinfo",
     "getmininginfo",
     "getnettotals",
@@ -139,13 +136,11 @@ const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
     "getnetworkinfo",
     "getnodeaddresses",
     "getpeerinfo",
-    "getprioritisedtransactions",
     "getrawmempool",
     "getrawtransaction",
     "getrpcinfo",
     "gettxout",
     "gettxoutsetinfo",
-    "gettxspendingprevout",
     "help",
     "invalidateblock",
     "joinpsbts",
@@ -154,12 +149,10 @@ const std::vector<std::string> RPC_COMMANDS_SAFE_FOR_FUZZING{
     "mockscheduler",
     "ping",
     "preciousblock",
-    "prioritisetransaction",
     "pruneblockchain",
     "reconsiderblock",
     "scanblocks",
     "scantxoutset",
-    "sendmsgtopeer", // when no peers are connected, no p2p message is sent
     "sendrawtransaction",
     "setmocktime",
     "setnetworkactive",
@@ -286,7 +279,9 @@ std::string ConsumeScalarRPCArgument(FuzzedDataProvider& fuzzed_data_provider)
         },
         [&] {
             // base58 encoded key
-            CKey key = ConsumePrivateKey(fuzzed_data_provider);
+            const std::vector<uint8_t> random_bytes = fuzzed_data_provider.ConsumeBytes<uint8_t>(32);
+            CKey key;
+            key.Set(random_bytes.begin(), random_bytes.end(), fuzzed_data_provider.ConsumeBool());
             if (!key.IsValid()) {
                 return;
             }
@@ -294,7 +289,9 @@ std::string ConsumeScalarRPCArgument(FuzzedDataProvider& fuzzed_data_provider)
         },
         [&] {
             // hex encoded pubkey
-            CKey key = ConsumePrivateKey(fuzzed_data_provider);
+            const std::vector<uint8_t> random_bytes = fuzzed_data_provider.ConsumeBytes<uint8_t>(32);
+            CKey key;
+            key.Set(random_bytes.begin(), random_bytes.end(), fuzzed_data_provider.ConsumeBool());
             if (!key.IsValid()) {
                 return;
             }
@@ -347,7 +344,7 @@ void initialize_rpc()
     }
 }
 
-FUZZ_TARGET(rpc, .init = initialize_rpc)
+FUZZ_TARGET_INIT(rpc, initialize_rpc)
 {
     FuzzedDataProvider fuzzed_data_provider{buffer.data(), buffer.size()};
     SetMockTime(ConsumeTime(fuzzed_data_provider));
@@ -366,7 +363,7 @@ FUZZ_TARGET(rpc, .init = initialize_rpc)
     try {
         rpc_testing_setup->CallRPC(rpc_command, arguments);
     } catch (const UniValue& json_rpc_error) {
-        const std::string error_msg{json_rpc_error.find_value("message").get_str()};
+        const std::string error_msg{find_value(json_rpc_error, "message").get_str()};
         // Once c++20 is allowed, starts_with can be used.
         // if (error_msg.starts_with("Internal bug detected")) {
         if (0 == error_msg.rfind("Internal bug detected", 0)) {

@@ -105,6 +105,7 @@ private Q_SLOTS:
     void clipboardFee();
     void clipboardAfterFee();
     void clipboardBytes();
+    void clipboardLowOutput();
     void clipboardChange();
     void radioTreeMode(bool);
     void radioListMode(bool);

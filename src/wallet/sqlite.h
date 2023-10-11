@@ -8,29 +8,19 @@
 #include <sync.h>
 #include <wallet/db.h>
 
-struct bilingual_str;
+#include <sqlite3.h>
 
-struct sqlite3_stmt;
-struct sqlite3;
+struct bilingual_str;
 
 namespace wallet {
 class SQLiteDatabase;
 
-/** RAII class that provides a database cursor */
 class SQLiteCursor : public DatabaseCursor
 {
 public:
     sqlite3_stmt* m_cursor_stmt{nullptr};
-    // Copies of the prefix things for the prefix cursor.
-    // Prevents SQLite from accessing temp variables for the prefix things.
-    std::vector<std::byte> m_prefix_range_start;
-    std::vector<std::byte> m_prefix_range_end;
 
     explicit SQLiteCursor() {}
-    explicit SQLiteCursor(std::vector<std::byte> start_range, std::vector<std::byte> end_range)
-        : m_prefix_range_start(std::move(start_range)),
-        m_prefix_range_end(std::move(end_range))
-    {}
     ~SQLiteCursor() override;
 
     Status Next(DataStream& key, DataStream& value) override;
@@ -46,16 +36,13 @@ private:
     sqlite3_stmt* m_insert_stmt{nullptr};
     sqlite3_stmt* m_overwrite_stmt{nullptr};
     sqlite3_stmt* m_delete_stmt{nullptr};
-    sqlite3_stmt* m_delete_prefix_stmt{nullptr};
 
     void SetupSQLStatements();
-    bool ExecStatement(sqlite3_stmt* stmt, Span<const std::byte> blob);
 
     bool ReadKey(DataStream&& key, DataStream& value) override;
     bool WriteKey(DataStream&& key, DataStream&& value, bool overwrite = true) override;
     bool EraseKey(DataStream&& key) override;
     bool HasKey(DataStream&& key) override;
-    bool ErasePrefix(Span<const std::byte> prefix) override;
 
 public:
     explicit SQLiteBatch(SQLiteDatabase& database);
@@ -67,7 +54,6 @@ public:
     void Close() override;
 
     std::unique_ptr<DatabaseCursor> GetNewCursor() override;
-    std::unique_ptr<DatabaseCursor> GetNewPrefixCursor(Span<const std::byte> prefix) override;
     bool TxnBegin() override;
     bool TxnCommit() override;
     bool TxnAbort() override;

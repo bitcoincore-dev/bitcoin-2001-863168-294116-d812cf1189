@@ -12,21 +12,15 @@ class CTxMemPool;
 
 namespace kernel {
 
-/** Dump the mempool to a file. */
+/** Dump the mempool to disk. */
 bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path,
                  fsbridge::FopenFn mockable_fopen_function = fsbridge::fopen,
                  bool skip_file_commit = false);
 
-struct ImportMempoolOptions {
-    fsbridge::FopenFn mockable_fopen_function{fsbridge::fopen};
-    bool use_current_time{false};
-    bool apply_fee_delta_priority{true};
-    bool apply_unbroadcast_set{true};
-};
-/** Import the file and attempt to add its contents to the mempool. */
+/** Load the mempool from disk. */
 bool LoadMempool(CTxMemPool& pool, const fs::path& load_path,
                  Chainstate& active_chainstate,
-                 ImportMempoolOptions&& opts);
+                 fsbridge::FopenFn mockable_fopen_function = fsbridge::fopen);
 
 } // namespace kernel
 

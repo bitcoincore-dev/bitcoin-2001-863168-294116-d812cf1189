@@ -4,16 +4,15 @@
 
 #include <map>
 
-#include <clientversion.h>
-#include <common/args.h>
 #include <dbwrapper.h>
 #include <hash.h>
 #include <index/blockfilterindex.h>
-#include <logging.h>
 #include <node/blockstorage.h>
-#include <undo.h>
 #include <util/fs_helpers.h>
+#include <util/system.h>
 #include <validation.h>
+
+using node::UndoReadFromDisk;
 
 /* The index database stores three items for each block: the disk location of the encoded filter,
  * its dSHA256 hash, and the header. Those belonging to blocks on the active chain are indexed by
@@ -224,7 +223,7 @@ bool BlockFilterIndex::CustomAppend(const interfaces::BlockInfo& block)
         // pindex variable gives indexing code access to node internals. It
         // will be removed in upcoming commit
         const CBlockIndex* pindex = WITH_LOCK(cs_main, return m_chainstate->m_blockman.LookupBlockIndex(block.hash));
-        if (!m_chainstate->m_blockman.UndoReadFromDisk(block_undo, *pindex)) {
+        if (!UndoReadFromDisk(block_undo, pindex)) {
             return false;
         }
 
@@ -261,7 +260,7 @@ bool BlockFilterIndex::CustomAppend(const interfaces::BlockInfo& block)
     return true;
 }
 
-[[nodiscard]] static bool CopyHeightIndexToHashIndex(CDBIterator& db_it, CDBBatch& batch,
+static bool CopyHeightIndexToHashIndex(CDBIterator& db_it, CDBBatch& batch,
                                        const std::string& index_name,
                                        int start_height, int stop_height)
 {

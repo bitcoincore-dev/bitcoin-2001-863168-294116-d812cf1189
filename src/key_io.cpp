@@ -6,9 +6,6 @@
 
 #include <base58.h>
 #include <bech32.h>
-#include <script/interpreter.h>
-#include <script/solver.h>
-#include <tinyformat.h>
 #include <util/strencodings.h>
 
 #include <algorithm>
@@ -67,18 +64,16 @@ public:
 
     std::string operator()(const WitnessUnknown& id) const
     {
-        const std::vector<unsigned char>& program = id.GetWitnessProgram();
-        if (id.GetWitnessVersion() < 1 || id.GetWitnessVersion() > 16 || program.size() < 2 || program.size() > 40) {
+        if (id.version < 1 || id.version > 16 || id.length < 2 || id.length > 40) {
             return {};
         }
-        std::vector<unsigned char> data = {(unsigned char)id.GetWitnessVersion()};
-        data.reserve(1 + (program.size() * 8 + 4) / 5);
-        ConvertBits<8, 5, true>([&](unsigned char c) { data.push_back(c); }, program.begin(), program.end());
+        std::vector<unsigned char> data = {(unsigned char)id.version};
+        data.reserve(1 + (id.length * 8 + 4) / 5);
+        ConvertBits<8, 5, true>([&](unsigned char c) { data.push_back(c); }, id.program, id.program + id.length);
         return bech32::Encode(bech32::Encoding::BECH32M, m_params.Bech32HRP(), data);
     }
 
     std::string operator()(const CNoDestination& no) const { return {}; }
-    std::string operator()(const PubKeyDestination& pk) const { return {}; }
 };
 
 CTxDestination DecodeDestination(const std::string& str, const CChainParams& params, std::string& error_str, std::vector<int>* error_locations)
@@ -151,9 +146,6 @@ CTxDestination DecodeDestination(const std::string& str, const CChainParams& par
         // The rest of the symbols are converted witness program bytes.
         data.reserve(((dec.data.size() - 1) * 5) / 8);
         if (ConvertBits<5, 8, false>([&](unsigned char c) { data.push_back(c); }, dec.data.begin() + 1, dec.data.end())) {
-
-            std::string_view byte_str{data.size() == 1 ? "byte" : "bytes"};
-
             if (version == 0) {
                 {
                     WitnessV0KeyHash keyid;
@@ -170,7 +162,7 @@ CTxDestination DecodeDestination(const std::string& str, const CChainParams& par
                     }
                 }
 
-                error_str = strprintf("Invalid Bech32 v0 address program size (%d %s), per BIP141", data.size(), byte_str);
+                error_str = strprintf("Invalid Bech32 v0 address program size (%s byte), per BIP141", data.size());
                 return CNoDestination();
             }
 
@@ -187,11 +179,15 @@ CTxDestination DecodeDestination(const std::string& str, const CChainParams& par
             }
 
             if (data.size() < 2 || data.size() > BECH32_WITNESS_PROG_MAX_LEN) {
-                error_str = strprintf("Invalid Bech32 address program size (%d %s)", data.size(), byte_str);
+                error_str = strprintf("Invalid Bech32 address program size (%s byte)", data.size());
                 return CNoDestination();
             }
 
-            return WitnessUnknown{version, data};
+            WitnessUnknown unk;
+            unk.version = version;
+            std::copy(data.begin(), data.end(), unk.program);
+            unk.length = data.size();
+            return unk;
         } else {
             error_str = strprintf("Invalid padding in Bech32 data section");
             return CNoDestination();

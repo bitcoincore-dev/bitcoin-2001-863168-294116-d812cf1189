@@ -30,16 +30,15 @@
 #include <qt/macdockiconhandler.h>
 #endif
 
+#include <functional>
 #include <chain.h>
 #include <chainparams.h>
-#include <common/system.h>
 #include <interfaces/handler.h>
 #include <interfaces/node.h>
 #include <node/interface_ui.h>
+#include <util/system.h>
 #include <util/translation.h>
 #include <validation.h>
-
-#include <functional>
 
 #include <QAction>
 #include <QActionGroup>
@@ -239,7 +238,6 @@ BitcoinGUI::~BitcoinGUI()
         trayIcon->hide();
 #ifdef Q_OS_MACOS
     delete m_app_nap_inhibitor;
-    delete appMenuBar;
     MacDockIconHandler::cleanup();
 #endif
 
@@ -359,10 +357,6 @@ void BitcoinGUI::createActions()
     m_close_all_wallets_action = new QAction(tr("Close All Wallets…"), this);
     m_close_all_wallets_action->setStatusTip(tr("Close all wallets"));
 
-    m_migrate_wallet_action = new QAction(tr("Migrate Wallet"), this);
-    m_migrate_wallet_action->setEnabled(false);
-    m_migrate_wallet_action->setStatusTip(tr("Migrate a wallet"));
-
     showHelpMessageAction = new QAction(tr("&Command-line options"), this);
     showHelpMessageAction->setMenuRole(QAction::NoRole);
     showHelpMessageAction->setStatusTip(tr("Show the %1 help message to get a list with possible Bitcoin command-line options").arg(PACKAGE_NAME));
@@ -416,7 +410,6 @@ void BitcoinGUI::createActions()
                 connect(action, &QAction::triggered, [this, path] {
                     auto activity = new OpenWalletActivity(m_wallet_controller, this);
                     connect(activity, &OpenWalletActivity::opened, this, &BitcoinGUI::setCurrentWallet, Qt::QueuedConnection);
-                    connect(activity, &OpenWalletActivity::opened, rpcConsole, &RPCConsole::setCurrentWallet, Qt::QueuedConnection);
                     activity->open(path);
                 });
             }
@@ -446,7 +439,6 @@ void BitcoinGUI::createActions()
 
             auto activity = new RestoreWalletActivity(m_wallet_controller, this);
             connect(activity, &RestoreWalletActivity::restored, this, &BitcoinGUI::setCurrentWallet, Qt::QueuedConnection);
-            connect(activity, &RestoreWalletActivity::restored, rpcConsole, &RPCConsole::setCurrentWallet, Qt::QueuedConnection);
 
             auto backup_file_path = fs::PathFromString(backup_file.toStdString());
             activity->restore(backup_file_path, wallet_name.toStdString());
@@ -457,16 +449,10 @@ void BitcoinGUI::createActions()
         connect(m_create_wallet_action, &QAction::triggered, [this] {
             auto activity = new CreateWalletActivity(m_wallet_controller, this);
             connect(activity, &CreateWalletActivity::created, this, &BitcoinGUI::setCurrentWallet);
-            connect(activity, &CreateWalletActivity::created, rpcConsole, &RPCConsole::setCurrentWallet);
             activity->create();
         });
         connect(m_close_all_wallets_action, &QAction::triggered, [this] {
             m_wallet_controller->closeAllWallets(this);
-        });
-        connect(m_migrate_wallet_action, &QAction::triggered, [this] {
-            auto activity = new MigrateWalletActivity(m_wallet_controller, this);
-            connect(activity, &MigrateWalletActivity::migrated, this, &BitcoinGUI::setCurrentWallet);
-            activity->migrate(walletFrame->currentWalletModel());
         });
         connect(m_mask_values_action, &QAction::toggled, this, &BitcoinGUI::setPrivacy);
         connect(m_mask_values_action, &QAction::toggled, this, &BitcoinGUI::enableHistoryAction);
@@ -479,13 +465,7 @@ void BitcoinGUI::createActions()
 
 void BitcoinGUI::createMenuBar()
 {
-#ifdef Q_OS_MACOS
-    // Create a decoupled menu bar on Mac which stays even if the window is closed
-    appMenuBar = new QMenuBar();
-#else
-    // Get the main window's menu bar on other platforms
     appMenuBar = menuBar();
-#endif
 
     // Configure the menus
     QMenu *file = appMenuBar->addMenu(tr("&File"));
@@ -495,7 +475,6 @@ void BitcoinGUI::createMenuBar()
         file->addAction(m_open_wallet_action);
         file->addAction(m_close_wallet_action);
         file->addAction(m_close_all_wallets_action);
-        file->addAction(m_migrate_wallet_action);
         file->addSeparator();
         file->addAction(backupWalletAction);
         file->addAction(m_restore_wallet_action);
@@ -689,7 +668,7 @@ void BitcoinGUI::enableHistoryAction(bool privacy)
     if (historyAction->isChecked()) gotoOverviewPage();
 }
 
-void BitcoinGUI::setWalletController(WalletController* wallet_controller, bool show_loading_minimized)
+void BitcoinGUI::setWalletController(WalletController* wallet_controller)
 {
     assert(!m_wallet_controller);
     assert(wallet_controller);
@@ -709,7 +688,7 @@ void BitcoinGUI::setWalletController(WalletController* wallet_controller, bool s
     });
 
     auto activity = new LoadWalletsActivity(m_wallet_controller, this);
-    activity->load(show_loading_minimized);
+    activity->load();
 }
 
 WalletController* BitcoinGUI::getWalletController()
@@ -780,7 +759,6 @@ void BitcoinGUI::setCurrentWallet(WalletModel* wallet_model)
         }
     }
     updateWindowTitle();
-    m_migrate_wallet_action->setEnabled(wallet_model->wallet().isLegacy());
 }
 
 void BitcoinGUI::setCurrentWalletBySelectorIndex(int index)
@@ -814,7 +792,6 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     openAction->setEnabled(enabled);
     m_close_wallet_action->setEnabled(enabled);
     m_close_all_wallets_action->setEnabled(enabled);
-    m_migrate_wallet_action->setEnabled(enabled);
 }
 
 void BitcoinGUI::createTrayIcon()
@@ -876,6 +853,7 @@ void BitcoinGUI::createTrayIconMenu()
     // Note: On macOS, the Dock icon is used to provide the tray's functionality.
     MacDockIconHandler* dockIconHandler = MacDockIconHandler::instance();
     connect(dockIconHandler, &MacDockIconHandler::dockIconClicked, [this] {
+        if (m_node.shutdownRequested()) return; // nothing to show, node is shutting down.
         show();
         activateWindow();
     });
@@ -887,6 +865,8 @@ void BitcoinGUI::createTrayIconMenu()
         // See https://bugreports.qt.io/browse/QTBUG-91697
         trayIconMenu.get(), &QMenu::aboutToShow,
         [this, show_hide_action, send_action, receive_action, sign_action, verify_action, options_action, node_window_action, quit_action] {
+            if (m_node.shutdownRequested()) return; // nothing to do, node is shutting down.
+
             if (show_hide_action) show_hide_action->setText(
                 (!isHidden() && !isMinimized() && !GUIUtil::isObscured(this)) ?
                     tr("&Hide") :

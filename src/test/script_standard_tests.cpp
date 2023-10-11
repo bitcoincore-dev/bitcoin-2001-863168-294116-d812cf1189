@@ -8,7 +8,7 @@
 #include <key_io.h>
 #include <script/script.h>
 #include <script/signingprovider.h>
-#include <script/solver.h>
+#include <script/standard.h>
 #include <test/util/setup_common.h>
 #include <util/strencodings.h>
 
@@ -203,8 +203,8 @@ BOOST_AUTO_TEST_CASE(script_standard_ExtractDestination)
     // TxoutType::PUBKEY
     s.clear();
     s << ToByteVector(pubkey) << OP_CHECKSIG;
-    BOOST_CHECK(!ExtractDestination(s, address));
-    BOOST_CHECK(std::get<PubKeyDestination>(address) == PubKeyDestination(pubkey));
+    BOOST_CHECK(ExtractDestination(s, address));
+    BOOST_CHECK(std::get<PKHash>(address) == PKHash(pubkey));
 
     // TxoutType::PUBKEYHASH
     s.clear();
@@ -249,7 +249,10 @@ BOOST_AUTO_TEST_CASE(script_standard_ExtractDestination)
     s.clear();
     s << OP_1 << ToByteVector(pubkey);
     BOOST_CHECK(ExtractDestination(s, address));
-    WitnessUnknown unk{1, ToByteVector(pubkey)};
+    WitnessUnknown unk;
+    unk.length = 33;
+    unk.version = 1;
+    std::copy(pubkey.begin(), pubkey.end(), unk.program);
     BOOST_CHECK(std::get<WitnessUnknown>(address) == unk);
 }
 
@@ -391,7 +394,7 @@ BOOST_AUTO_TEST_CASE(bip341_spk_test_vectors)
     using control_set = decltype(TaprootSpendData::scripts)::mapped_type;
 
     UniValue tests;
-    tests.read(json_tests::bip341_wallet_vectors);
+    tests.read((const char*)json_tests::bip341_wallet_vectors, sizeof(json_tests::bip341_wallet_vectors));
 
     const auto& vectors = tests["scriptPubKey"];
 

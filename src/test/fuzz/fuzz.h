@@ -21,25 +21,25 @@
 using FuzzBufferType = Span<const uint8_t>;
 
 using TypeTestOneInput = std::function<void(FuzzBufferType)>;
-struct FuzzTargetOptions {
-    std::function<void()> init{[] {}};
-    bool hidden{false};
-};
+using TypeInitialize = std::function<void()>;
+using TypeHidden = bool;
 
-void FuzzFrameworkRegisterTarget(std::string_view name, TypeTestOneInput target, FuzzTargetOptions opts);
+void FuzzFrameworkRegisterTarget(std::string_view name, TypeTestOneInput target, TypeInitialize init, TypeHidden hidden);
 
-#if defined(__clang__)
-#define FUZZ_TARGET(...) _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wgnu-zero-variadic-macro-arguments\"") DETAIL_FUZZ(__VA_ARGS__) _Pragma("clang diagnostic pop")
-#else
-#define FUZZ_TARGET(...) DETAIL_FUZZ(__VA_ARGS__)
-#endif
+inline void FuzzFrameworkEmptyInitFun() {}
 
-#define DETAIL_FUZZ(name, ...)                                                        \
+#define FUZZ_TARGET(name) \
+    FUZZ_TARGET_INIT(name, FuzzFrameworkEmptyInitFun)
+
+#define FUZZ_TARGET_INIT(name, init_fun) \
+    FUZZ_TARGET_INIT_HIDDEN(name, init_fun, false)
+
+#define FUZZ_TARGET_INIT_HIDDEN(name, init_fun, hidden)                               \
     void name##_fuzz_target(FuzzBufferType);                                          \
     struct name##_Before_Main {                                                       \
         name##_Before_Main()                                                          \
         {                                                                             \
-            FuzzFrameworkRegisterTarget(#name, name##_fuzz_target, {__VA_ARGS__});    \
+            FuzzFrameworkRegisterTarget(#name, name##_fuzz_target, init_fun, hidden); \
         }                                                                             \
     } const static g_##name##_before_main;                                            \
     void name##_fuzz_target(FuzzBufferType buffer)

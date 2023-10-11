@@ -7,6 +7,7 @@
 #include <key.h>
 #include <key_io.h>
 #include <pubkey.h>
+#include <script/standard.h>
 #include <uint256.h>
 #include <util/message.h>
 #include <util/strencodings.h>
@@ -47,7 +48,7 @@ MessageVerificationResult MessageVerify(
         return MessageVerificationResult::ERR_PUBKEY_NOT_RECOVERED;
     }
 
-    if (!(PKHash(pubkey) == *std::get_if<PKHash>(&destination))) {
+    if (!(CTxDestination(PKHash(pubkey)) == destination)) {
         return MessageVerificationResult::ERR_NOT_SIGNED;
     }
 

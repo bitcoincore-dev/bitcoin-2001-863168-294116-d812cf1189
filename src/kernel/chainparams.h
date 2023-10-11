@@ -7,10 +7,10 @@
 #define BITCOIN_KERNEL_CHAINPARAMS_H
 
 #include <consensus/params.h>
-#include <kernel/messagestartchars.h>
+#include <netaddress.h>
 #include <primitives/block.h>
+#include <protocol.h>
 #include <uint256.h>
-#include <util/chaintype.h>
 #include <util/hash_type.h>
 
 #include <cstdint>
@@ -86,14 +86,25 @@ public:
     };
 
     const Consensus::Params& GetConsensus() const { return consensus; }
-    const MessageStartChars& MessageStart() const { return pchMessageStart; }
+    const CMessageHeader::MessageStartChars& MessageStart() const { return pchMessageStart; }
     uint16_t GetDefaultPort() const { return nDefaultPort; }
+    uint16_t GetDefaultPort(Network net) const
+    {
+        return net == NET_I2P ? I2P_SAM31_PORT : GetDefaultPort();
+    }
+    uint16_t GetDefaultPort(const std::string& addr) const
+    {
+        CNetAddr a;
+        return a.SetSpecial(addr) ? GetDefaultPort(a.GetNetwork()) : GetDefaultPort();
+    }
 
     const CBlock& GenesisBlock() const { return genesis; }
     /** Default value for -checkmempool and -checkblockindex argument */
     bool DefaultConsistencyChecks() const { return fDefaultConsistencyChecks; }
+    /** Policy: Filter transactions that do not match well-defined patterns */
+    bool RequireStandard() const { return fRequireStandard; }
     /** If this chain is exclusively used for testing */
-    bool IsTestChain() const { return m_chain_type != ChainType::MAIN; }
+    bool IsTestChain() const { return m_is_test_chain; }
     /** If this chain allows time to be mocked */
     bool IsMockableChain() const { return m_is_mockable_chain; }
     uint64_t PruneAfterHeight() const { return nPruneAfterHeight; }
@@ -103,10 +114,8 @@ public:
     uint64_t AssumedChainStateSize() const { return m_assumed_chain_state_size; }
     /** Whether it is possible to mine blocks on demand (no retargeting) */
     bool MineBlocksOnDemand() const { return consensus.fPowNoRetargeting; }
-    /** Return the chain type string */
-    std::string GetChainTypeString() const { return ChainTypeToString(m_chain_type); }
-    /** Return the chain type */
-    ChainType GetChainType() const { return m_chain_type; }
+    /** Return the network string */
+    std::string NetworkIDString() const { return strNetworkID; }
     /** Return the list of hostnames to look up for DNS seeds */
     const std::vector<std::string>& DNSSeeds() const { return vSeeds; }
     const std::vector<unsigned char>& Base58Prefix(Base58Type type) const { return base58Prefixes[type]; }
@@ -155,7 +164,7 @@ protected:
     CChainParams() {}
 
     Consensus::Params consensus;
-    MessageStartChars pchMessageStart;
+    CMessageHeader::MessageStartChars pchMessageStart;
     uint16_t nDefaultPort;
     uint64_t nPruneAfterHeight;
     uint64_t m_assumed_blockchain_size;
@@ -163,10 +172,12 @@ protected:
     std::vector<std::string> vSeeds;
     std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
     std::string bech32_hrp;
-    ChainType m_chain_type;
+    std::string strNetworkID;
     CBlock genesis;
     std::vector<uint8_t> vFixedSeeds;
     bool fDefaultConsistencyChecks;
+    bool fRequireStandard;
+    bool m_is_test_chain;
     bool m_is_mockable_chain;
     CCheckpointData checkpointData;
     MapAssumeutxo m_assumeutxo_data;

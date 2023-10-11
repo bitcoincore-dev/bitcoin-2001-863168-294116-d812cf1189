@@ -8,7 +8,7 @@
 #include <script/bitcoinconsensus.h>
 #endif
 #include <script/script.h>
-#include <script/interpreter.h>
+#include <script/standard.h>
 #include <streams.h>
 #include <test/util/transaction_utils.h>
 
