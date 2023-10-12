@@ -74,7 +74,7 @@ jobs:
         run: clang --version
 
       - name: Install Homebrew packages
-        run: brew install automake libtool pkg-config gnu-getopt ccache boost libevent miniupnpc libnatpmp zeromq qt@5 qrencode
+        run: brew install automake libtool pkg-config gnu-getopt ccache boost libevent miniupnpc libnatpmp zeromq qt@5 qrencode kadwanev/brew/retry
       - name: Install HomebrewCask android-sdk
         run: brew install --cask android-sdk
       - name: brew link --force gnu-getopt
