@@ -75,6 +75,8 @@ jobs:
 
       - name: Install Homebrew packages
         run: brew install automake libtool pkg-config gnu-getopt ccache boost libevent miniupnpc libnatpmp zeromq qt@5 qrencode
+      - name: brew link --force gnu-getopt
+        run: brew link --force gnu-getopt
 
       - name: Set Ccache directory
         run: echo "CCACHE_DIR=${RUNNER_TEMP}/ccache_dir" >> "$GITHUB_ENV"
