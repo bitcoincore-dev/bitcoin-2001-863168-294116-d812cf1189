@@ -75,6 +75,8 @@ jobs:
 
       - name: Install Homebrew packages
         run: brew install automake libtool pkg-config gnu-getopt ccache boost libevent miniupnpc libnatpmp zeromq qt@5 qrencode
+      - name: Install HomebrewCask android-sdk
+        run: brew install --cask android-sdk
       - name: brew link --force gnu-getopt
         run: brew link --force gnu-getopt
       - name: add gnu-getopt to PATH
