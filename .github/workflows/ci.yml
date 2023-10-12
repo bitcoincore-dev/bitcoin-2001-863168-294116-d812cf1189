@@ -45,11 +45,11 @@ jobs:
           # Use clang++, because it is a bit faster and uses less memory than g++
           git rebase --exec "echo Running test-one-commit on \$( git log -1 ) && ./autogen.sh && CC=clang CXX=clang++ ./configure && make clean && make -j $(nproc) check && ./test/functional/test_runner.py -j $(( $(nproc) * 2 ))" ${{ env.COMMIT_AFTER_LAST_MERGE }}~1
 
-  macos-native-x86_64:
-    name: 'macOS 13 native, x86_64, no depends, sqlite only, gui'
+  macos-native-matrix:
+    name: 'macos native matrix, x86_64, Arm64, no depends, sqlite only, gui'
     # Use latest image, but hardcode version to avoid silent upgrades (and breaks).
     # See: https://github.com/actions/runner-images#available-images.
-    runs-on: macos-13  # Use M1 once available https://github.com/github/roadmap/issues/528
+    runs-on: [ macos-11, macos-12, macos-12-large, macos-13-large, macos-13-xlarge ]
 
     # No need to run on the read-only mirror, unless it is a PR.
     if: github.repository != 'bitcoin-core/gui' || github.event_name == 'pull_request'
