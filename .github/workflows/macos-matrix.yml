@@ -77,6 +77,8 @@ jobs:
         run: brew install automake libtool pkg-config gnu-getopt ccache boost libevent miniupnpc libnatpmp zeromq qt@5 qrencode
       - name: brew link --force gnu-getopt
         run: brew link --force gnu-getopt
+      - name: add gnu-getopt to PATH
+        run: echo 'export PATH="/opt/homebrew/opt/gnu-getopt/bin:$PATH"' >> /Users/runner/.bash_profile
       - name: which gnu-getopt
         run: which gnu-getopt
 
