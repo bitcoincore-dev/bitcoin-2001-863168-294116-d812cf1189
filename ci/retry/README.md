@@ -16,8 +16,7 @@ sudo sh -c "curl https://raw.githubusercontent.com/kadwanev/retry/master/retry -
 If you're on OS X, retry is also on Homebrew:
 
 ```
-brew pull 27283
-brew install retry
+brew install kadwanev/brew/retry
 ```
 Not popular enough for homebrew-core. Please star this project to help.
 
@@ -35,6 +34,10 @@ Help:
         -m, --min=secs                   Exponential Backoff: minimum sleep amount (seconds): Default 0.3
         -x, --max=secs                   Exponential Backoff: maximum sleep amount (seconds): Default 60
         -f, --fail="script +cmds"        Fail Script: run in case of final failure
+
+#### State
+
+Environment variable `RETRY_ATTEMPT` is set with the current attempt number.
 
 ### Examples
 
@@ -94,7 +97,7 @@ Bad command:
 
 Fail command:
 
-`retry -t 3 -f 'echo "oh poopsickles"' 'echo "y u no work"; false'`
+`retry -t 3 -f 'echo "oh poopsicles"' 'echo "y u no work"; false'`
 
     y u no work
     Before retry #1: sleeping 0.3 seconds
@@ -104,7 +107,7 @@ Fail command:
     Before retry #3: sleeping 1.2 seconds
     y u no work
     Retries exhausted, running fail script
-    oh poopsickles
+    oh poopsicles
 
 Last attempt passed:
 
