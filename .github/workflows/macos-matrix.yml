@@ -79,8 +79,8 @@ jobs:
         run: brew link --force gnu-getopt
       - name: add gnu-getopt to PATH
         run: echo 'export PATH="/opt/homebrew/opt/gnu-getopt/bin:$PATH"' >> /Users/runner/.bash_profile
-      - name: which gnu-getopt
-        run: which gnu-getopt
+      - name: echo $(which gnu-getopt)
+        run: echo $(which gnu-getopt)
 
       - name: Set Ccache directory
         run: echo "CCACHE_DIR=${RUNNER_TEMP}/ccache_dir" >> "$GITHUB_ENV"
