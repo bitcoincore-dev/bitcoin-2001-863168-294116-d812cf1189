@@ -373,8 +373,8 @@ public:
 
         // Deployment of OP_COVTOOLS (BIP xxx)
         consensus.vDeployments[Consensus::DEPLOYMENT_COVTOOLS].bit = 3;
-        consensus.vDeployments[Consensus::DEPLOYMENT_COVTOOLS].nStartTime = 1711993169; // XXX FIXME
-        consensus.vDeployments[Consensus::DEPLOYMENT_COVTOOLS].nTimeout = 1727804369; // XXX FIXME
+        consensus.vDeployments[Consensus::DEPLOYMENT_COVTOOLS].nStartTime = Consensus::BIP9Deployment::ALWAYS_ACTIVE;
+        consensus.vDeployments[Consensus::DEPLOYMENT_COVTOOLS].nTimeout = Consensus::BIP9Deployment::NO_TIMEOUT;
         consensus.vDeployments[Consensus::DEPLOYMENT_COVTOOLS].min_activation_height = 0;
 
         // message start is defined as the first 4 bytes of the sha256d of the block script
