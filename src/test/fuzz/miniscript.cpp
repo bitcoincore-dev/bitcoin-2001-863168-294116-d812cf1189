@@ -391,6 +391,7 @@ std::optional<NodeInfo> ConsumeNodeStable(MsCtx script_ctx, FuzzedDataProvider& 
     bool allow_K = (type_needed == ""_mst) || (type_needed << "K"_mst);
     bool allow_V = (type_needed == ""_mst) || (type_needed << "V"_mst);
     bool allow_W = (type_needed == ""_mst) || (type_needed << "W"_mst);
+    static constexpr auto B{"B"_mst}, K{"K"_mst}, V{"V"_mst}, W{"W"_mst};
 
     switch (provider.ConsumeIntegral<uint8_t>()) {
         case 0:
@@ -440,22 +441,22 @@ std::optional<NodeInfo> ConsumeNodeStable(MsCtx script_ctx, FuzzedDataProvider& 
         }
         case 11:
             if (!(allow_B || allow_K || allow_V)) return {};
-            return {{{"B"_mst, type_needed, type_needed}, Fragment::ANDOR}};
+            return {{{B, type_needed, type_needed}, Fragment::ANDOR}};
         case 12:
             if (!(allow_B || allow_K || allow_V)) return {};
-            return {{{"V"_mst, type_needed}, Fragment::AND_V}};
+            return {{{V, type_needed}, Fragment::AND_V}};
         case 13:
             if (!allow_B) return {};
-            return {{{"B"_mst, "W"_mst}, Fragment::AND_B}};
+            return {{{B, W}, Fragment::AND_B}};
         case 15:
             if (!allow_B) return {};
-            return {{{"B"_mst, "W"_mst}, Fragment::OR_B}};
+            return {{{B, W}, Fragment::OR_B}};
         case 16:
             if (!allow_V) return {};
-            return {{{"B"_mst, "V"_mst}, Fragment::OR_C}};
+            return {{{B, V}, Fragment::OR_C}};
         case 17:
             if (!allow_B) return {};
-            return {{{"B"_mst, "B"_mst}, Fragment::OR_D}};
+            return {{{B, B}, Fragment::OR_D}};
         case 18:
             if (!(allow_B || allow_K || allow_V)) return {};
             return {{{type_needed, type_needed}, Fragment::OR_I}};
@@ -472,25 +473,25 @@ std::optional<NodeInfo> ConsumeNodeStable(MsCtx script_ctx, FuzzedDataProvider& 
         }
         case 20:
             if (!allow_W) return {};
-            return {{{"B"_mst}, Fragment::WRAP_A}};
+            return {{{B}, Fragment::WRAP_A}};
         case 21:
             if (!allow_W) return {};
-            return {{{"B"_mst}, Fragment::WRAP_S}};
+            return {{{B}, Fragment::WRAP_S}};
         case 22:
             if (!allow_B) return {};
-            return {{{"K"_mst}, Fragment::WRAP_C}};
+            return {{{K}, Fragment::WRAP_C}};
         case 23:
             if (!allow_B) return {};
-            return {{{"V"_mst}, Fragment::WRAP_D}};
+            return {{{V}, Fragment::WRAP_D}};
         case 24:
             if (!allow_V) return {};
-            return {{{"B"_mst}, Fragment::WRAP_V}};
+            return {{{B}, Fragment::WRAP_V}};
         case 25:
             if (!allow_B) return {};
-            return {{{"B"_mst}, Fragment::WRAP_J}};
+            return {{{B}, Fragment::WRAP_J}};
         case 26:
             if (!allow_B) return {};
-            return {{{"B"_mst}, Fragment::WRAP_N}};
+            return {{{B}, Fragment::WRAP_N}};
         case 27: {
             if (!allow_B || !IsTapscript(script_ctx)) return {};
             const auto k = provider.ConsumeIntegral<uint16_t>();
