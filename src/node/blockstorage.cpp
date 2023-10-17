@@ -18,6 +18,7 @@
 #include <streams.h>
 #include <undo.h>
 #include <util/fs.h>
+#include <util/overflow.h>
 #include <util/syscall_sandbox.h>
 #include <util/system.h>
 #include <validation.h>
@@ -55,6 +56,13 @@ bool CBlockIndexHeightOnlyComparator::operator()(const CBlockIndex* pa, const CB
 static FILE* OpenUndoFile(const FlatFilePos& pos, bool fReadOnly = false);
 static FlatFileSeq BlockFileSeq();
 static FlatFileSeq UndoFileSeq();
+
+/** The number of blocks to keep below the deepest prune lock.
+ *  There is nothing special about this number. It is higher than what we
+ *  expect to see in regular mainnet reorgs, but not so high that it would
+ *  noticeably interfere with the pruning mechanism.
+ * */
+static constexpr int PRUNE_LOCK_BUFFER{10};
 
 std::vector<CBlockIndex*> BlockManager::GetAllBlockIndices()
 {
@@ -149,6 +157,24 @@ void BlockManager::PruneOneBlockFile(const int fileNumber)
     m_dirty_fileinfo.insert(fileNumber);
 }
 
+bool BlockManager::DoPruneLocksForbidPruning(const CBlockFileInfo& block_file_info)
+{
+    AssertLockHeld(cs_main);
+    for (const auto& prune_lock : m_prune_locks) {
+        if (prune_lock.second.height_first == std::numeric_limits<uint64_t>::max()) continue;
+        // Remove the buffer and one additional block here to get actual height that is outside of the buffer
+        const uint64_t lock_height{(prune_lock.second.height_first <= PRUNE_LOCK_BUFFER + 1) ? 1 : (prune_lock.second.height_first - PRUNE_LOCK_BUFFER - 1)};
+        const uint64_t lock_height_last{SaturatingAdd(prune_lock.second.height_last, (uint64_t)PRUNE_LOCK_BUFFER)};
+        if (block_file_info.nHeightFirst > lock_height_last) continue;
+        if (block_file_info.nHeightLast <= lock_height) continue;
+        // TODO: Check each block within the file against the prune_lock range
+
+        LogPrint(BCLog::PRUNE, "%s limited pruning to height %d\n", prune_lock.first, lock_height);
+        return true;
+    }
+    return false;
+}
+
 void BlockManager::FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight, int chain_tip_height)
 {
     assert(IsPruneMode() && nManualPruneHeight > 0);
@@ -165,6 +191,9 @@ void BlockManager::FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nM
         if (m_blockfile_info[fileNumber].nSize == 0 || m_blockfile_info[fileNumber].nHeightLast > nLastBlockWeCanPrune) {
             continue;
         }
+
+        if (DoPruneLocksForbidPruning(m_blockfile_info[fileNumber])) continue;
+
         PruneOneBlockFile(fileNumber);
         setFilesToPrune.insert(fileNumber);
         count++;
@@ -217,6 +246,8 @@ void BlockManager::FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPr
                 continue;
             }
 
+            if (DoPruneLocksForbidPruning(m_blockfile_info[fileNumber])) continue;
+
             PruneOneBlockFile(fileNumber);
             // Queue up the files for removal
             setFilesToPrune.insert(fileNumber);
@@ -231,9 +262,38 @@ void BlockManager::FindFilesToPrune(std::set<int>& setFilesToPrune, uint64_t nPr
              nLastBlockWeCanPrune, count);
 }
 
-void BlockManager::UpdatePruneLock(const std::string& name, const PruneLockInfo& lock_info) {
+bool BlockManager::PruneLockExists(const std::string& name) const {
+    return m_prune_locks.count(name);
+}
+
+bool BlockManager::UpdatePruneLock(const std::string& name, const PruneLockInfo& lock_info, const bool sync) {
     AssertLockHeld(::cs_main);
-    m_prune_locks[name] = lock_info;
+    if (sync) {
+        if (!m_block_tree_db->WritePruneLock(name, lock_info)) {
+            return error("%s: failed to %s prune lock '%s'", __func__, "write", name);
+        }
+    }
+    PruneLockInfo& stored_lock_info = m_prune_locks[name];
+    if (lock_info.temporary && !stored_lock_info.temporary) {
+        // Erase non-temporary lock from disk
+        if (!m_block_tree_db->DeletePruneLock(name)) {
+            return error("%s: failed to %s prune lock '%s'", __func__, "erase", name);
+        }
+    }
+    stored_lock_info = lock_info;
+    return true;
+}
+
+bool BlockManager::DeletePruneLock(const std::string& name)
+{
+    AssertLockHeld(::cs_main);
+    m_prune_locks.erase(name);
+
+    // Since there is no reasonable expectation for any follow-up to this prune lock, actually ensure it gets committed to disk immediately
+    if (!m_block_tree_db->DeletePruneLock(name)) {
+        return error("%s: failed to %s prune lock '%s'", __func__, "erase", name);
+    }
+    return true;
 }
 
 CBlockIndex* BlockManager::InsertBlockIndex(const uint256& hash)
@@ -257,6 +317,8 @@ bool BlockManager::LoadBlockIndex(const Consensus::Params& consensus_params)
     if (!m_block_tree_db->LoadBlockIndexGuts(consensus_params, [this](const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs_main) { return this->InsertBlockIndex(hash); })) {
         return false;
     }
+
+    if (!m_block_tree_db->LoadPruneLocks(m_prune_locks)) return false;
 
     // Calculate nChainWork
     std::vector<CBlockIndex*> vSortedByHeight{GetAllBlockIndices()};
@@ -311,7 +373,7 @@ bool BlockManager::WriteBlockIndexDB()
         vBlocks.push_back(*it);
         m_dirty_blockindex.erase(it++);
     }
-    if (!m_block_tree_db->WriteBatchSync(vFiles, m_last_blockfile, vBlocks)) {
+    if (!m_block_tree_db->WriteBatchSync(vFiles, m_last_blockfile, vBlocks, m_prune_locks)) {
         return false;
     }
     return true;
