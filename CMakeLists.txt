@@ -40,6 +40,7 @@ option(BUILD_DAEMON "Build bitcoind executable." ON)
 option(BUILD_CLI "Build bitcoin-cli executable." ON)
 option(BUILD_TX "Build bitcoin-tx executable." ON)
 option(BUILD_UTIL "Build bitcoin-util executable." ON)
+option(BUILD_BITCOINCONSENSUS_LIB "Build bitcoinconsensus library." ON)
 option(ASM "Use assembly routines." ON)
 
 option(ENABLE_WALLET "Enable wallet." ON)
@@ -255,6 +256,11 @@ if(HARDENING)
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening)
 
     if(MINGW)
+      add_library(link_ssp INTERFACE)
+      target_link_libraries(link_ssp INTERFACE
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:ssp>
+      )
+
       # stack-clash-protection doesn't compile with GCC 10 and earlier.
       # In any case, it is a no-op for Windows.
       # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
@@ -300,6 +306,10 @@ if(WERROR)
   unset(werror_flag)
 endif()
 
+if(BUILD_BITCOINCONSENSUS_LIB)
+  set(HAVE_CONSENSUS_LIB ON)
+endif()
+
 find_package(Python3 3.9 COMPONENTS Interpreter)
 set(PYTHON_COMMAND ${Python3_EXECUTABLE})
 
@@ -320,6 +330,15 @@ message("  bitcoin-cli ......................... ${BUILD_CLI}")
 message("  bitcoin-tx .......................... ${BUILD_TX}")
 message("  bitcoin-util ........................ ${BUILD_UTIL}")
 message("  bitcoin-wallet ...................... ${BUILD_WALLET_TOOL}")
+message("Libraries:")
+if(BUILD_SHARED_LIBS)
+  set(library_type "Shared")
+else()
+  set(library_type "Static")
+endif()
+message("  library type ........................ ${library_type}")
+unset(library_type)
+message("  libbitcoinconsensus ................. ${BUILD_BITCOINCONSENSUS_LIB}")
 message("Wallet support:")
 message("  SQLite, descriptor wallets .......... ${WITH_SQLITE}")
 message("  Berkeley DB, legacy wallets ......... ${WITH_BDB}")
