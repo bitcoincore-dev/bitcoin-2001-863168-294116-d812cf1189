@@ -54,6 +54,7 @@ target_link_libraries(bench_bitcoin
   test_util
   leveldb
   univalue
+  $<TARGET_NAME_IF_EXISTS:bitcoinconsensus>
   Boost::headers
 )
 
@@ -67,6 +68,8 @@ if(ENABLE_WALLET)
   )
   target_link_libraries(bench_bitcoin bitcoin_wallet)
 endif()
+
+make_bitcoinconsensus_dll_available(bench_bitcoin)
 
 install(TARGETS bench_bitcoin
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
