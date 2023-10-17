@@ -10,6 +10,7 @@ from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import assert_equal, assert_raises_rpc_error
 
 import hashlib
+import os
 from pathlib import Path
 
 
@@ -18,16 +19,30 @@ class DumptxoutsetTest(BitcoinTestFramework):
         self.setup_clean_chain = True
         self.num_nodes = 1
 
-    def run_test(self):
-        """Test a trivial usage of the dumptxoutset RPC command."""
-        node = self.nodes[0]
-        mocktime = node.getblockheader(node.getblockhash(0))['time'] + 1
-        node.setmocktime(mocktime)
-        self.generate(node, COINBASE_MATURITY)
+    @staticmethod
+    def check_output_file(path, is_human_readable, expected_digest):
+        with open(str(path), 'rb') as f:
+            content = f.read()
 
-        FILENAME = 'txoutset.dat'
-        out = node.dumptxoutset(FILENAME)
-        expected_path = Path(node.datadir) / self.chain / FILENAME
+            if is_human_readable:
+                # Normalise platform EOL to \n, while making sure any stray \n becomes a literal backslash+n to avoid a false positive
+                # This ensures the platform EOL and only the platform EOL produces the expected hash
+                linesep = os.linesep.encode('utf8')
+                content = b'\n'.join(line.replace(b'\n', b'\\n') for line in content.split(linesep))
+
+            digest = hashlib.sha256(content).hexdigest()
+            # UTXO snapshot hash should be deterministic based on mocked time.
+            assert_equal(digest, expected_digest)
+
+    def test_dump_file(self, testname, params, expected_digest):
+        node = self.nodes[0]
+
+        self.log.info(testname)
+        filename = testname + '_txoutset.dat'
+        is_human_readable = not params.get('format') is None
+
+        out = node.dumptxoutset(path=filename, **params)
+        expected_path = Path(node.datadir) / self.chain / filename
 
         assert expected_path.is_file()
 
@@ -39,23 +54,56 @@ class DumptxoutsetTest(BitcoinTestFramework):
             out['base_hash'],
             '09abf0e7b510f61ca6cf33bab104e9ee99b3528b371d27a2d4b39abb800fba7e')
 
-        with open(str(expected_path), 'rb') as f:
-            digest = hashlib.sha256(f.read()).hexdigest()
-            # UTXO snapshot hash should be deterministic based on mocked time.
-            assert_equal(
-                digest, 'b1bacb602eacf5fbc9a7c2ef6eeb0d229c04e98bdf0c2ea5929012cd0eae3830')
+        self.check_output_file(expected_path, is_human_readable, expected_digest)
 
         assert_equal(
             out['txoutset_hash'], '1f7e3befd45dc13ae198dfbb22869a9c5c4196f8e9ef9735831af1288033f890')
         assert_equal(out['nchaintx'], 101)
 
-        # Specifying a path to an existing or invalid file will fail.
+        self.log.info("Test that a path to an existing or invalid file will fail")
         assert_raises_rpc_error(
-            -8, '{} already exists'.format(FILENAME),  node.dumptxoutset, FILENAME)
+            -8, '{} already exists'.format(filename),  node.dumptxoutset, filename)
         invalid_path = str(Path(node.datadir) / "invalid" / "path")
         assert_raises_rpc_error(
             -8, "Couldn't open file {}.incomplete for writing".format(invalid_path), node.dumptxoutset, invalid_path)
 
+        if params.get('format') == ():
+            with open(expected_path, 'r', encoding='utf-8') as f:
+                content = f.readlines()
+                sep = params.get('separator', ',')
+                if params.get('show_header', True):
+                    assert_equal(content.pop(0).rstrip(),
+                        "#(blockhash 09abf0e7b510f61ca6cf33bab104e9ee99b3528b371d27a2d4b39abb800fba7e ) txid{s}vout{s}value{s}coinbase{s}height{s}scriptPubKey".format(s=sep))
+                assert_equal(content[0].rstrip(),
+                    "b9edce02689692b1cdc3440d03011486a27c46b966248b922cc6e4315e900708{s}0{s}5000000000{s}1{s}78{s}76a9142b4569203694fc997e13f2c0a1383b9e16c77a0d88ac".format(s=sep))
+
+    def run_test(self):
+        """Test a trivial usage of the dumptxoutset RPC command."""
+        node = self.nodes[0]
+        mocktime = node.getblockheader(node.getblockhash(0))['time'] + 1
+        node.setmocktime(mocktime)
+        self.generate(node, COINBASE_MATURITY)
+
+        self.test_dump_file('no_option',           {},
+                            'b1bacb602eacf5fbc9a7c2ef6eeb0d229c04e98bdf0c2ea5929012cd0eae3830')
+        self.test_dump_file('all_data',            {'format': ()},
+                            '50d7bf3ecca8c5daf648aca884b91496386d8269ef001ff95a1db4381d399bfb')
+        self.test_dump_file('partial_data_1',      {'format': ('txid',)},
+                            'f9966db510b46d865a9412da88d17ac2c05c6bfe612ffc7c1b004aec1b508c5c')
+        self.test_dump_file('partial_data_order',  {'format': ('height', 'vout')},
+                            '0ef7e361fde77f5c9f3667b1d8ce4351ec8dc81826937da0dab5631e2aedc5fe')
+        self.test_dump_file('partial_data_double', {'format': ('scriptPubKey', 'scriptPubKey')},
+                            '8bd128d326b971ea37bd28c016aae506e29d23dac578edd849636a8ab2ee31a8')
+        self.test_dump_file('no_header',           {'format': (), 'show_header': False},
+                            'af1f38ee1d1b8bbdc117ab7e8353910dab5ab45f18be27aa4fa7d96ccc96a050')
+        self.test_dump_file('separator',           {'format': (), 'separator': ':'},
+                            '5bee81096e400d1b3bf02de432e0fd4af8f4d9244907dc1c857ec329c5ce4490')
+        self.test_dump_file('all_options',         {'format': (), 'show_header': False, 'separator': ':'},
+                            '5c52c2a9bdb23946eb0f6d088f25ed8f5d9ebc3a3512182287975f1041cdedb4')
+
+        # Other failing tests
+        assert_raises_rpc_error(
+            -8, 'unable to find item \'sample\'',  node.dumptxoutset, path='xxx', format=['sample'])
 
 if __name__ == '__main__':
     DumptxoutsetTest().main()
