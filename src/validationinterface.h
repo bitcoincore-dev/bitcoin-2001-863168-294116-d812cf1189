@@ -74,6 +74,9 @@ void SyncWithValidationInterfaceQueue() LOCKS_EXCLUDED(cs_main);
  * ValidationInterface() subscribers.
  */
 class CValidationInterface {
+public:
+    static bool any_use_tip_block_cache;
+
 protected:
     /**
      * Protected destructor so that instances can only be deleted by derived classes.
@@ -89,7 +92,7 @@ protected:
      *
      * Called on a background thread.
      */
-    virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload) {}
+    virtual void UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload, const std::shared_ptr<const CBlock>& block) {}
     /**
      * Notifies listeners of a transaction having been added to mempool.
      *
@@ -171,6 +174,13 @@ protected:
      * Notifies listeners that a block which builds directly on our current tip
      * has been received and connected to the headers tree, though not validated yet */
     virtual void NewPoWValidBlock(const CBlockIndex *pindex, const std::shared_ptr<const CBlock>& block) {};
+    /**
+     * Notifies the validation interface that it is being unregistered
+     */
+    virtual void ValidationInterfaceUnregistering() {};
+
+    friend void UnregisterValidationInterface(CValidationInterface*);
+    friend void UnregisterAllValidationInterfaces();
     friend class CMainSignals;
     friend class ValidationInterfaceTest;
 };
@@ -196,7 +206,7 @@ public:
     size_t CallbacksPending();
 
 
-    void UpdatedBlockTip(const CBlockIndex *, const CBlockIndex *, bool fInitialDownload);
+    void UpdatedBlockTip(const CBlockIndex *, const CBlockIndex *, bool fInitialDownload, const std::shared_ptr<const CBlock>&);
     void TransactionAddedToMempool(const CTransactionRef&, uint64_t mempool_sequence);
     void TransactionRemovedFromMempool(const CTransactionRef&, MemPoolRemovalReason, uint64_t mempool_sequence);
     void BlockConnected(const std::shared_ptr<const CBlock> &, const CBlockIndex *pindex);
