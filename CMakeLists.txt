@@ -5,20 +5,20 @@
 # IMPORTANT: Changes which affect binary results may not be quietly gated
 #            by CMake version.
 #
-# Debian 10 Buster, https://wiki.debian.org/LTS, EOL 2024:
-#  - CMake 3.13.4, https://packages.debian.org/buster/cmake
+# Debian 10 Buster, https://wiki.debian.org/LTS, EOL in June 2024:
+#  - CMake 3.18.4, https://packages.debian.org/buster-backports/cmake
 #
-# Ubuntu 22.04 Jammy, https://wiki.ubuntu.com/Releases, EOL 2032:
+# Ubuntu 20.04 LTS Jammy, https://wiki.ubuntu.com/Releases, EOSS in April 2025:
+#  - CMake 3.16.3, https://packages.ubuntu.com/focal/cmake
+#
+# Ubuntu 22.04 LTS Jammy, https://wiki.ubuntu.com/Releases, EOSS in June 2027:
 #  - CMake 3.22.1, https://packages.ubuntu.com/jammy/cmake
 #
-# Visual Studio 17 2022, https://visualstudio.microsoft.com:
-#  - CMake 3.24
-#
 # All policies known to the running version of CMake and introduced
-# in the 3.24 version or earlier will be set to use NEW behavior.
+# in the 3.28 version or earlier will be set to use NEW behavior.
 # All policies introduced in later versions will be unset.
 # See: https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html
-cmake_minimum_required(VERSION 3.13...3.24)
+cmake_minimum_required(VERSION 3.16...3.28)
 
 project("Bitcoin Core"
   VERSION 24.99.0
