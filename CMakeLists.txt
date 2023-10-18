@@ -77,6 +77,16 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(configure_warnings)
 
+include(CheckPIESupported)
+check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
+if(CMAKE_CXX_LINK_PIE_SUPPORTED)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+else()
+  message(WARNING "PIE is not supported at link time: ${check_pie_output}")
+  list(APPEND configure_warnings "Position independent code disabled.")
+endif()
+unset(check_pie_output)
+
 # The core interface library aims to encapsulate all common build flags.
 # It is intended to be a usage requirement for all other targets.
 add_library(core INTERFACE)
@@ -168,20 +178,6 @@ include(AddBoostIfNeeded)
 add_boost_if_needed()
 
 include(CheckSourceCompilesAndLinks)
-
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.14)
-  include(CheckPIESupported)
-  check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
-  if(CMAKE_CXX_LINK_PIE_SUPPORTED)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-  endif()
-else()
-  check_cxx_source_links_with_flags("-fPIE;-pie" "int main(){}" LINKER_SUPPORTS_PIE)
-  if(LINKER_SUPPORTS_PIE)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie")
-  endif()
-endif()
 
 include(AddLibeventIfNeeded)
 add_libevent_if_needed()
