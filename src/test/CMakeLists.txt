@@ -134,6 +134,11 @@ add_executable(test_bitcoin
   xoroshiro128plusplus_tests.cpp
 )
 
+if(TARGET bitcoinconsensus_static)
+  target_link_libraries(test_bitcoin bitcoinconsensus_static)
+elseif(TARGET bitcoinconsensus AND NOT WIN32)
+  target_link_libraries(test_bitcoin bitcoinconsensus)
+endif()
 target_link_libraries(test_bitcoin
   core
   test_util
