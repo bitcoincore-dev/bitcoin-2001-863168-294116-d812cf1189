@@ -239,6 +239,20 @@ endif()
 
 include(cmake/optional.cmake)
 
+set(core_cxx_flags)
+# Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
+try_append_cxx_flags(core_cxx_flags "-fno-extended-identifiers")
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  # Currently all versions of gcc are subject to a class of bugs, see the
+  # gccbug_90348 test case (only reproduces on GCC 11 and earlier) and
+  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111843. To work around that,
+  # set -fstack-reuse=none for all gcc builds.
+  try_append_cxx_flags(core_cxx_flags "-fstack-reuse=none")
+endif()
+separate_arguments(core_cxx_flags)
+target_compile_options(core INTERFACE ${core_cxx_flags})
+unset(core_cxx_flags)
+
 find_package(Python3 3.8 COMPONENTS Interpreter)
 set(PYTHON_COMMAND ${Python3_EXECUTABLE})
 
