@@ -45,11 +45,8 @@ function(try_append_linker_flag target flag)
   if(NOT working_linker_werror_flag)
     set(working_linker_werror_flag)
   endif()
-  if(CMAKE_VERSION VERSION_LESS 3.14)
-    set(CMAKE_REQUIRED_LIBRARIES ${flag} ${working_linker_werror_flag})
-  else()
-    set(CMAKE_REQUIRED_LINK_OPTIONS ${flag} ${working_linker_werror_flag})
-  endif()
+
+  set(CMAKE_REQUIRED_LINK_OPTIONS ${flag} ${working_linker_werror_flag})
 
   check_cxx_source_compiles("${TALF_SOURCE}" ${result})
 

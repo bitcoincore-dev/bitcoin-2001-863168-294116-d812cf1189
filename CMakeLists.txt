@@ -5,23 +5,20 @@
 # IMPORTANT: Changes which affect binary results may not be quietly gated
 #            by CMake version.
 #
-# Debian 10 Buster, https://wiki.debian.org/LTS, EOL 2024:
-#  - CMake 3.13.4, https://packages.debian.org/buster/cmake
+# Ubuntu 20.04 LTS Focal Fossa, https://wiki.ubuntu.com/Releases, EOSS in April 2025:
+#  - CMake 3.16.3, https://packages.ubuntu.com/focal/cmake
 #
-# Ubuntu 22.04 Jammy, https://wiki.ubuntu.com/Releases, EOL 2032:
-#  - CMake 3.22.1, https://packages.ubuntu.com/jammy/cmake
-#
-# Visual Studio 17 2022, https://visualstudio.microsoft.com:
-#  - CMake 3.24
+# Centos Stream 8, EOL in May 2024:
+#  - CMake 3.20.2, http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/
 #
 # All policies known to the running version of CMake and introduced
-# in the 3.24 version or earlier will be set to use NEW behavior.
+# in the 3.28 version or earlier will be set to use NEW behavior.
 # All policies introduced in later versions will be unset.
 # See: https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html
-cmake_minimum_required(VERSION 3.13...3.24)
+cmake_minimum_required(VERSION 3.16...3.28)
 
 project("Bitcoin Core"
-  VERSION 24.99.0
+  VERSION 25.99.0
   DESCRIPTION "Bitcoin client software"
   HOMEPAGE_URL "https://bitcoincore.org/"
   LANGUAGES CXX ASM
@@ -79,6 +76,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(configure_warnings)
+
+include(CheckPIESupported)
+check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
+if(CMAKE_CXX_LINK_PIE_SUPPORTED)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+else()
+  message(WARNING "PIE is not supported at link time: ${check_pie_output}")
+  list(APPEND configure_warnings "Position independent code disabled.")
+endif()
+unset(check_pie_output)
 
 # The core interface library aims to encapsulate all common build flags.
 # It is intended to be a usage requirement for all other targets.
@@ -171,20 +178,6 @@ include(AddBoostIfNeeded)
 add_boost_if_needed()
 
 include(CheckSourceCompilesAndLinks)
-
-if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.14)
-  include(CheckPIESupported)
-  check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
-  if(CMAKE_CXX_LINK_PIE_SUPPORTED)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-  endif()
-else()
-  check_cxx_source_links_with_flags("-fPIE;-pie" "int main(){}" LINKER_SUPPORTS_PIE)
-  if(LINKER_SUPPORTS_PIE)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pie")
-  endif()
-endif()
 
 include(AddLibeventIfNeeded)
 add_libevent_if_needed()

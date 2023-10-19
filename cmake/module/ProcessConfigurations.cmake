@@ -36,11 +36,7 @@ function(set_default_config config)
   endif()
 
   list(REMOVE_ITEM all_configs ${config})
-  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.15)
-    list(PREPEND all_configs ${config})
-  else()
-    set(all_configs ${config} ${all_configs})
-  endif()
+  list(PREPEND all_configs ${config})
 
   get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
   if(is_multi_config)
