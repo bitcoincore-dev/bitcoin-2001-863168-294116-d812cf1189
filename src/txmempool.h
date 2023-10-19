@@ -598,6 +598,7 @@ public:
      * @param[out]      errString               Populated with error reason if a limit is hit.
      */
     bool CheckPackageLimits(const Package& package,
+                            int64_t total_vsize,
                             const Limits& limits,
                             std::string &errString) const EXCLUSIVE_LOCKS_REQUIRED(cs);
 
