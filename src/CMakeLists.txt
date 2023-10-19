@@ -224,6 +224,7 @@ target_link_libraries(bitcoin_node
     core
     bitcoin_common
     bitcoin_util
+    $<TARGET_NAME_IF_EXISTS:bitcoin_zmq>
     univalue
     leveldb
     minisketch
@@ -231,7 +232,6 @@ target_link_libraries(bitcoin_node
     $<TARGET_NAME_IF_EXISTS:PkgConfig::libevent_pthreads>
     $<TARGET_NAME_IF_EXISTS:NATPMP::NATPMP>
     $<TARGET_NAME_IF_EXISTS:MiniUPnPc::MiniUPnPc>
-    $<TARGET_NAME_IF_EXISTS:bitcoin_zmq>
     Boost::headers
 )
 
