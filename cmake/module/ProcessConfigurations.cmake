@@ -97,7 +97,7 @@ function(separate_by_configs options)
 
   get_all_configs(all_configs)
   foreach(config IN LISTS all_configs)
-    string(REGEX MATCHALL "\\$<\\$<CONFIG:${config}>[^\n]*>" match "${${options}}")
+    string(REGEX MATCHALL "\\$<\\$<CONFIG:${config}>:[^<>\n]*>" match "${${options}}")
     list(JOIN match " " match)
     string(REPLACE "\$<\$<CONFIG:${config}>:" "" match "${match}")
     string(REPLACE ">" "" match "${match}")
