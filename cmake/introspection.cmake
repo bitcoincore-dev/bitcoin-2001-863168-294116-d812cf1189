@@ -246,7 +246,3 @@ check_cxx_source_compiles("
   int main(){}
   " HAVE_DLLEXPORT_ATTRIBUTE
 )
-
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-  find_program(BREW_COMMAND brew)
-endif()
