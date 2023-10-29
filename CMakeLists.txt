@@ -53,6 +53,9 @@ cmake_dependent_option(BUILD_WALLET_TOOL "Build bitcoin-wallet tool." ON "ENABLE
 
 cmake_dependent_option(CXX20 "Enable compilation in C++20 mode." OFF "NOT MSVC" ON)
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
+option(HARDENING "Attempt to harden the resulting executables." ON)
+option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables." OFF)
+option(WERROR "Treat compiler warnings as errors." OFF)
 
 tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
 tristate_option(WITH_NATPMP "Enable NAT-PMP." "if libnatpmp is found." AUTO)
@@ -66,6 +69,7 @@ tristate_option(WITH_USDT
 
 option(BUILD_TESTS "Build test_bitcoin executable." ON)
 option(BUILD_BENCH "Build bench_bitcoin executable." ON)
+option(INSTALL_MAN "Install man pages." ON)
 
 if(CXX20)
   set(CMAKE_CXX_STANDARD 20)
@@ -135,10 +139,10 @@ if(WIN32)
       _WINDOWS
       _MT
     )
-    try_append_linker_flag(core "-static")
+    try_append_linker_flag("-static" TARGET core)
     # We require Windows 7 (NT 6.1) or later.
-    try_append_linker_flag(core "-Wl,--major-subsystem-version,6")
-    try_append_linker_flag(core "-Wl,--minor-subsystem-version,1")
+    try_append_linker_flag("-Wl,--major-subsystem-version,6" TARGET core)
+    try_append_linker_flag("-Wl,--minor-subsystem-version,1" TARGET core)
   endif()
 endif()
 
@@ -157,9 +161,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   # These flags are specific to ld64, and may cause issues with other linkers.
   # For example: GNU ld will interpret -dead_strip as -de and then try and use
   # "ad_strip" as the symbol for the entry point.
-  try_append_linker_flag(core "-Wl,-dead_strip")
-  try_append_linker_flag(core "-Wl,-dead_strip_dylibs")
-  try_append_linker_flag(core "-Wl,-headerpad_max_install_names")
+  try_append_linker_flag("-Wl,-dead_strip" TARGET core)
+  try_append_linker_flag("-Wl,-dead_strip_dylibs" TARGET core)
+  try_append_linker_flag("-Wl,-headerpad_max_install_names" TARGET core)
 endif()
 
 if(CMAKE_CROSSCOMPILING)
@@ -212,25 +216,89 @@ else()
   replace_c_flag_in_config(Release -O3 -O2)
   replace_cxx_flag_in_config(Release -O3 -O2)
 
-  set(debug_c_flags "")
-  set(debug_cxx_flags "")
-  try_append_cxx_flags(debug_cxx_flags "-O0" RESULT_VAR compiler_supports_O0)
-  if(compiler_supports_O0)
-    string(STRIP "${debug_c_flags} -O0" debug_c_flags)
+  set(debug_flags)
+  try_append_cxx_flags("-O0" VAR debug_flags)
+  try_append_cxx_flags("-g3" VAR debug_flags RESULT_VAR compiler_supports_g3)
+  if(NOT compiler_supports_g3)
+    try_append_cxx_flags("-g" VAR debug_flags)
   endif()
-  try_append_cxx_flags(debug_cxx_flags "-g3" RESULT_VAR compiler_supports_g3)
-  if(compiler_supports_g3)
-    string(STRIP "${debug_c_flags} -g3" debug_c_flags)
-  else()
-    try_append_cxx_flags(debug_cxx_flags "-g")
-    string(STRIP "${debug_c_flags} -g" debug_c_flags)
-  endif()
-  try_append_cxx_flags(debug_cxx_flags "-ftrapv")
-  set(CMAKE_C_FLAGS_DEBUG "${debug_c_flags}")
-  set(CMAKE_CXX_FLAGS_DEBUG "${debug_cxx_flags}")
+  set(CMAKE_C_FLAGS_DEBUG "${debug_flags}")
+  try_append_cxx_flags("-ftrapv" VAR debug_flags)
+  set(CMAKE_CXX_FLAGS_DEBUG "${debug_flags}")
+  unset(debug_flags)
 endif()
 
 include(cmake/optional.cmake)
+
+# Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
+try_append_cxx_flags("-fno-extended-identifiers" TARGET core)
+
+# Currently all versions of gcc are subject to a class of bugs, see the
+# gccbug_90348 test case (only reproduces on GCC 11 and earlier) and
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111843. To work around that, set
+# -fstack-reuse=none for all gcc builds. (Only gcc understands this flag).
+try_append_cxx_flags("-fstack-reuse=none" TARGET core)
+
+if(HARDENING)
+  add_library(hardening INTERFACE)
+  if(MSVC)
+    try_append_linker_flag("/DYNAMICBASE" TARGET hardening)
+    try_append_linker_flag("/HIGHENTROPYVA" TARGET hardening)
+    try_append_linker_flag("/NXCOMPAT" TARGET hardening)
+  else()
+    target_compile_options(hardening INTERFACE
+      $<$<NOT:$<CONFIG:Debug>>:-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3>
+    )
+
+    try_append_cxx_flags("-Wstack-protector" TARGET hardening)
+    try_append_cxx_flags("-fstack-protector-all" TARGET hardening)
+    try_append_cxx_flags("-fcf-protection=full" TARGET hardening)
+
+    if(MINGW)
+      # stack-clash-protection doesn't compile with GCC 10 and earlier.
+      # In any case, it is a no-op for Windows.
+      # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
+    else()
+      try_append_cxx_flags("-fstack-clash-protection" TARGET hardening)
+    endif()
+
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
+      try_append_cxx_flags("-mbranch-protection=bti" TARGET hardening)
+    endif()
+
+    try_append_linker_flag("-Wl,--enable-reloc-section" TARGET hardening)
+    try_append_linker_flag("-Wl,--dynamicbase" TARGET hardening)
+    try_append_linker_flag("-Wl,--nxcompat" TARGET hardening)
+    try_append_linker_flag("-Wl,--high-entropy-va" TARGET hardening)
+    try_append_linker_flag("-Wl,-z,relro" TARGET hardening)
+    try_append_linker_flag("-Wl,-z,now" TARGET hardening)
+    try_append_linker_flag("-Wl,-z,separate-code" TARGET hardening)
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+      try_append_linker_flag("-Wl,-bind_at_load" TARGET hardening)
+      try_append_linker_flag("-Wl,-fixup_chains" TARGET hardening)
+    endif()
+  endif()
+  target_link_libraries(core INTERFACE hardening)
+endif()
+
+if(REDUCE_EXPORTS)
+  set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+  set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
+  try_append_linker_flag("-Wl,--exclude-libs,ALL" TARGET core)
+endif()
+
+if(WERROR)
+  if(MSVC)
+    set(werror_flag "/WX")
+  else()
+    set(werror_flag "-Werror")
+  endif()
+  try_append_cxx_flags(${werror_flag} TARGET core RESULT_VAR compiler_supports_werror)
+  if(NOT compiler_supports_werror)
+    message(FATAL_ERROR "WERROR set but ${werror_flag} is not usable.")
+  endif()
+  unset(werror_flag)
+endif()
 
 find_package(Python3 3.9 COMPONENTS Interpreter)
 set(PYTHON_COMMAND ${Python3_EXECUTABLE})
@@ -279,25 +347,16 @@ message("C++ compiler .......................... ${CMAKE_CXX_COMPILER}")
 list(JOIN DEPENDS_CXX_COMPILER_FLAGS " " depends_cxx_flags)
 string(STRIP "${CMAKE_CXX_FLAGS} ${depends_cxx_flags}" combined_cxx_flags)
 message("CXXFLAGS .............................. ${combined_cxx_flags}")
-get_target_property(common_compile_options core INTERFACE_COMPILE_OPTIONS)
-if(common_compile_options)
-  list(JOIN common_compile_options " " common_compile_options)
-else()
-  set(common_compile_options)
-endif()
-string(GENEX_STRIP "${common_compile_options}" common_compile_options)
+get_target_interface(common_compile_options core COMPILE_OPTIONS)
 message("Common compile options ................ ${common_compile_options}")
-get_target_property(common_link_options core INTERFACE_LINK_OPTIONS)
-if(common_link_options)
-  list(JOIN common_link_options " " common_link_options)
-else()
-  set(common_link_options)
-endif()
+get_target_interface(common_link_options core LINK_OPTIONS)
 message("Common link options ................... ${common_link_options}")
 message("Linker flags for executables .......... ${CMAKE_EXE_LINKER_FLAGS}")
 message("Linker flags for shared libraries ..... ${CMAKE_SHARED_LINKER_FLAGS}")
 print_config_flags()
 message("Use assembly routines ................. ${ASM}")
+message("Attempt to harden executables ......... ${HARDENING}")
+message("Treat compiler warnings as errors ..... ${WERROR}")
 message("Use ccache for compiling .............. ${CCACHE}")
 message("\n")
 if(configure_warnings)
