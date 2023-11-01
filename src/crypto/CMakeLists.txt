@@ -3,6 +3,8 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 if(ASM AND NOT MSVC)
+  include(CheckSourceCompilesAndLinks)
+
   # Check for SSE4.1 intrinsics.
   set(SSE41_CXXFLAGS -msse4.1)
   check_cxx_source_compiles_with_flags("${SSE41_CXXFLAGS}" "
@@ -64,10 +66,9 @@ endif()
 include(CheckCXXSymbolExists)
 check_cxx_symbol_exists(timingsafe_bcmp "string.h" HAVE_TIMINGSAFE_BCMP)
 
-# The `bitcoin_crypto` must be of an `OBJECT` type to include
+# The `bitcoin_crypto_base` must be of an `OBJECT` type to include
 # its object files into the output static library archives.
-add_library(bitcoin_crypto OBJECT EXCLUDE_FROM_ALL
-  $<$<BOOL:${ASM}>:sha256_sse4.cpp>
+add_library(bitcoin_crypto_base OBJECT EXCLUDE_FROM_ALL
   aes.cpp
   chacha20.cpp
   chacha20poly1305.cpp
@@ -79,46 +80,85 @@ add_library(bitcoin_crypto OBJECT EXCLUDE_FROM_ALL
   ripemd160.cpp
   sha1.cpp
   sha256.cpp
+  $<$<BOOL:${ASM}>:sha256_sse4.cpp>
   sha3.cpp
   sha512.cpp
   siphash.cpp
 )
-target_compile_definitions(bitcoin_crypto
+target_compile_definitions(bitcoin_crypto_base
   PRIVATE
     $<$<BOOL:${ASM}>:USE_ASM>
-    $<$<BOOL:${HAVE_SSE41}>:ENABLE_SSE41>
-    $<$<BOOL:${HAVE_AVX2}>:ENABLE_AVX2>
-    $<$<BOOL:${HAVE_X86_SHANI}>:ENABLE_X86_SHANI>
-    $<$<BOOL:${HAVE_ARM_SHANI}>:ENABLE_ARM_SHANI>
     $<$<BOOL:${HAVE_TIMINGSAFE_BCMP}>:HAVE_TIMINGSAFE_BCMP>
 )
+target_link_libraries(bitcoin_crypto_base PRIVATE core)
 
 if(HAVE_SSE41)
-  target_sources(bitcoin_crypto PRIVATE sha256_sse41.cpp)
-  set_property(SOURCE sha256_sse41.cpp
-    APPEND PROPERTY COMPILE_OPTIONS ${SSE41_CXXFLAGS}
+  add_library(bitcoin_crypto_sse41 STATIC EXCLUDE_FROM_ALL
+    sha256_sse41.cpp
   )
+  target_compile_definitions(bitcoin_crypto_sse41
+    PUBLIC
+      ENABLE_SSE41
+  )
+  target_compile_options(bitcoin_crypto_sse41
+    PRIVATE
+      ${SSE41_CXXFLAGS}
+  )
+  target_link_libraries(bitcoin_crypto_sse41 PRIVATE core)
 endif()
 
 if(HAVE_AVX2)
-  target_sources(bitcoin_crypto PRIVATE sha256_avx2.cpp)
-  set_property(SOURCE sha256_avx2.cpp
-    APPEND PROPERTY COMPILE_OPTIONS ${AVX2_CXXFLAGS}
+  add_library(bitcoin_crypto_avx2 STATIC EXCLUDE_FROM_ALL
+    sha256_sse41.cpp
   )
+  target_compile_definitions(bitcoin_crypto_avx2
+    PUBLIC
+      ENABLE_AVX2
+  )
+  target_compile_options(bitcoin_crypto_avx2
+    PRIVATE
+      ${AVX2_CXXFLAGS}
+  )
+  target_link_libraries(bitcoin_crypto_avx2 PRIVATE core)
 endif()
 
 if(HAVE_X86_SHANI)
-  target_sources(bitcoin_crypto PRIVATE sha256_x86_shani.cpp)
-  set_property(SOURCE sha256_x86_shani.cpp
-    APPEND PROPERTY COMPILE_OPTIONS ${X86_SHANI_CXXFLAGS}
+  add_library(bitcoin_crypto_x86_shani STATIC EXCLUDE_FROM_ALL
+    sha256_x86_shani.cpp
   )
+  target_compile_definitions(bitcoin_crypto_x86_shani
+    PUBLIC
+      ENABLE_X86_SHANI
+  )
+  target_compile_options(bitcoin_crypto_x86_shani
+    PRIVATE
+      ${X86_SHANI_CXXFLAGS}
+  )
+  target_link_libraries(bitcoin_crypto_x86_shani PRIVATE core)
 endif()
 
 if(HAVE_ARM_SHANI)
-  target_sources(bitcoin_crypto PRIVATE sha256_arm_shani.cpp)
-  set_property(SOURCE sha256_arm_shani.cpp
-    APPEND PROPERTY COMPILE_OPTIONS ${ARM_SHANI_CXXFLAGS}
+  add_library(bitcoin_crypto_arm_shani STATIC EXCLUDE_FROM_ALL
+    sha256_arm_shani.cpp
   )
+  target_compile_definitions(bitcoin_crypto_arm_shani
+    PUBLIC
+      ENABLE_ARM_SHANI
+  )
+  target_compile_options(bitcoin_crypto_arm_shani
+    PRIVATE
+      ${ARM_SHANI_CXXFLAGS}
+  )
+  target_link_libraries(bitcoin_crypto_arm_shani PRIVATE core)
 endif()
 
-target_link_libraries(bitcoin_crypto PRIVATE core)
+add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL
+  $<TARGET_OBJECTS:bitcoin_crypto_base>
+)
+target_link_libraries(bitcoin_crypto
+  PRIVATE
+    $<TARGET_NAME_IF_EXISTS:bitcoin_crypto_sse41>
+    $<TARGET_NAME_IF_EXISTS:bitcoin_crypto_avx2>
+    $<TARGET_NAME_IF_EXISTS:bitcoin_crypto_x86_shani>
+    $<TARGET_NAME_IF_EXISTS:bitcoin_crypto_arm_shani>
+)
