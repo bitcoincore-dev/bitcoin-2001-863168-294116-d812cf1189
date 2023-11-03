@@ -13,25 +13,31 @@ add_subdirectory(univalue)
 add_subdirectory(util)
 
 
+# These sources are to be compiled with different compile definitions.
+set(bitcoin_consensus_sources
+  ${CMAKE_CURRENT_SOURCE_DIR}/arith_uint256.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/consensus/merkle.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/consensus/tx_check.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/hash.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/primitives/block.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/primitives/transaction.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/pubkey.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/script/interpreter.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/script/script.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/script/script_error.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/uint256.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/util/strencodings.cpp
+)
+
 # Stable, backwards-compatible consensus functionality
 # also exposed as a shared library and/or a static one.
-add_library(bitcoin_consensus OBJECT EXCLUDE_FROM_ALL
-  arith_uint256.cpp
-  consensus/merkle.cpp
-  consensus/tx_check.cpp
-  hash.cpp
-  primitives/block.cpp
-  primitives/transaction.cpp
-  pubkey.cpp
-  script/interpreter.cpp
-  script/script.cpp
-  script/script_error.cpp
-  uint256.cpp
-  util/strencodings.cpp
+add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL
+  ${bitcoin_consensus_sources}
 )
 target_link_libraries(bitcoin_consensus
   PRIVATE
     core
+    bitcoin_crypto
     secp256k1
 )
 
