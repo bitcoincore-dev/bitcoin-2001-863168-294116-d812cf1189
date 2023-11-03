@@ -43,6 +43,7 @@ option(BUILD_DAEMON "Build bitcoind executable." ON)
 option(BUILD_CLI "Build bitcoin-cli executable." ON)
 option(BUILD_TX "Build bitcoin-tx executable." ON)
 option(BUILD_UTIL "Build bitcoin-util executable." ON)
+option(BUILD_BITCOINCONSENSUS_LIB "Build bitcoinconsensus library." ON)
 option(ASM "Use assembly routines." ON)
 
 option(ENABLE_WALLET "Enable wallet." ON)
@@ -91,8 +92,16 @@ unset(check_pie_output)
 # It is intended to be a usage requirement for all other targets.
 add_library(core INTERFACE)
 
+# The lib interface library aims to encapsulate build flags, which
+# are specific to non-internal libraries.
+# It is intended to be a usage requirement for non-internal library
+# targets.
+add_library(lib INTERFACE)
+
 include(TryAppendCXXFlags)
 include(TryAppendLinkerFlag)
+
+try_append_linker_flag("-Wl,--no-undefined" TARGET lib)
 
 if(WIN32)
   #[=[
@@ -317,6 +326,10 @@ if(WERROR)
   unset(werror_flag)
 endif()
 
+if(BUILD_BITCOINCONSENSUS_LIB)
+  set(HAVE_CONSENSUS_LIB TRUE)
+endif()
+
 find_package(Python3 3.9 COMPONENTS Interpreter)
 set(PYTHON_COMMAND ${Python3_EXECUTABLE})
 
@@ -337,6 +350,13 @@ message("  bitcoin-cli ......................... ${BUILD_CLI}")
 message("  bitcoin-tx .......................... ${BUILD_TX}")
 message("  bitcoin-util ........................ ${BUILD_UTIL}")
 message("  bitcoin-wallet ...................... ${BUILD_WALLET_TOOL}")
+message("Libraries:")
+if(BUILD_SHARED_LIBS)
+  message("  library type ........................ Shared")
+else()
+  message("  library type ........................ Static")
+endif()
+message("  libbitcoinconsensus ................. ${BUILD_BITCOINCONSENSUS_LIB}")
 message("Wallet support:")
 message("  SQLite, descriptor wallets .......... ${WITH_SQLITE}")
 message("  Berkeley DB, legacy wallets ......... ${WITH_BDB}")
