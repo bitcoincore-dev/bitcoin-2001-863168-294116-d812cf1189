@@ -250,9 +250,19 @@ if(HARDENING)
       $<$<NOT:$<CONFIG:Debug>>:-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3>
     )
 
-    try_append_cxx_flags("-Wstack-protector" TARGET hardening)
-    try_append_cxx_flags("-fstack-protector-all" TARGET hardening)
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening)
+    try_append_cxx_flags("-fstack-protector-all" TARGET hardening)
+    try_append_cxx_flags("-Wstack-protector" TARGET hardening)
+
+    try_append_linker_flag("-fstack-protector-all" TARGET hardening)
+
+    try_append_linker_flag("-Wl,--enable-reloc-section" TARGET hardening)
+    try_append_linker_flag("-Wl,--dynamicbase" TARGET hardening)
+    try_append_linker_flag("-Wl,--nxcompat" TARGET hardening)
+    try_append_linker_flag("-Wl,--high-entropy-va" TARGET hardening)
+    try_append_linker_flag("-Wl,-z,relro" TARGET hardening)
+    try_append_linker_flag("-Wl,-z,now" TARGET hardening)
+    try_append_linker_flag("-Wl,-z,separate-code" TARGET hardening)
 
     if(MINGW)
       # stack-clash-protection doesn't compile with GCC 10 and earlier.
@@ -266,13 +276,6 @@ if(HARDENING)
       try_append_cxx_flags("-mbranch-protection=bti" TARGET hardening)
     endif()
 
-    try_append_linker_flag("-Wl,--enable-reloc-section" TARGET hardening)
-    try_append_linker_flag("-Wl,--dynamicbase" TARGET hardening)
-    try_append_linker_flag("-Wl,--nxcompat" TARGET hardening)
-    try_append_linker_flag("-Wl,--high-entropy-va" TARGET hardening)
-    try_append_linker_flag("-Wl,-z,relro" TARGET hardening)
-    try_append_linker_flag("-Wl,-z,now" TARGET hardening)
-    try_append_linker_flag("-Wl,-z,separate-code" TARGET hardening)
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
       try_append_linker_flag("-Wl,-bind_at_load" TARGET hardening)
       try_append_linker_flag("-Wl,-fixup_chains" TARGET hardening)
