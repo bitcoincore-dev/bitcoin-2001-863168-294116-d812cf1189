@@ -145,6 +145,7 @@ target_link_libraries(test_bitcoin
   minisketch
   leveldb
   univalue
+  $<TARGET_NAME_IF_EXISTS:bitcoinconsensus>
   Boost::headers
   libevent::libevent
 )
@@ -175,6 +176,8 @@ if(ENABLE_WALLET)
     target_sources(test_bitcoin PRIVATE ../wallet/test/db_tests.cpp)
   endif()
 endif()
+
+make_bitcoinconsensus_dll_available(test_bitcoin)
 
 install(TARGETS test_bitcoin
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
