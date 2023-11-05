@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 # This file is part of the transition from Autotools to CMake. Once CMake
 # support has been merged we should switch to using the upstream CMake
@@ -48,9 +48,16 @@ target_include_directories(secp256k1
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/secp256k1/include>
 )
 
-target_compile_options(secp256k1
-  PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/wd4146 /wd4334>
-)
+if(MSVC)
+  target_compile_options(secp256k1
+    PRIVATE
+      # Disable warning C4146 "unary minus operator applied to unsigned type, result still unsigned".
+      /wd4146
+      # Disable warning C4244 "'conversion' conversion from 'type1' to 'type2', possible loss of data".
+      /wd4244
+      # Disable warning C4267 "'var' : conversion from 'size_t' to 'type', possible loss of data".
+      /wd4267
+  )
+endif()
 
 target_link_libraries(secp256k1 PRIVATE core)
