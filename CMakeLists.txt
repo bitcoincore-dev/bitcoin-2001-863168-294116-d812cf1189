@@ -131,6 +131,26 @@ if(WIN32)
     # Improve parallelism in MSBuild.
     # See: https://devblogs.microsoft.com/cppblog/improved-parallelism-in-msbuild/.
     list(APPEND CMAKE_VS_GLOBALS "UseMultiToolTask=true")
+
+    # Production quality warning level.
+    try_append_cxx_flags("/W3" TARGET core)
+    # Disable warning C4244 "'conversion' conversion from 'type1' to 'type2', possible loss of data".
+    try_append_cxx_flags("/wd4244" TARGET core)
+    # Disable warning C4267 "'var' : conversion from 'size_t' to 'type', possible loss of data".
+    try_append_cxx_flags("/wd4267" TARGET core)
+    # Disable warning C4715 "'function' : not all control paths return a value".
+    try_append_cxx_flags("/wd4715" TARGET core)
+    # Disable warning C4018 "'token' : signed/unsigned mismatch".
+    try_append_cxx_flags("/wd4018" TARGET core)
+    # Disable warning C4805 "'operation' : unsafe mix of type 'type' and type 'type' in operation".
+    try_append_cxx_flags("/wd4805" TARGET core)
+    target_compile_definitions(core INTERFACE
+      # Disable warning C4996 "This function or variable may be unsafe. Consider using safe-version instead. ..."
+      _CRT_SECURE_NO_WARNINGS
+      # Disable warning C4996 "warning STL4017: ...".
+      # Also see: https://devblogs.microsoft.com/cppblog/c17-feature-removals-and-deprecations/.
+      _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+    )
   endif()
 
   if(MINGW)
