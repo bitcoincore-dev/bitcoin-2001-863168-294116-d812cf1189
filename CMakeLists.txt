@@ -131,6 +131,17 @@ if(WIN32)
     # Improve parallelism in MSBuild.
     # See: https://devblogs.microsoft.com/cppblog/improved-parallelism-in-msbuild/.
     list(APPEND CMAKE_VS_GLOBALS "UseMultiToolTask=true")
+
+    try_append_cxx_flags("/W3" TARGET core)
+    try_append_cxx_flags("/wd4018" TARGET core)
+    try_append_cxx_flags("/wd4244" TARGET core)
+    try_append_cxx_flags("/wd4267" TARGET core)
+    try_append_cxx_flags("/wd4715" TARGET core)
+    try_append_cxx_flags("/wd4805" TARGET core)
+    target_compile_definitions(core INTERFACE
+      _CRT_SECURE_NO_WARNINGS
+      _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+    )
   endif()
 
   if(MINGW)
