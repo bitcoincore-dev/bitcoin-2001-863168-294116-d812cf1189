@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 # Check for clmul instructions support.
 if(MSVC)
@@ -24,12 +24,21 @@ check_cxx_source_compiles_with_flags("${CLMUL_CXXFLAGS}" "
   " HAVE_CLMUL
 )
 
-add_library(minisketch_defs INTERFACE)
-target_compile_definitions(minisketch_defs INTERFACE
+add_library(minisketch_common INTERFACE)
+target_compile_definitions(minisketch_common INTERFACE
   DISABLE_DEFAULT_FIELDS
   ENABLE_FIELD_32
   $<$<AND:$<BOOL:${HAVE_BUILTIN_CLZL}>,$<BOOL:${HAVE_BUILTIN_CLZLL}>>:HAVE_CLZ>
 )
+if(MSVC)
+  target_compile_options(minisketch_common INTERFACE
+    /wd4060
+    /wd4065
+    /wd4146
+    /wd4244
+    /wd4267
+  )
+endif()
 
 if(HAVE_CLMUL)
   add_library(minisketch_clmul OBJECT EXCLUDE_FROM_ALL
@@ -47,7 +56,7 @@ if(HAVE_CLMUL)
   target_link_libraries(minisketch_clmul
     PRIVATE
       core
-      minisketch_defs
+      minisketch_common
   )
 endif()
 
@@ -71,6 +80,6 @@ target_include_directories(minisketch
 target_link_libraries(minisketch
   PRIVATE
     core
-    minisketch_defs
+    minisketch_common
     $<TARGET_NAME_IF_EXISTS:minisketch_clmul>
 )
