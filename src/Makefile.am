@@ -216,7 +216,6 @@ BITCOIN_CORE_H = \
   node/mempool_args.h \
   node/mempool_persist_args.h \
   node/miner.h \
-  node/minisketchwrapper.h \
   node/psbt.h \
   node/transaction.h \
   node/txreconciliation.h \
@@ -407,7 +406,6 @@ libbitcoin_node_a_SOURCES = \
   node/mempool_args.cpp \
   node/mempool_persist_args.cpp \
   node/miner.cpp \
-  node/minisketchwrapper.cpp \
   node/psbt.cpp \
   node/transaction.cpp \
   node/txreconciliation.cpp \
@@ -1102,10 +1100,10 @@ endif
 	} > "$@.new" && mv -f "$@.new" "$@"
 	@echo "Generated $@"
 
-include Makefile.minisketch.include
-
+if EMBEDDED_LEVELDB
 include Makefile.crc32c.include
 include Makefile.leveldb.include
+endif
 
 include Makefile.test_util.include
 include Makefile.test_fuzz.include
