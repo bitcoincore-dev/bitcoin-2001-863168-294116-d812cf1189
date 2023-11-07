@@ -123,6 +123,9 @@ if(WIN32)
   )
 
   if(MSVC)
+    target_compile_definitions(core INTERFACE
+      _UNICODE;UNICODE
+    )
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     target_compile_options(core INTERFACE
       /utf-8
