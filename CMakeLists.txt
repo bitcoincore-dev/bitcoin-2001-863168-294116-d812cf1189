@@ -99,27 +99,24 @@ include(TryAppendCXXFlags)
 include(TryAppendLinkerFlag)
 
 if(WIN32)
-  #[=[
-  This build system supports two ways to build binaries for Windows.
-
-  1. Building on Windows using MSVC.
-  Implementation notes:
-  - /DWIN32 and /D_WINDOWS definitions are included into the CMAKE_CXX_FLAGS_INIT
-    and CMAKE_CXX_FLAGS_INIT variables by default.
-  - A run-time library is selected using the CMAKE_MSVC_RUNTIME_LIBRARY variable.
-  - MSVC-specific options, for example, /Zc:__cplusplus, are additionally required.
-
-  2. Cross-compiling using MinGW.
-  Implementation notes:
-  - WIN32 and _WINDOWS definitions must be provided explicitly.
-  - A run-time library must be specified explicitly using _MT definition.
-  ]=]
+  # This build system supports two ways to build binaries for Windows:
+  # 1. Building on Windows using MSVC.
+  # 2. Cross-compiling using MinGW.
 
   target_compile_definitions(core INTERFACE
+    # For MSVC, the /DWIN32 and /D_WINDOWS definitions are included
+    # to the CMAKE_{C,CXX}_FLAGS_INIT variables by default.
+    $<$<BOOL:${MINGW}>:WIN32;_WINDOWS>
     _WIN32_WINNT=0x0601
     _WIN32_IE=0x0501
     WIN32_LEAN_AND_MEAN
     NOMINMAX
+    # TODO: Consider to unify the Unicode usage among the MSVC and
+    #       MINGW builds.
+    $<$<BOOL:${MSVC}>:_UNICODE;UNICODE>
+    # MSVC uses the CMAKE_MSVC_RUNTIME_LIBRARY variable to specify
+    # a run-time library.
+    $<$<BOOL:${MINGW}>:_MT>
   )
 
   if(MSVC)
@@ -145,11 +142,6 @@ if(WIN32)
   endif()
 
   if(MINGW)
-    target_compile_definitions(core INTERFACE
-      WIN32
-      _WINDOWS
-      _MT
-    )
     try_append_linker_flag("-static" TARGET core)
     # We require Windows 7 (NT 6.1) or later.
     try_append_linker_flag("-Wl,--major-subsystem-version,6" TARGET core)
