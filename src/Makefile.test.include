@@ -107,7 +107,6 @@ BITCOIN_TESTS =\
   test/merkleblock_tests.cpp \
   test/miner_tests.cpp \
   test/miniscript_tests.cpp \
-  test/minisketch_tests.cpp \
   test/multisig_tests.cpp \
   test/net_peer_eviction_tests.cpp \
   test/net_tests.cpp \
@@ -285,7 +284,6 @@ test_fuzz_fuzz_SOURCES = \
  test/fuzz/merkleblock.cpp \
  test/fuzz/message.cpp \
  test/fuzz/miniscript.cpp \
- test/fuzz/minisketch.cpp \
  test/fuzz/muhash.cpp \
  test/fuzz/multiplication_overflow.cpp \
  test/fuzz/net.cpp \
