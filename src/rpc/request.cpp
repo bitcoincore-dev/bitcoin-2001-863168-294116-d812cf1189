@@ -68,6 +68,8 @@ static const std::string COOKIEAUTH_USER = "__cookie__";
 /** Default name for auth cookie file */
 static const std::string COOKIEAUTH_FILE = ".cookie";
 
+static std::optional<std::string> g_generated_cookie;
+
 /** Get name of RPC authentication cookie file */
 static fs::path GetAuthCookieFile(bool temp=false)
 {
@@ -77,8 +79,6 @@ static fs::path GetAuthCookieFile(bool temp=false)
     }
     return AbsPathForConfigVal(fs::PathFromString(arg));
 }
-
-static std::optional<std::string> g_generated_cookie;
 
 bool GenerateAuthCookie(std::string *cookie_out)
 {
