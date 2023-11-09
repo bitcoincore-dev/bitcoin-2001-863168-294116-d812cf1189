@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 include(GenerateHeaders)
 generate_header_from_raw(data/block413567.raw)
@@ -52,8 +52,7 @@ add_executable(bench_bitcoin
 target_link_libraries(bench_bitcoin
   core
   test_util
-  leveldb
-  univalue
+  bitcoin_node
   Boost::headers
 )
 
