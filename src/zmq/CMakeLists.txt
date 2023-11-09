@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 add_library(bitcoin_zmq STATIC
   zmqabstractnotifier.cpp
@@ -16,7 +16,6 @@ target_compile_definitions(bitcoin_zmq
 target_link_libraries(bitcoin_zmq
   PRIVATE
     core
-    leveldb
     univalue
     $<TARGET_NAME_IF_EXISTS:libzmq>
     $<TARGET_NAME_IF_EXISTS:PkgConfig::libzmq>
