@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 add_library(test_util STATIC EXCLUDE_FROM_ALL
   blockfilter.cpp
@@ -17,22 +17,13 @@ add_library(test_util STATIC EXCLUDE_FROM_ALL
   transaction_utils.cpp
   txmempool.cpp
   validation.cpp
+  $<$<BOOL:${ENABLE_WALLET}>:${PROJECT_SOURCE_DIR}/src/wallet/test/util.cpp>
 )
+
 target_link_libraries(test_util
   PRIVATE
     core
-    bitcoin_common
-    bitcoin_node
-    leveldb
-    univalue
     Boost::headers
+  PUBLIC
+    univalue
 )
-
-if(ENABLE_WALLET)
-  target_sources(test_util
-    PRIVATE
-      ../../wallet/test/util.cpp
-  )
-endif()
-
-target_link_libraries(test_util PRIVATE core)
