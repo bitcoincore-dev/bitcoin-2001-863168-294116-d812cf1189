@@ -217,13 +217,9 @@ add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
   validation.cpp
   validationinterface.cpp
   versionbits.cpp
+  $<$<TARGET_EXISTS:bitcoin_wallet>:wallet/init.cpp>
+  $<$<NOT:$<TARGET_EXISTS:bitcoin_wallet>>:dummywallet.cpp>
 )
-if(ENABLE_WALLET)
-  target_sources(bitcoin_node PRIVATE wallet/init.cpp)
-  target_link_libraries(bitcoin_node PRIVATE bitcoin_wallet)
-else()
-  target_sources(bitcoin_node PRIVATE dummywallet.cpp)
-endif()
 target_link_libraries(bitcoin_node
   PRIVATE
     core
@@ -250,6 +246,7 @@ if(BUILD_DAEMON)
   target_link_libraries(bitcoind
     core
     bitcoin_node
+    $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
   list(APPEND installable_targets bitcoind)
 endif()
