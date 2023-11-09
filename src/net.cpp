@@ -673,6 +673,7 @@ void CNode::CopyStats(CNodeStats& stats)
         X(nRecvBytes);
     }
     X(m_permission_flags);
+    X(m_forced_inbound);
 
     X(m_last_ping_time);
     X(m_min_ping_time);

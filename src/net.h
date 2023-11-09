@@ -222,6 +222,8 @@ public:
     Network m_network;
     uint32_t m_mapped_as;
     ConnectionType m_conn_type;
+    /** whether this peer forced its connection by evicting another */
+    bool m_forced_inbound;
 };
 
 
