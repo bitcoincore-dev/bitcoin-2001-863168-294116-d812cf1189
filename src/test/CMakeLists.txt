@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 include(GenerateHeaders)
 generate_header_from_json(data/base58_encode_decode.json)
@@ -140,13 +140,8 @@ target_link_libraries(test_bitcoin
   test_util
   bitcoin_cli
   bitcoin_node
-  bitcoin_common
-  bitcoin_util
   minisketch
-  leveldb
-  univalue
   Boost::headers
-  libevent::libevent
 )
 
 if(ENABLE_WALLET)
