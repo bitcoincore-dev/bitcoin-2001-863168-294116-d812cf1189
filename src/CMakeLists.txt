@@ -220,7 +220,6 @@ add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
 )
 if(ENABLE_WALLET)
   target_sources(bitcoin_node PRIVATE wallet/init.cpp)
-  target_link_libraries(bitcoin_node PRIVATE bitcoin_wallet)
 else()
   target_sources(bitcoin_node PRIVATE dummywallet.cpp)
 endif()
@@ -250,6 +249,7 @@ if(BUILD_DAEMON)
   target_link_libraries(bitcoind
     core
     bitcoin_node
+    $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
   list(APPEND installable_targets bitcoind)
 endif()
