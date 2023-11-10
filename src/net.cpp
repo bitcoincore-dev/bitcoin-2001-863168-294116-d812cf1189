@@ -1748,7 +1748,6 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
                                             const CAddress& addr)
 {
     int nInbound = 0;
-    int nForced{0};
     int nMaxInbound = nMaxConnections - m_max_outbound;
 
     AddWhitelistPermissionFlags(permission_flags, addr, vWhitelistedRange);
@@ -1757,7 +1756,6 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
         LOCK(m_nodes_mutex);
         for (const CNode* pnode : m_nodes) {
             if (pnode->IsInboundConn()) nInbound++;
-            if (pnode->m_forced_inbound) nForced++;
         }
     }
 
@@ -1798,12 +1796,6 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
     bool forced{false};
     if (nInbound >= nMaxInbound)
     {
-        // Protect from force evicting everyone
-        if (nForced >= MAX_FORCED_INBOUND_CONNECTIONS) {
-            LogPrint(BCLog::NET, "connection from %s dropped (too many forced inbound)\n", addr.ToStringAddrPort());
-            return;
-        }
-
         // If the inbound connection attempt is granted ForceInbound permission, try a little harder
         // to make room by evicting a peer we may not have otherwise evicted.
         if (!AttemptToEvictConnection(NetPermissions::HasFlag(permission_flags, NetPermissionFlags::ForceInbound))) {

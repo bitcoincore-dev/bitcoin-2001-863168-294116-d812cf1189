@@ -87,8 +87,6 @@ static const bool DEFAULT_BLOCKSONLY = false;
 static const int64_t DEFAULT_PEER_CONNECT_TIMEOUT = 60;
 /** Number of file descriptors required for message capture **/
 static const int NUM_FDS_MESSAGE_CAPTURE = 1;
-/** Maximum number of forced inbound connections **/
-static const int MAX_FORCED_INBOUND_CONNECTIONS{8};
 
 static constexpr bool DEFAULT_FORCEDNSSEED{false};
 static constexpr bool DEFAULT_DNSSEED{true};
