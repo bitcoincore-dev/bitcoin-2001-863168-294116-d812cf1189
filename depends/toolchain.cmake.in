@@ -39,10 +39,9 @@ if(NOT CMAKE_C_COMPILER)
     # store the compiler arguments in the CMAKE_C_COMPILER variable.
     # Therefore, we have to store them separately.
     set(mandatory_c_compiler_flags ${CMAKE_C_COMPILER})
-    list(REMOVE_AT mandatory_c_compiler_flags 0)
+    list(POP_FRONT mandatory_c_compiler_flags CMAKE_C_COMPILER)
     list(JOIN mandatory_c_compiler_flags " " mandatory_c_compiler_flags)
     set(CMAKE_C_FLAGS_INIT ${CMAKE_C_FLAGS_INIT} ${mandatory_c_compiler_flags})
-    list(GET CMAKE_C_COMPILER 0 CMAKE_C_COMPILER)
   endif()
   set(DEPENDS_C_COMPILER_FLAGS @CFLAGS@)
 endif()
@@ -58,11 +57,10 @@ if(NOT CMAKE_CXX_COMPILER)
     # store the compiler arguments in the CMAKE_CXX_COMPILER variable.
     # Therefore, we have to store them separately.
     set(mandatory_cxx_compiler_flags ${CMAKE_CXX_COMPILER})
-    list(REMOVE_AT mandatory_cxx_compiler_flags 0)
+    list(POP_FRONT mandatory_cxx_compiler_flags CMAKE_CXX_COMPILER)
     list(JOIN mandatory_cxx_compiler_flags " " mandatory_cxx_compiler_flags)
     set(CMAKE_CXX_FLAGS_INIT ${CMAKE_CXX_FLAGS_INIT} ${mandatory_cxx_compiler_flags})
     set(CMAKE_EXE_LINKER_FLAGS_INIT ${CMAKE_EXE_LINKER_FLAGS_INIT} ${mandatory_cxx_compiler_flags})
-    list(GET CMAKE_CXX_COMPILER 0 CMAKE_CXX_COMPILER)
   endif()
   set(DEPENDS_CXX_COMPILER_FLAGS @CXXFLAGS@)
 
