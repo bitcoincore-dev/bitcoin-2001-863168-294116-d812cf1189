@@ -35,6 +35,9 @@ if(NOT CMAKE_C_COMPILER)
     set(CMAKE_C_LINKER_LAUNCHER ${CMAKE_C_COMPILER_LAUNCHER})
   endif()
   if(CMAKE_VERSION VERSION_LESS 3.19)
+    # Being provided with CC="compiler -arg1 -arg2", the old CMake cannot
+    # store the compiler arguments in the CMAKE_C_COMPILER variable.
+    # Therefore, we have to store them separately.
     set(mandatory_c_compiler_flags ${CMAKE_C_COMPILER})
     list(REMOVE_AT mandatory_c_compiler_flags 0)
     list(JOIN mandatory_c_compiler_flags " " mandatory_c_compiler_flags)
@@ -51,8 +54,9 @@ if(NOT CMAKE_CXX_COMPILER)
     set(CMAKE_CXX_LINKER_LAUNCHER ${CMAKE_CXX_COMPILER_LAUNCHER})
   endif()
   if(CMAKE_VERSION VERSION_LESS 3.19)
-    # Handle CXX='clang++ -stdlib=libc++' properly.
-    # See: https://gitlab.kitware.com/cmake/cmake/-/merge_requests/4136.
+    # Being provided with CXX="compiler -arg1 -arg2", the old CMake cannot
+    # store the compiler arguments in the CMAKE_CXX_COMPILER variable.
+    # Therefore, we have to store them separately.
     set(mandatory_cxx_compiler_flags ${CMAKE_CXX_COMPILER})
     list(REMOVE_AT mandatory_cxx_compiler_flags 0)
     list(JOIN mandatory_cxx_compiler_flags " " mandatory_cxx_compiler_flags)
