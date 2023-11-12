@@ -32,7 +32,6 @@ add_library(bitcoin_util STATIC EXCLUDE_FROM_ALL
   time.cpp
   tokenpipe.cpp
   ../chainparamsbase.cpp
-  ../clientversion.cpp
   ../logging.cpp
   ../random.cpp
   ../randomenv.cpp
@@ -51,6 +50,7 @@ target_compile_definitions(bitcoin_util
 target_link_libraries(bitcoin_util
   PRIVATE
     core
+    bitcoin_clientversion
     bitcoin_crypto
     Threads::Threads
     $<$<BOOL:${MINGW}>:ws2_32>
