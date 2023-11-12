@@ -81,6 +81,9 @@ if(HAVE_SYS_TYPES_H AND HAVE_IFADDRS_H)
   endif()
 endif()
 
+include(TestAppendRequiredLibraries)
+test_append_atomic_library(core)
+
 # Check for gmtime_r(), fallback to gmtime_s() if that is unavailable.
 # Fail if neither are available.
 check_cxx_source_compiles("
