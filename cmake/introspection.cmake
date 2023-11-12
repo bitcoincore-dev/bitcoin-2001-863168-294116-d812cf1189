@@ -75,29 +75,9 @@ check_include_file_cxx(ifaddrs.h HAVE_IFADDRS_H)
 if(HAVE_SYS_TYPES_H AND HAVE_IFADDRS_H)
   check_cxx_symbol_exists(freeifaddrs "sys/types.h;ifaddrs.h" HAVE_DECL_FREEIFADDRS)
   check_cxx_symbol_exists(getifaddrs "sys/types.h;ifaddrs.h" HAVE_DECL_GETIFADDRS)
-  # Illumos/SmartOS requires linking with -lsocket if
-  # using getifaddrs & freeifaddrs.
-  # See: https://github.com/bitcoin/bitcoin/pull/21486
   if(HAVE_DECL_GETIFADDRS AND HAVE_DECL_FREEIFADDRS)
-    set(check_socket_source "
-      #include <sys/types.h>
-      #include <ifaddrs.h>
-
-      int main() {
-        struct ifaddrs* ifaddr;
-        getifaddrs(&ifaddr);
-        freeifaddrs(ifaddr);
-      }
-    ")
-    check_cxx_source_links("${check_socket_source}" IFADDR_LINKS_WITHOUT_LIBSOCKET)
-    if(NOT IFADDR_LINKS_WITHOUT_LIBSOCKET)
-      check_cxx_source_links_with_libs(socket "${check_socket_source}" IFADDR_NEEDS_LINK_TO_LIBSOCKET)
-      if(IFADDR_NEEDS_LINK_TO_LIBSOCKET)
-        link_libraries(socket)
-      else()
-        message(FATAL_ERROR "Cannot figure out how to use getifaddrs/freeifaddrs.")
-      endif()
-    endif()
+    include(TestAppendRequiredLibraries)
+    test_append_socket_library(core)
   endif()
 endif()
 
