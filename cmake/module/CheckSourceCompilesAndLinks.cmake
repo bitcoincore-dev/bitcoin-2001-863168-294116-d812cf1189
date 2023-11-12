@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 include(CheckCXXSourceCompiles)
 include(CMakePushCheckState)
@@ -16,14 +16,14 @@ endmacro()
 
 macro(check_cxx_source_compiles_with_flags flags source)
   cmake_push_check_state(RESET)
-  string(REPLACE ";" " " CMAKE_REQUIRED_FLAGS "${flags}")
+  list(JOIN flags " " CMAKE_REQUIRED_FLAGS)
   check_cxx_source_compiles("${source}" ${ARGN})
   cmake_pop_check_state()
 endmacro()
 
 macro(check_cxx_source_links_with_flags flags source)
   cmake_push_check_state(RESET)
-  string(REPLACE ";" " " CMAKE_REQUIRED_FLAGS "${flags}")
+  list(JOIN flags " " CMAKE_REQUIRED_FLAGS)
   check_cxx_source_links("${source}" ${ARGN})
   cmake_pop_check_state()
 endmacro()
