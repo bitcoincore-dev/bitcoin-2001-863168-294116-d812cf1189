@@ -1,3 +1,4 @@
+
 // Copyright (c) 2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -14,6 +15,17 @@
 #include <cstdint>
 #include <limits>
 
+bool SanityCheckForConsumeTxMemPoolEntry(const CTransaction& tx) noexcept
+{
+    try {
+        (void)tx.GetValueOut();
+        return true;
+    } catch (const std::runtime_error&) {
+        return false;
+    }
+}
+
+// NOTE: Transaction must pass SanityCheckForConsumeTxMemPoolEntry first
 CTxMemPoolEntry ConsumeTxMemPoolEntry(FuzzedDataProvider& fuzzed_data_provider, const CTransaction& tx) noexcept
 {
     // Avoid:
@@ -23,8 +35,10 @@ CTxMemPoolEntry ConsumeTxMemPoolEntry(FuzzedDataProvider& fuzzed_data_provider, 
     const CAmount fee{ConsumeMoney(fuzzed_data_provider, /*max=*/std::numeric_limits<CAmount>::max() / CAmount{100'000})};
     assert(MoneyRange(fee));
     const int64_t time = fuzzed_data_provider.ConsumeIntegral<int64_t>();
-    const unsigned int entry_height = fuzzed_data_provider.ConsumeIntegral<unsigned int>();
+    const double coinage_priority = fuzzed_data_provider.ConsumeFloatingPoint<double>();
+    const unsigned int entry_height = fuzzed_data_provider.ConsumeIntegralInRange<unsigned int>(0, std::numeric_limits<unsigned int>::max() - 1);
     const bool spends_coinbase = fuzzed_data_provider.ConsumeBool();
+    const int32_t extra_weight = fuzzed_data_provider.ConsumeIntegralInRange<int32_t>(0, GetTransactionWeight(tx) * 3);
     const unsigned int sig_op_cost = fuzzed_data_provider.ConsumeIntegralInRange<unsigned int>(0, MAX_BLOCK_SIGOPS_COST);
-    return CTxMemPoolEntry{MakeTransactionRef(tx), fee, time, entry_height, spends_coinbase, sig_op_cost, {}};
+    return CTxMemPoolEntry{MakeTransactionRef(tx), fee, time, coinage_priority, entry_height, tx.GetValueOut(), spends_coinbase, extra_weight, sig_op_cost, {}};
 }

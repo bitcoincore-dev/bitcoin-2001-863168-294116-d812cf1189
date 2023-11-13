@@ -10,6 +10,7 @@
 #include <consensus/consensus.h>
 #include <consensus/tx_verify.h>
 #include <consensus/validation.h>
+#include <policy/coin_age_priority.h>
 #include <policy/fees.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
@@ -195,13 +196,29 @@ util::Result<CTxMemPool::setEntries> CTxMemPool::CalculateAncestorsAndCheckLimit
 }
 
 bool CTxMemPool::CheckPackageLimits(const Package& package,
+                                    const int64_t total_vsize,
                                     const Limits& limits,
                                     std::string &errString) const
 {
+    size_t pack_count = package.size();
+
+    // Package itself is busting mempool limits; should be rejected even if no staged_ancestors exist
+    if (pack_count > static_cast<uint64_t>(m_limits.ancestor_count)) {
+        errString = strprintf("package count %u exceeds ancestor count limit [limit: %u]", pack_count, m_limits.ancestor_count);
+        return false;
+    } else if (pack_count > static_cast<uint64_t>(m_limits.descendant_count)) {
+        errString = strprintf("package count %u exceeds descendant count limit [limit: %u]", pack_count, m_limits.descendant_count);
+        return false;
+    } else if (total_vsize > m_limits.ancestor_size_vbytes) {
+        errString = strprintf("package size %u exceeds ancestor size limit [limit: %u]", total_vsize, m_limits.ancestor_size_vbytes);
+        return false;
+    } else if (total_vsize > m_limits.descendant_size_vbytes) {
+        errString = strprintf("package size %u exceeds descendant size limit [limit: %u]", total_vsize, m_limits.descendant_size_vbytes);
+        return false;
+    }
+
     CTxMemPoolEntry::Parents staged_ancestors;
-    size_t total_size = 0;
     for (const auto& tx : package) {
-        total_size += GetVirtualTransactionSize(*tx);
         for (const auto& input : tx->vin) {
             std::optional<txiter> piter = GetIter(input.prevout.hash);
             if (piter) {
@@ -216,7 +233,7 @@ bool CTxMemPool::CheckPackageLimits(const Package& package,
     // When multiple transactions are passed in, the ancestors and descendants of all transactions
     // considered together must be within limits even if they are not interdependent. This may be
     // stricter than the limits for each individual transaction.
-    const auto ancestors{CalculateAncestorsAndCheckLimits(total_size, package.size(),
+    const auto ancestors{CalculateAncestorsAndCheckLimits(total_vsize, package.size(),
                                                           staged_ancestors, limits)};
     // It's possible to overestimate the ancestor/descendant totals.
     if (!ancestors.has_value()) errString = "possibly " + util::ErrorString(ancestors).original;
@@ -393,6 +410,7 @@ CTxMemPool::CTxMemPool(const Options& opts)
       m_dust_relay_feerate{opts.dust_relay_feerate},
       m_permit_bare_multisig{opts.permit_bare_multisig},
       m_max_datacarrier_bytes{opts.max_datacarrier_bytes},
+      m_datacarrier_fullcount{opts.datacarrier_fullcount},
       m_require_standard{opts.require_standard},
       m_full_rbf{opts.full_rbf},
       m_limits{opts.limits}
@@ -423,8 +441,10 @@ void CTxMemPool::addUnchecked(const CTxMemPoolEntry &entry, setEntries &setAnces
     indexed_transaction_set::iterator newit = mapTx.insert(entry).first;
 
     // Update transaction for any feeDelta created by PrioritiseTransaction
+    double priority_delta{0.};
     CAmount delta{0};
-    ApplyDelta(entry.GetTx().GetHash(), delta);
+    ApplyDeltas(entry.GetTx().GetHash(), priority_delta, delta);
+    // NOTE: priority_delta is handled in addPriorityTxs
     // The following call to UpdateModifiedFee assumes no previous fee modifications
     Assume(entry.GetFee() == entry.GetModifiedFee());
     if (delta) {
@@ -634,6 +654,7 @@ void CTxMemPool::removeForBlock(const std::vector<CTransactionRef>& vtx, unsigne
     if (minerPolicyEstimator) {minerPolicyEstimator->processBlock(nBlockHeight, entries);}
     for (const auto& tx : vtx)
     {
+        UpdateDependentPriorities(*tx, nBlockHeight, true);
         txiter it = mapTx.find(tx->GetHash());
         if (it != mapTx.end()) {
             setEntries stage;
@@ -666,6 +687,13 @@ void CTxMemPool::check(const CCoinsViewCache& active_coins_tip, int64_t spendhei
 
     for (const auto& it : GetSortedDepthAndScore()) {
         checkTotal += it->GetTxSize();
+        CAmount dummyValue;
+        double freshPriority = GetPriority(it->GetTx(), active_coins_tip, spendheight, dummyValue);
+        double cachePriority = it->GetPriority(spendheight);
+        double priDiff = cachePriority > freshPriority ? cachePriority - freshPriority : freshPriority - cachePriority;
+        // Verify that the difference between the on the fly calculation and a fresh calculation
+        // is small enough to be a result of double imprecision.
+        assert(priDiff < .0001 * freshPriority + 1);
         check_total_fee += it->GetFee();
         innerUsage += it->DynamicMemoryUsage();
         const CTransaction& tx = it->GetTx();
@@ -846,15 +874,17 @@ TxMempoolInfo CTxMemPool::info(const GenTxid& gtxid) const
     return GetInfo(i);
 }
 
-void CTxMemPool::PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta)
+void CTxMemPool::PrioritiseTransaction(const uint256& hash, double dPriorityDelta, const CAmount& nFeeDelta)
 {
     {
         LOCK(cs);
-        CAmount &delta = mapDeltas[hash];
-        delta = SaturatingAdd(delta, nFeeDelta);
+        std::pair<double, CAmount> &deltas = mapDeltas[hash];
+        deltas.first += dPriorityDelta;
+        deltas.second = SaturatingAdd(deltas.second, nFeeDelta);
         txiter it = mapTx.find(hash);
         if (it != mapTx.end()) {
             mapTx.modify(it, [&nFeeDelta](CTxMemPoolEntry& e) { e.UpdateModifiedFee(nFeeDelta); });
+
             // Now update all ancestors' modified fees with descendants
             auto ancestors{AssumeCalculateMemPoolAncestors(__func__, *it, Limits::NoLimits(), /*fSearchForParents=*/false)};
             for (txiter ancestorIt : ancestors) {
@@ -869,24 +899,51 @@ void CTxMemPool::PrioritiseTransaction(const uint256& hash, const CAmount& nFeeD
             }
             ++nTransactionsUpdated;
         }
+        if (deltas.first == 0. && deltas.second == 0) {
+            mapDeltas.erase(hash);
+            LogPrintf("PrioritiseTransaction: %s (%sin mempool) delta cleared\n", hash.ToString(), it == mapTx.end() ? "not " : "");
+        } else {
+            LogPrintf("PrioritiseTransaction: %s (%sin mempool) priority += %f, fee += %s, new delta=%s\n",
+                      hash.ToString(),
+                      it == mapTx.end() ? "not " : "",
+                      dPriorityDelta,
+                      FormatMoney(nFeeDelta),
+                      FormatMoney(deltas.second));
+        }
     }
-    LogPrintf("PrioritiseTransaction: %s fee += %s\n", hash.ToString(), FormatMoney(nFeeDelta));
 }
 
-void CTxMemPool::ApplyDelta(const uint256& hash, CAmount &nFeeDelta) const
+void CTxMemPool::ApplyDeltas(const uint256& hash, double &dPriorityDelta, CAmount &nFeeDelta) const
 {
     AssertLockHeld(cs);
-    std::map<uint256, CAmount>::const_iterator pos = mapDeltas.find(hash);
+    std::map<uint256, std::pair<double, CAmount> >::const_iterator pos = mapDeltas.find(hash);
     if (pos == mapDeltas.end())
         return;
-    const CAmount &delta = pos->second;
-    nFeeDelta += delta;
+    const std::pair<double, CAmount> &deltas = pos->second;
+    dPriorityDelta += deltas.first;
+    nFeeDelta += deltas.second;
 }
 
 void CTxMemPool::ClearPrioritisation(const uint256& hash)
 {
     AssertLockHeld(cs);
     mapDeltas.erase(hash);
+}
+
+std::vector<CTxMemPool::delta_info> CTxMemPool::GetPrioritisedTransactions() const
+{
+    AssertLockNotHeld(cs);
+    LOCK(cs);
+    std::vector<delta_info> result;
+    result.reserve(mapDeltas.size());
+    for (const auto& [txid, delta] : mapDeltas) {
+        const auto iter{mapTx.find(txid)};
+        const bool in_mempool{iter != mapTx.end()};
+        std::optional<CAmount> modified_fee;
+        if (in_mempool) modified_fee = iter->GetModifiedFee();
+        result.emplace_back(delta_info{in_mempool, delta.second, delta.first, modified_fee, txid});
+    }
+    return result;
 }
 
 const CTransaction* CTxMemPool::GetConflictTx(const COutPoint& prevout) const

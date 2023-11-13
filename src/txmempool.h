@@ -44,6 +44,10 @@ class Chainstate;
 /** Fake height value used in Coin to signify they are only in the memory pool (since 0.8) */
 static const uint32_t MEMPOOL_HEIGHT = 0x7FFFFFFF;
 
+inline int64_t maxmempoolMinimumBytes(const int64_t descendant_size_vbytes) {
+    return descendant_size_vbytes * 40;
+}
+
 /**
  * Test whether the LockPoints height and time are still valid on the current chain
  */
@@ -447,17 +451,18 @@ private:
 
 public:
     indirectmap<COutPoint, const CTransaction*> mapNextTx GUARDED_BY(cs);
-    std::map<uint256, CAmount> mapDeltas GUARDED_BY(cs);
+    std::map<uint256, std::pair<double, CAmount> > mapDeltas GUARDED_BY(cs);
 
     using Options = kernel::MemPoolOptions;
 
-    const int64_t m_max_size_bytes;
+    int64_t m_max_size_bytes;
     const std::chrono::seconds m_expiry;
     const CFeeRate m_incremental_relay_feerate;
     const CFeeRate m_min_relay_feerate;
     const CFeeRate m_dust_relay_feerate;
     const bool m_permit_bare_multisig;
     const std::optional<unsigned> m_max_datacarrier_bytes;
+    bool m_datacarrier_fullcount;
     const bool m_require_standard;
     const bool m_full_rbf;
 
@@ -510,11 +515,32 @@ public:
      * the tx is not dependent on other mempool transactions to be included in a block.
      */
     bool HasNoInputsOf(const CTransaction& tx) const EXCLUSIVE_LOCKS_REQUIRED(cs);
+    /**
+     * Update all transactions in the mempool which depend on tx to recalculate their priority
+     * and adjust the input value that will age to reflect that the inputs from this transaction have
+     * either just been added to the chain or just been removed.
+     */
+    void UpdateDependentPriorities(const CTransaction &tx, unsigned int nBlockHeight, bool addToChain);
 
     /** Affect CreateNewBlock prioritisation of transactions */
-    void PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta);
-    void ApplyDelta(const uint256& hash, CAmount &nFeeDelta) const EXCLUSIVE_LOCKS_REQUIRED(cs);
+    void PrioritiseTransaction(const uint256& hash, double dPriorityDelta, const CAmount& nFeeDelta);
+    void PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta) { PrioritiseTransaction(hash, 0., nFeeDelta); }
+    void ApplyDeltas(const uint256& hash, double &dPriorityDelta, CAmount &nFeeDelta) const EXCLUSIVE_LOCKS_REQUIRED(cs);
     void ClearPrioritisation(const uint256& hash) EXCLUSIVE_LOCKS_REQUIRED(cs);
+
+    struct delta_info {
+        /** Whether this transaction is in the mempool. */
+        const bool in_mempool;
+        /** The fee delta added using PrioritiseTransaction(). */
+        const CAmount delta;
+        const double priority_delta;
+        /** The modified fee (base fee + delta) of this entry. Only present if in_mempool=true. */
+        std::optional<CAmount> modified_fee;
+        /** The prioritised transaction's txid. */
+        const uint256 txid;
+    };
+    /** Return a vector of all entries in mapDeltas with their corresponding delta_info. */
+    std::vector<delta_info> GetPrioritisedTransactions() const EXCLUSIVE_LOCKS_REQUIRED(!cs);
 
     /** Get the transaction in the pool that spends the same prevout */
     const CTransaction* GetConflictTx(const COutPoint& prevout) const EXCLUSIVE_LOCKS_REQUIRED(cs);
@@ -598,6 +624,7 @@ public:
      * @param[out]      errString               Populated with error reason if a limit is hit.
      */
     bool CheckPackageLimits(const Package& package,
+                            int64_t total_vsize,
                             const Limits& limits,
                             std::string &errString) const EXCLUSIVE_LOCKS_REQUIRED(cs);
 

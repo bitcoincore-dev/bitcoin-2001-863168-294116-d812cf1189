@@ -86,6 +86,7 @@ std::optional<bilingual_str> ApplyArgsManOptions(const ArgsManager& argsman, con
     } else {
         mempool_opts.max_datacarrier_bytes = std::nullopt;
     }
+    mempool_opts.datacarrier_fullcount = argsman.GetBoolArg("-datacarrierfullcount", DEFAULT_DATACARRIER_FULLCOUNT);
 
     mempool_opts.require_standard = !argsman.GetBoolArg("-acceptnonstdtxn", !chainparams.RequireStandard());
     if (!chainparams.IsTestChain() && !mempool_opts.require_standard) {
