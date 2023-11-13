@@ -651,6 +651,8 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return qlonglong(node().mempool().m_limits.descendant_size_vbytes / 1'000);
     case rejectbaremultisig:
         return !node().mempool().m_permit_bare_multisig;
+    case maxscriptsize:
+        return ::g_script_size_policy_limit;
     case datacarriercost:
         return double(::g_weight_per_data_byte) / WITNESS_SCALE_FACTOR;
     case datacarriersize:
@@ -1148,6 +1150,13 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
             const bool fNewValue = ! value.toBool();
             node().mempool().m_permit_bare_multisig = fNewValue;
             gArgs.ModifyRWConfigFile("permitbaremultisig", strprintf("%d", fNewValue));
+        }
+        break;
+    case maxscriptsize:
+        if (changed()) {
+            const auto nv = value.toLongLong();
+            update(nv);
+            ::g_script_size_policy_limit = nv;
         }
         break;
     case datacarriercost:
