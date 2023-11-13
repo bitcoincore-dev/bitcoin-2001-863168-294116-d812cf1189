@@ -22,3 +22,12 @@ get_directory_property(global_link_options LINK_OPTIONS)
 if(global_link_options)
   message(AUTHOR_WARNING "The directory's LINK_OPTIONS property is not empty: ${global_link_options}")
 endif()
+
+# Avoid the directory-wide link_libraries() command.
+# Instead, prefer the target-specific target_link_libraries() one.
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/dummy_cxx_source.cpp "#error")
+add_library(check_loose_linked_libraries OBJECT EXCLUDE_FROM_ALL ${CMAKE_CURRENT_BINARY_DIR}/dummy_cxx_source.cpp)
+get_target_property(global_linked_libraries check_loose_linked_libraries LINK_LIBRARIES)
+if(global_linked_libraries)
+  message(AUTHOR_WARNING "There are libraries linked with `link_libraries` commands: ${global_linked_libraries}")
+endif()
