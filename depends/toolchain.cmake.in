@@ -126,6 +126,11 @@ if(NOT WITH_USDT AND "@no_usdt@" STREQUAL "1")
   set(WITH_USDT OFF CACHE STRING "")
 endif()
 
+if(NOT LTO AND "@lto@" STREQUAL "1")
+  set(LTO ON CACHE STRING "")
+  set(LTO_FLAGS -flto CACHE STRING "")
+endif()
+
 if(DEFINED ENV{PYTHONPATH})
   set(PYTHONPATH "@depends_prefix@/native/lib/python3/dist-packages:$ENV{PYTHONPATH}")
 else()
