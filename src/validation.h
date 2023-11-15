@@ -66,6 +66,8 @@ struct Params;
 static const int MAX_SCRIPTCHECK_THREADS = 15;
 /** -par default (number of script-checking threads, 0 = auto) */
 static const int DEFAULT_SCRIPTCHECK_THREADS = 0;
+/** Default for using fee filter */
+static const bool DEFAULT_FEEFILTER = true;
 /** Default for -stopatheight */
 static const int DEFAULT_STOPATHEIGHT = 0;
 /** Block files containing a block-height within MIN_BLOCKS_TO_KEEP of ActiveChain().Tip() will not be pruned. */

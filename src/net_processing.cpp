@@ -5390,6 +5390,7 @@ void PeerManagerImpl::MaybeSendFeefilter(CNode& pto, Peer& peer, std::chrono::mi
 {
     if (m_ignore_incoming_txs) return;
     if (pto.GetCommonVersion() < FEEFILTER_VERSION) return;
+    if (!gArgs.GetBoolArg("-feefilter", DEFAULT_FEEFILTER)) return;
     // peers with the forcerelay permission should not filter txs to us
     if (pto.HasPermission(NetPermissionFlags::ForceRelay)) return;
     // Don't send feefilter messages to outbound block-relay-only peers since they should never announce
