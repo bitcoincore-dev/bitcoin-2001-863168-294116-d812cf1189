@@ -65,6 +65,7 @@ class NetTest(BitcoinTestFramework):
         self.test_service_flags()
         self.test_getnodeaddresses()
         self.test_addpeeraddress()
+        self.test_getaddrmaninfo()
 
     def test_connection_count(self):
         self.log.info("Test getconnectioncount")
@@ -328,6 +329,28 @@ class NetTest(BitcoinTestFramework):
             addrs = node.getnodeaddresses(count=0)  # getnodeaddresses re-runs the addrman checks
             assert_equal(len(addrs), 2)
 
+    def test_getaddrmaninfo(self):
+        self.log.info("Test getaddrmaninfo")
+        node = self.nodes[1]
+
+        self.log.debug("Test that getaddrmaninfo is a hidden RPC")
+        # It is hidden from general help, but its detailed help may be called directly.
+        assert "getaddrmaninfo" not in node.help()
+        assert "getaddrmaninfo" in node.help("getaddrmaninfo")
+
+        # current count of ipv4 addresses in addrman is {'new':1, 'tried':1}
+        self.log.info("Test that count of addresses in addrman match expected values")
+        res = node.getaddrmaninfo()
+        assert_equal(res["ipv4"]["new"], 1)
+        assert_equal(res["ipv4"]["tried"], 1)
+        assert_equal(res["ipv4"]["total"], 2)
+        assert_equal(res["all_networks"]["new"], 1)
+        assert_equal(res["all_networks"]["tried"], 1)
+        assert_equal(res["all_networks"]["total"], 2)
+        for net in ["ipv6", "onion", "i2p", "cjdns"]:
+            assert_equal(res[net]["new"], 0)
+            assert_equal(res[net]["tried"], 0)
+            assert_equal(res[net]["total"], 0)
 
 if __name__ == '__main__':
     NetTest().main()
