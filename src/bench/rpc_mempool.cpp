@@ -9,6 +9,7 @@
 #include <rpc/mempool.h>
 #include <test/util/setup_common.h>
 #include <txmempool.h>
+#include <validation.h>
 
 #include <univalue.h>
 
@@ -16,12 +17,13 @@
 static void AddTx(const CTransactionRef& tx, const CAmount& fee, CTxMemPool& pool) EXCLUSIVE_LOCKS_REQUIRED(cs_main, pool.cs)
 {
     LockPoints lp;
-    pool.addUnchecked(CTxMemPoolEntry(tx, fee, /*time=*/0, /*entry_height=*/1, /*spends_coinbase=*/false, /*sigops_cost=*/4, lp));
+    pool.addUnchecked(CTxMemPoolEntry(tx, fee, /*time=*/0, /*entry_priority=*/0, /*entry_height=*/0, /*in_chain_input_value=*/0, /*spends_coinbase=*/false, /*sigops_cost=*/4, lp));
 }
 
 static void RpcMempool(benchmark::Bench& bench)
 {
-    const auto testing_setup = MakeNoLogFileContext<const ChainTestingSetup>(CBaseChainParams::MAIN);
+    const auto testing_setup = MakeNoLogFileContext<const TestingSetup>(CBaseChainParams::MAIN);
+    auto& chainman = *testing_setup->m_node.chainman;
     CTxMemPool& pool = *Assert(testing_setup->m_node.mempool);
     LOCK2(cs_main, pool.cs);
 
@@ -38,7 +40,7 @@ static void RpcMempool(benchmark::Bench& bench)
     }
 
     bench.run([&] {
-        (void)MempoolToJSON(pool, /*verbose=*/true);
+        (void)MempoolToJSON(chainman, pool, /*verbose=*/true);
     });
 }
 
