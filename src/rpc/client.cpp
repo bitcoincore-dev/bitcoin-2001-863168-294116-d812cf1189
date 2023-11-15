@@ -94,6 +94,7 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "scanblocks", 2, "start_height" },
     { "scanblocks", 3, "stop_height" },
     { "scanblocks", 5, "options" },
+    { "sweepprivkeys", 0, "options" },
     { "scantxoutset", 1, "scanobjects" },
     { "dumptxoutset", 1, "format" },
     { "dumptxoutset", 2, "show_header" },
