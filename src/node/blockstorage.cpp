@@ -526,7 +526,7 @@ void CleanupBlockRevFiles()
 CBlockFileInfo* BlockManager::GetBlockFileInfo(size_t n)
 {
     LOCK(cs_LastBlockFile);
-
+    if (n > m_blockfile_info.size()-1) return nullptr;
     return &m_blockfile_info.at(n);
 }
 
