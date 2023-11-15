@@ -31,6 +31,9 @@ class FilelockTest(BitcoinTestFramework):
         expected_msg = f"Error: Cannot obtain a lock on data directory {datadir}. {self.config['environment']['PACKAGE_NAME']} is probably already running."
         self.nodes[1].assert_start_raises_init_error(extra_args=[f'-datadir={self.nodes[0].datadir}', '-noserver'], expected_msg=expected_msg)
 
+        cookie_file = os.path.join(datadir, ".cookie")
+        assert os.path.exists(cookie_file)  # should not be deleted during the second bitcoind instance shutdown
+
         if self.is_wallet_compiled():
             def check_wallet_filelock(descriptors):
                 wallet_name = ''.join([random.choice(string.ascii_lowercase) for _ in range(6)])
