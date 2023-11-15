@@ -250,6 +250,10 @@ void ClientModel::subscribeToCoreSignals()
         [this](bool network_active) {
             Q_EMIT networkActiveChanged(network_active);
         });
+    m_handler_notify_network_local_changed = m_node.handleNotifyNetworkLocalChanged(
+        [this]() {
+            Q_EMIT networkLocalChanged();
+        });
     m_handler_notify_alert_changed = m_node.handleNotifyAlertChanged(
         [this]() {
             qDebug() << "ClientModel: NotifyAlertChanged";
@@ -277,6 +281,7 @@ void ClientModel::unsubscribeFromCoreSignals()
     m_handler_show_progress->disconnect();
     m_handler_notify_num_connections_changed->disconnect();
     m_handler_notify_network_active_changed->disconnect();
+    m_handler_notify_network_local_changed->disconnect();
     m_handler_notify_alert_changed->disconnect();
     m_handler_banned_list_changed->disconnect();
     m_handler_notify_block_tip->disconnect();
@@ -291,6 +296,17 @@ bool ClientModel::getProxyInfo(std::string& ip_port) const
     if (m_node.getProxy((Network) 1, ipv4) && m_node.getProxy((Network) 2, ipv6)) {
       ip_port = ipv4.proxy.ToStringAddrPort();
       return true;
+    }
+    return false;
+}
+
+bool ClientModel::getTorInfo(QString& out_onion) const
+{
+    for (const auto& addr : m_node.getNetLocalAddresses()) {
+        if (addr.IsTor()) {
+            out_onion = QString::fromStdString(addr.ToStringAddr());
+            return true;
+        }
     }
     return false;
 }

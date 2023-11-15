@@ -168,6 +168,16 @@ public:
     }
     void mapPort(bool use_upnp, bool use_natpmp) override { StartMapPort(use_upnp, use_natpmp); }
     bool getProxy(Network net, Proxy& proxy_info) override { return GetProxy(net, proxy_info); }
+    std::vector<CNetAddr> getNetLocalAddresses() override
+    {
+        std::vector<CNetAddr> ret;
+        LOCK(g_maplocalhost_mutex);
+        ret.reserve(mapLocalHost.size());
+        for (const std::pair<const CNetAddr, LocalServiceInfo> &item : mapLocalHost) {
+            ret.emplace_back(item.first);
+        }
+        return ret;
+    }
     size_t getNodeCount(ConnectionDirection flags) override
     {
         return m_context->connman ? m_context->connman->GetNodeCount(flags) : 0;
@@ -365,6 +375,10 @@ public:
     std::unique_ptr<Handler> handleNotifyNetworkActiveChanged(NotifyNetworkActiveChangedFn fn) override
     {
         return MakeSignalHandler(::uiInterface.NotifyNetworkActiveChanged_connect(fn));
+    }
+    std::unique_ptr<Handler> handleNotifyNetworkLocalChanged(NotifyNetworkLocalChangedFn fn) override
+    {
+        return MakeSignalHandler(::uiInterface.NotifyNetworkLocalChanged_connect(fn));
     }
     std::unique_ptr<Handler> handleNotifyAlertChanged(NotifyAlertChangedFn fn) override
     {
