@@ -6,6 +6,7 @@
 #include <rpc/server.h>
 
 #include <httprpc.h>
+#include <node/context.h>
 #include <rpc/util.h>
 #include <shutdown.h>
 #include <sync.h>
@@ -13,6 +14,11 @@
 #include <util/string.h>
 #include <util/system.h>
 #include <util/time.h>
+
+#ifdef ENABLE_WALLET
+#include <interfaces/wallet.h>
+#include <wallet/wallet.h>
+#endif
 
 #include <boost/signals2/signal.hpp>
 
@@ -263,6 +269,10 @@ static RPCHelpMan getrpcwhitelist()
                         {
                             {RPCResult::Type::NONE, "rpc", "Key is name of RPC method, value is null"},
                         }},
+                        {RPCResult::Type::OBJ_DYN, "wallets", "List of wallets that the user is allowed to access",
+                        {
+                            {RPCResult::Type::NONE, "wallet_name", "Key is name of wallet, value is null"},
+                        }},
                     }
                 },
                 RPCExamples{
@@ -276,8 +286,31 @@ static RPCHelpMan getrpcwhitelist()
         whitelisted_rpcs.pushKV(rpc, NullUniValue);
     }
 
+    UniValue whitelisted_wallets(UniValue::VOBJ);
+#ifdef ENABLE_WALLET
+    std::string authorized_wallet_name;
+    const bool have_wallet_restriction = GetWalletRestrictionFromJSONRPCRequest(request, authorized_wallet_name);
+    if (have_wallet_restriction) {
+        if (authorized_wallet_name != "-") {
+            whitelisted_wallets.pushKV(authorized_wallet_name, NullUniValue);
+        }
+    } else {
+        // All wallets are allowed
+        auto node_context = util::AnyPtr<node::NodeContext>(request.context);
+        if (node_context && node_context->wallet_loader && node_context->wallet_loader->context()) {
+            for (const std::shared_ptr<wallet::CWallet>& wallet : wallet::GetWallets(*node_context->wallet_loader->context())) {
+                if (!wallet.get()) continue;
+
+                LOCK(wallet->cs_wallet);
+                whitelisted_wallets.pushKV(wallet->GetName(), NullUniValue);
+            }
+        }
+    }
+#endif
+
     UniValue result(UniValue::VOBJ);
     result.pushKV("methods", whitelisted_rpcs);
+    result.pushKV("wallets", whitelisted_wallets);
 
     return result;
 }
