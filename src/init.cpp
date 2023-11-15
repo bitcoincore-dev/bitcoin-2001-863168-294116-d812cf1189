@@ -1442,6 +1442,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
     g_zmq_notification_interface = CZMQNotificationInterface::Create();
 
     if (g_zmq_notification_interface) {
+        CValidationInterface::any_use_tip_block_cache = true;
         RegisterValidationInterface(g_zmq_notification_interface);
     }
 #endif

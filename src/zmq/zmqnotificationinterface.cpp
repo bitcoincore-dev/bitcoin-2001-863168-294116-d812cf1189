@@ -4,7 +4,9 @@
 
 #include <zmq/zmqnotificationinterface.h>
 
+#include <chainparams.h>
 #include <logging.h>
+#include <node/blockstorage.h>
 #include <primitives/block.h>
 #include <primitives/transaction.h>
 #include <util/system.h>
@@ -134,13 +136,27 @@ void TryForEachAndRemoveFailed(std::list<std::unique_ptr<CZMQAbstractNotifier>>&
 
 } // anonymous namespace
 
-void CZMQNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload)
+void CZMQNotificationInterface::UpdatedBlockTip(const CBlockIndex *pindexNew, const CBlockIndex *pindexFork, bool fInitialDownload, const std::shared_ptr<const CBlock>& block_cached)
 {
     if (fInitialDownload || pindexNew == pindexFork) // In IBD or blocks were disconnected without any new ones
         return;
 
-    TryForEachAndRemoveFailed(notifiers, [pindexNew](CZMQAbstractNotifier* notifier) {
-        return notifier->NotifyBlock(pindexNew);
+    std::shared_ptr<const CBlock> block = block_cached;
+    if (!block) {
+        // This shouldn't happen, but just in case
+        LogPrintf("BUG! PLEASE REPORT THIS! Cached CBlock unexpectedly missing in %s\n", __func__);
+
+        const Consensus::Params& consensusParams = Params().GetConsensus();
+        std::shared_ptr<CBlock> pblock = std::make_shared<CBlock>();
+        if (!node::ReadBlockFromDisk(*pblock, pindexNew, consensusParams)) {
+            LogPrint(BCLog::ZMQ, "Error: Can't read block %s from disk\n", pindexNew->GetBlockHash().ToString());
+            return;
+        }
+        block = pblock;
+    }
+
+    TryForEachAndRemoveFailed(notifiers, [block](CZMQAbstractNotifier* notifier) {
+        return notifier->NotifyBlock(block);
     });
 }
 
