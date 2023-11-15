@@ -61,6 +61,7 @@ public:
         ThirdPartyTxUrls,       // QString
         Language,               // QString
         UseEmbeddedMonospacedFont, // bool
+        PeersTabAlternatingRowColors, // bool
         CoinControlFeatures,    // bool
         SubFeeFromAmount,       // bool
         ThreadsScriptVerif,     // int
@@ -94,6 +95,7 @@ public:
     BitcoinUnit getDisplayUnit() const { return m_display_bitcoin_unit; }
     QString getThirdPartyTxUrls() const { return strThirdPartyTxUrls; }
     bool getUseEmbeddedMonospacedFont() const { return m_use_embedded_monospaced_font; }
+    bool getPeersTabAlternatingRowColors() const { return m_peers_tab_alternating_row_colors; }
     bool getCoinControlFeatures() const { return fCoinControlFeatures; }
     bool getSubFeeFromAmount() const { return m_sub_fee_from_amount; }
     bool getEnablePSBTControls() const { return m_enable_psbt_controls; }
@@ -121,6 +123,7 @@ private:
     BitcoinUnit m_display_bitcoin_unit;
     QString strThirdPartyTxUrls;
     bool m_use_embedded_monospaced_font;
+    bool m_peers_tab_alternating_row_colors;
     bool fCoinControlFeatures;
     bool m_sub_fee_from_amount;
     bool m_enable_psbt_controls;
@@ -140,6 +143,7 @@ Q_SIGNALS:
     void coinControlFeaturesChanged(bool);
     void showTrayIconChanged(bool);
     void useEmbeddedMonospacedFontChanged(bool);
+    void peersTabAlternatingRowColorsChanged(bool);
 };
 
 #endif // BITCOIN_QT_OPTIONSMODEL_H
