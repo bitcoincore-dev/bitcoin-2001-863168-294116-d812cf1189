@@ -39,6 +39,7 @@ int64_t GetStartupTime();
 
 extern const char * const BITCOIN_CONF_FILENAME;
 extern const char * const BITCOIN_SETTINGS_FILENAME;
+extern const char * const BITCOIN_RW_CONF_FILENAME;
 
 void SetupEnvironment();
 bool SetupNetworking();
@@ -104,6 +105,8 @@ std::optional<int64_t> SettingToInt(const util::SettingsValue&);
 bool SettingToBool(const util::SettingsValue&, bool);
 std::optional<bool> SettingToBool(const util::SettingsValue&);
 
+void ModifyRWConfigStream(std::istream& stream_in, std::ostream& stream_out, const std::map<std::string, std::string>& settings_to_change);
+
 class ArgsManager
 {
 public:
@@ -149,11 +152,12 @@ protected:
     bool m_accept_any_command GUARDED_BY(cs_args){true};
     std::list<SectionInfo> m_config_sections GUARDED_BY(cs_args);
     std::optional<fs::path> m_config_path GUARDED_BY(cs_args);
+    std::optional<fs::path> m_rwconf_path GUARDED_BY(cs_args);
     mutable fs::path m_cached_blocks_path GUARDED_BY(cs_args);
     mutable fs::path m_cached_datadir_path GUARDED_BY(cs_args);
     mutable fs::path m_cached_network_datadir_path GUARDED_BY(cs_args);
 
-    [[nodiscard]] bool ReadConfigStream(std::istream& stream, const std::string& filepath, std::string& error, bool ignore_invalid_keys = false);
+    [[nodiscard]] bool ReadConfigStream(std::istream& stream, const std::string& filepath, std::string& error, bool ignore_invalid_keys = false, std::map<std::string, std::vector<util::SettingsValue>>* settings_target = nullptr);
 
     /**
      * Returns true if settings values from the default section should be used,
@@ -191,7 +195,12 @@ protected:
      * Return config file path (read-only)
      */
     fs::path GetConfigFilePath() const;
+    fs::path GetRWConfigFilePath() const;
     [[nodiscard]] bool ReadConfigFiles(std::string& error, bool ignore_invalid_keys = false);
+
+    void ModifyRWConfigFile(const std::map<std::string, std::string>& settings_to_change);
+    void ModifyRWConfigFile(const std::string& setting_to_change, const std::string& new_value);
+    void EraseRWConfigFile();
 
     /**
      * Log warnings for options in m_section_only_args when
