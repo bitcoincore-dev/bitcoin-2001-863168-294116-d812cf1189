@@ -2831,7 +2831,7 @@ bool Chainstate::ConnectTip(BlockValidationState& state, CBlockIndex* pindexNew,
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs (%.2fms/blk)]\n",
              Ticks<MillisecondsDouble>(time_2 - time_1),
              Ticks<SecondsDouble>(time_read_from_disk_total),
-             Ticks<MillisecondsDouble>(time_read_from_disk_total) / num_blocks_total);
+             Ticks<MillisecondsDouble>(time_read_from_disk_total) / (num_blocks_total ? num_blocks_total : 1));
     {
         CCoinsViewCache view(&CoinsTip());
         bool rv = ConnectBlock(blockConnecting, state, pindexNew, view);
