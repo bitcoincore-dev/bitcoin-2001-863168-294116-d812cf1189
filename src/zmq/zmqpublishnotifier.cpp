@@ -37,8 +37,12 @@ static std::multimap<std::string, CZMQAbstractPublishNotifier*> mapPublishNotifi
 
 static const char *MSG_HASHBLOCK = "hashblock";
 static const char *MSG_HASHTX    = "hashtx";
+static const char *MSG_HASHWALLETTXMEMPOOL  = "hashwallettx-mempool";
+static const char *MSG_HASHWALLETTXBLOCK    = "hashwallettx-block";
 static const char *MSG_RAWBLOCK  = "rawblock";
 static const char *MSG_RAWTX     = "rawtx";
+static const char *MSG_RAWWALLETTXMEMPOOL   = "rawwallettx-mempool";
+static const char *MSG_RAWWALLETTXBLOCK     = "rawwallettx-block";
 static const char *MSG_SEQUENCE  = "sequence";
 
 // Internal function to send multipart message
@@ -235,6 +239,23 @@ bool CZMQPublishHashTransactionNotifier::NotifyTransaction(const CTransaction &t
     return SendZmqMessage(MSG_HASHTX, data, 32);
 }
 
+bool CZMQPublishHashWalletTransactionNotifier::NotifyWalletTransaction(const CTransaction &transaction, const uint256 &hashBlock){
+    uint256 hash = transaction.GetHash();
+    LogPrint(BCLog::ZMQ, "zmq: Publish hashwallettx %s to %s\n", hash.GetHex(), this->address);
+    uint8_t data[32];
+    for (unsigned int i = 0; i < 32; i++)
+        data[31 - i] = hash.begin()[i];
+
+    const char *command;
+
+    if (!hashBlock.IsNull())
+        command = MSG_HASHWALLETTXBLOCK;
+    else
+        command = MSG_HASHWALLETTXMEMPOOL;
+
+    return SendZmqMessage(command, data, 32);
+}
+
 bool CZMQPublishRawBlockNotifier::NotifyBlock(const std::shared_ptr<const CBlock>& block)
 {
     LogPrint(BCLog::ZMQ, "Publish rawblock %s to %s\n", block->GetHash().GetHex(), this->address);
@@ -291,4 +312,20 @@ bool CZMQPublishSequenceNotifier::NotifyTransactionRemoval(const CTransaction &t
     uint256 hash = transaction.GetHash();
     LogPrint(BCLog::ZMQ, "Publish hashtx mempool removal %s to %s\n", hash.GetHex(), this->address);
     return SendSequenceMsg(*this, hash, /* Mempool (R)emoval */ 'R', mempool_sequence);
+}
+
+bool CZMQPublishRawWalletTransactionNotifier::NotifyWalletTransaction(const CTransaction &transaction, const uint256 &hashBlock){
+    uint256 hash = transaction.GetHash();
+    LogPrint(BCLog::ZMQ, "zmq: Publish rawwallettx %s to %s\n", hash.GetHex(), this->address);
+    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION | RPCSerializationFlags());
+    ss << transaction;
+
+    const char *command;
+
+    if (!hashBlock.IsNull())
+        command = MSG_RAWWALLETTXBLOCK;
+    else
+        command = MSG_RAWWALLETTXMEMPOOL;
+
+    return SendZmqMessage(command, &(*ss.begin()), ss.size());
 }

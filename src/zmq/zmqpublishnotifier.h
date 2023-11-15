@@ -45,6 +45,12 @@ public:
     bool NotifyTransaction(const CTransaction &transaction) override;
 };
 
+class CZMQPublishHashWalletTransactionNotifier : public CZMQAbstractPublishNotifier
+{
+public:
+    bool NotifyWalletTransaction(const CTransaction &transaction, const uint256 &hashBlock) override;
+};
+
 class CZMQPublishRawBlockNotifier : public CZMQAbstractPublishNotifier
 {
 public:
@@ -55,6 +61,12 @@ class CZMQPublishRawTransactionNotifier : public CZMQAbstractPublishNotifier
 {
 public:
     bool NotifyTransaction(const CTransaction &transaction) override;
+};
+
+class CZMQPublishRawWalletTransactionNotifier : public CZMQAbstractPublishNotifier
+{
+public:
+    bool NotifyWalletTransaction(const CTransaction &transaction, const uint256 &hashBlock) override;
 };
 
 class CZMQPublishSequenceNotifier : public CZMQAbstractPublishNotifier
