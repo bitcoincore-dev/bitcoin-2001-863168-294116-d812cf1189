@@ -30,8 +30,8 @@
 #include <event2/thread.h>
 #include <event2/util.h>
 
-/** Default control port */
-const std::string DEFAULT_TOR_CONTROL = "127.0.0.1:9051";
+/** Default control ip and port */
+const std::string DEFAULT_TOR_CONTROL = "127.0.0.1:" + ToString(DEFAULT_TOR_CONTROL_PORT);
 /** Tor cookie size (from control-spec.txt) */
 static const int TOR_COOKIE_SIZE = 32;
 /** Size of client/server nonce for SAFECOOKIE */
@@ -133,7 +133,7 @@ bool TorControlConnection::Connect(const std::string& tor_control_center, const 
     }
 
     CService control_service;
-    if (!Lookup(tor_control_center, control_service, 9051, fNameLookup)) {
+    if (!Lookup(tor_control_center, control_service, DEFAULT_TOR_CONTROL_PORT, fNameLookup)) {
         LogPrintf("tor: Failed to look up control center %s\n", tor_control_center);
         return false;
     }
