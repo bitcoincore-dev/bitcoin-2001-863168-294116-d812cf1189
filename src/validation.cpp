@@ -766,7 +766,15 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 //
                 // If replaceability signaling is ignored due to node setting,
                 // replacement is always allowed.
-                if (!(m_pool.m_full_rbf || ignore_rejects.count("txn-mempool-conflict")) && !SignalsOptInRBF(*ptxConflicting)) {
+                bool allow_replacement;
+                if (m_pool.m_rbf_policy == RBFPolicy::Always || ignore_rejects.count("txn-mempool-conflict")) {
+                    allow_replacement = true;
+                } else if (m_pool.m_rbf_policy == RBFPolicy::Never) {
+                    allow_replacement = false;
+                } else {
+                    allow_replacement = SignalsOptInRBF(*ptxConflicting);
+                }
+                if (!allow_replacement) {
                     return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-mempool-conflict");
                 }
 
