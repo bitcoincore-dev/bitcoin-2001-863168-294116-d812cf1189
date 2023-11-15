@@ -36,5 +36,5 @@ CTxMemPoolEntry TestMemPoolEntryHelper::FromTx(const CTransactionRef& tx) const
 {
     const double dPriority = 0;
     const CAmount inChainValue = 0;
-    return CTxMemPoolEntry{tx, nFee, TicksSinceEpoch<std::chrono::seconds>(time), dPriority, nHeight, inChainValue, spendsCoinbase, sigOpCost, lp};
+    return CTxMemPoolEntry{tx, nFee, TicksSinceEpoch<std::chrono::seconds>(time), dPriority, nHeight, inChainValue, spendsCoinbase, /*extra_weight=*/0, sigOpCost, lp};
 }

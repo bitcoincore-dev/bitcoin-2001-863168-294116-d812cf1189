@@ -950,8 +950,9 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         }
     }
 
+    int32_t extra_weight = CalculateExtraTxWeight(*ptx, m_view, ::g_weight_per_data_byte);
     entry.reset(new CTxMemPoolEntry(ptx, ws.m_base_fees, nAcceptTime, dPriority, m_active_chainstate.m_chain.Height(),
-                                    inChainInputValue, fSpendsCoinbase, nSigOpsCost, lock_points.value()));
+                                    inChainInputValue, fSpendsCoinbase, extra_weight, nSigOpsCost, lock_points.value()));
     ws.m_vsize = entry->GetTxSize();
     entry->mapSPK = mapSPK;
 

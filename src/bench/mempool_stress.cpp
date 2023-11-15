@@ -19,7 +19,7 @@ static void AddTx(const CTransactionRef& tx, CTxMemPool& pool) EXCLUSIVE_LOCKS_R
     bool spendsCoinbase = false;
     unsigned int sigOpCost = 4;
     LockPoints lp;
-    pool.addUnchecked(CTxMemPoolEntry(tx, 1000, nTime, coinage_priority, nHeight, tx->GetValueOut(), spendsCoinbase, sigOpCost, lp));
+    pool.addUnchecked(CTxMemPoolEntry(tx, 1000, nTime, coinage_priority, nHeight, tx->GetValueOut(), spendsCoinbase, /*extra_weight=*/0, sigOpCost, lp));
 }
 
 struct Available {
