@@ -65,7 +65,17 @@ struct CBlockIndexHeightOnlyComparator {
 };
 
 struct PruneLockInfo {
-    int height_first{std::numeric_limits<int>::max()}; //! Height of earliest block that should be kept and not pruned
+    std::string desc; //! Arbitrary human-readable description of the lock purpose
+    uint64_t height_first{std::numeric_limits<uint64_t>::max()}; //! Height of earliest block that should be kept and not pruned
+    uint64_t height_last{std::numeric_limits<uint64_t>::max()}; //! Height of latest block that should be kept and not pruned
+    bool temporary{true};
+
+    SERIALIZE_METHODS(PruneLockInfo, obj)
+    {
+        READWRITE(obj.desc);
+        READWRITE(VARINT(obj.height_first));
+        READWRITE(VARINT(obj.height_last));
+    }
 };
 
 /**
@@ -92,6 +102,8 @@ private:
     void FlushUndoFile(int block_file, bool finalize = false);
     bool FindBlockPos(FlatFilePos& pos, unsigned int nAddSize, unsigned int nHeight, CChain& active_chain, uint64_t nTime, bool fKnown);
     bool FindUndoPos(BlockValidationState& state, int nFile, FlatFilePos& pos, unsigned int nAddSize);
+
+    bool DoPruneLocksForbidPruning(const CBlockFileInfo& block_file_info) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
     /* Calculate the block/rev files to delete based on height specified by user with RPC command pruneblockchain */
     void FindFilesToPruneManual(std::set<int>& setFilesToPrune, int nManualPruneHeight, int chain_tip_height);
@@ -130,14 +142,17 @@ private:
     /** Dirty block file entries. */
     std::set<int> m_dirty_fileinfo;
 
+public:
     /**
      * Map from external index name to oldest block that must not be pruned.
      *
-     * @note Internally, only blocks at height (height_first - PRUNE_LOCK_BUFFER - 1) and
-     * below will be pruned, but callers should avoid assuming any particular buffer size.
+     * @note Internally, only blocks before height (height_first - PRUNE_LOCK_BUFFER - 1) and
+     * after height (height_last + PRUNE_LOCK_BUFFER) will be pruned, but callers should
+     * avoid assuming any particular buffer size.
      */
     std::unordered_map<std::string, PruneLockInfo> m_prune_locks GUARDED_BY(::cs_main);
 
+private:
     const kernel::BlockManagerOpts m_opts;
 
 public:
@@ -214,8 +229,10 @@ public:
     //! Check whether the block associated with this index entry is pruned or not.
     bool IsBlockPruned(const CBlockIndex* pblockindex) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 
+    bool PruneLockExists(const std::string& name) const SHARED_LOCKS_REQUIRED(::cs_main);
     //! Create or update a prune lock identified by its name
-    void UpdatePruneLock(const std::string& name, const PruneLockInfo& lock_info) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    bool UpdatePruneLock(const std::string& name, const PruneLockInfo& lock_info, bool sync=false) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
+    bool DeletePruneLock(const std::string& name) EXCLUSIVE_LOCKS_REQUIRED(::cs_main);
 };
 
 void CleanupBlockRevFiles();
