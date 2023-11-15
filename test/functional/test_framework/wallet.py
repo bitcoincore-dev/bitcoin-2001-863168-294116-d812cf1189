@@ -13,6 +13,7 @@ from typing import (
     Optional,
 )
 from test_framework.address import (
+    ADDRESS_BCRT1_P2WSH_OP_TRUE,
     address_to_scriptpubkey,
     create_deterministic_address_bcrt1_p2tr_op_true,
     key_to_p2pkh,
@@ -76,6 +77,7 @@ class MiniWalletMode(Enum):
     RAW_P2PK        | pay-to-public-key |  - (raw)  |   yes    |    yes     |   yes
     """
     ADDRESS_OP_TRUE = 1
+    ADDRESS_OP_TRUE_OLD = 10000000
     RAW_OP_TRUE = 2
     RAW_P2PK = 3
 
@@ -97,6 +99,9 @@ class MiniWallet:
             self._scriptPubKey = key_to_p2pk_script(pub_key.get_bytes())
         elif mode == MiniWalletMode.ADDRESS_OP_TRUE:
             self._address, self._internal_key = create_deterministic_address_bcrt1_p2tr_op_true()
+            self._scriptPubKey = address_to_scriptpubkey(self._address)
+        elif mode == MiniWalletMode.ADDRESS_OP_TRUE_OLD:
+            self._address = ADDRESS_BCRT1_P2WSH_OP_TRUE
             self._scriptPubKey = address_to_scriptpubkey(self._address)
 
         # When the pre-mined test framework chain is used, it contains coinbase
@@ -184,6 +189,10 @@ class MiniWallet:
             tx.wit.vtxinwit = [CTxInWitness()] * len(tx.vin)
             for i in tx.wit.vtxinwit:
                 i.scriptWitness.stack = [CScript([OP_TRUE]), bytes([LEAF_VERSION_TAPSCRIPT]) + self._internal_key]
+        elif self._mode == MiniWalletMode.ADDRESS_OP_TRUE_OLD:
+            tx.wit.vtxinwit = [CTxInWitness()] * len(tx.vin)
+            for i in tx.wit.vtxinwit:
+                i.scriptWitness.stack = [CScript([OP_TRUE])]
         else:
             assert False
 
@@ -207,7 +216,7 @@ class MiniWallet:
         return descsum_create(f'raw({self._scriptPubKey.hex()})')
 
     def get_address(self):
-        assert_equal(self._mode, MiniWalletMode.ADDRESS_OP_TRUE)
+        assert self._mode in (MiniWalletMode.ADDRESS_OP_TRUE, MiniWalletMode.ADDRESS_OP_TRUE_OLD)
         return self._address
 
     def get_utxo(self, *, txid: str = '', vout: Optional[int] = None, mark_as_spent=True) -> dict:
@@ -336,6 +345,8 @@ class MiniWallet:
         # calculate fee
         if self._mode in (MiniWalletMode.RAW_OP_TRUE, MiniWalletMode.ADDRESS_OP_TRUE):
             vsize = Decimal(104)  # anyone-can-spend
+        elif self._mode == MiniWalletMode.ADDRESS_OP_TRUE_OLD:
+            vsize = Decimal(96)  # anyone-can-spend
         elif self._mode == MiniWalletMode.RAW_P2PK:
             vsize = Decimal(168)  # P2PK (73 bytes scriptSig + 35 bytes scriptPubKey + 60 bytes other)
         else:
