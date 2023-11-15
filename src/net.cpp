@@ -1868,7 +1868,7 @@ void CConnman::ThreadOpenConnections(const std::vector<std::string> connect)
 
             // Require outbound connections, other than feelers, to be to distinct network groups
             if (!fFeeler && setConnected.count(m_netgroupman.GetGroup(addr))) {
-                break;
+                continue;
             }
 
             // if we selected an invalid or local address, restart
