@@ -1029,14 +1029,12 @@ void ArgsManager::LogArgs() const
     logArgsPrefix("Command-line arg:", "", m_settings.command_line_options);
 }
 
-#ifndef WIN32
 std::string ShellEscape(const std::string& arg)
 {
     std::string escaped = arg;
-    ReplaceAll(escaped, "'", "'\"'\"'");
+    ReplaceAll(escaped, "'", "'\\''");
     return "'" + escaped + "'";
 }
-#endif
 
 #if HAVE_SYSTEM
 void runCommand(const std::string& strCommand)
