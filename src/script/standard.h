@@ -37,6 +37,8 @@ public:
  * +2 for the pushdata opcodes.
  */
 static const unsigned int MAX_OP_RETURN_RELAY = 83;
+/** Default for -datacarrierfullcount */
+static constexpr bool DEFAULT_DATACARRIER_FULLCOUNT{false};
 
 /**
  * Mandatory script verification flags that all new blocks must comply with for
