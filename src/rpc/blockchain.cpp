@@ -1493,6 +1493,84 @@ static RPCHelpMan verifychain()
     };
 }
 
+static size_t ScriptCheckWorkerThreadCountRemembered(const size_t current_thread_count) EXCLUSIVE_LOCKS_REQUIRED(cs_main)
+{
+    static size_t remembered_thread_count{0};
+    if (current_thread_count > 0) {
+        remembered_thread_count = current_thread_count;
+    }
+    return remembered_thread_count;
+}
+
+static RPCHelpMan scriptthreadsinfo()
+{
+    return RPCHelpMan{"scriptthreadsinfo",
+                "\nShow information about the script verification threads.\n",
+                {},
+                RPCResult{
+                    RPCResult::Type::OBJ, "", "",
+                    {
+                        {RPCResult::Type::BOOL, "enabled", "true if script verification threads are enabled (see setscriptthreadsenabled)."},
+                        {RPCResult::Type::NUM, "num_script_check_threads", "The total number of script verification threads, when enabled."},
+                    },
+                },
+                RPCExamples{
+                    HelpExampleCli("scriptthreadsinfo", "")
+            + HelpExampleRpc("scriptthreadsinfo", "")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    UniValue ret(UniValue::VOBJ);
+    size_t thread_count{ScriptCheckWorkerThreadCount()};
+    ret.pushKV("enabled", (bool)thread_count);
+    {
+        LOCK(cs_main);
+        thread_count = ScriptCheckWorkerThreadCountRemembered(thread_count);
+    }
+    ret.pushKV("num_script_check_threads", (int64_t)thread_count + 1);
+    return ret;
+},
+    };
+}
+
+static RPCHelpMan setscriptthreadsenabled()
+{
+    return RPCHelpMan{"setscriptthreadsenabled",
+                "\nDisable/enable script verification threads, thereby reducing CPU usage on multicore systems on demand.\n"
+                "Disabling script verification threads may result in a significant slow-down during synchronisation.\n"
+                "Has no effect on single core machines or if started with -par=<-<numcores>\n",
+                {
+                    {"state", RPCArg::Type::BOOL, RPCArg::Optional::NO, "false if script verification threads should be disabled (true for re-enabling)"},
+                },
+                RPCResult{RPCResult::Type::NONE, "", ""},
+                RPCExamples{
+                    HelpExampleCli("setscriptthreadsenabled", "false")
+            + HelpExampleRpc("setscriptthreadsenabled", "false")
+                },
+        [&](const RPCHelpMan& self, const JSONRPCRequest& request) -> UniValue
+{
+    LOCK(cs_main);
+    const auto thread_count{ScriptCheckWorkerThreadCount()};
+    size_t remembered_thread_count{ScriptCheckWorkerThreadCountRemembered(thread_count)};
+
+    const bool parallel_script_checks{request.params[0].get_bool()};
+    if (parallel_script_checks) {
+        if (!thread_count) {
+            if (remembered_thread_count <= 0) {
+                throw JSONRPCError(RPC_MISC_ERROR, "Script verification threads are disabled (single core machine or -par=<-<numcores>)");
+            }
+
+            StartScriptCheckWorkerThreads(remembered_thread_count);
+        }
+    } else {
+        StopScriptCheckWorkerThreads();
+    }
+
+    return NullUniValue;
+},
+    };
+}
+
 static void SoftForkDescPushBack(const CBlockIndex* blockindex, UniValue& softforks, const ChainstateManager& chainman, Consensus::BuriedDeployment dep)
 {
     // For buried deployments.
@@ -3270,6 +3348,8 @@ void RegisterBlockchainRPCCommands(CRPCTable& t)
         {"blockchain", &setprunelock},
         {"blockchain", &pruneblockchain},
         {"blockchain", &verifychain},
+        {"blockchain", &scriptthreadsinfo},
+        {"blockchain", &setscriptthreadsenabled},
         {"blockchain", &preciousblock},
         {"blockchain", &scantxoutset},
         {"blockchain", &scanblocks},
