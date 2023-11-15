@@ -25,7 +25,7 @@ static constexpr unsigned int DEFAULT_BLOCKSONLY_MAX_MEMPOOL_SIZE_MB{5};
 /** Default for -mempoolexpiry, expiration time for mempool transactions in hours */
 static constexpr unsigned int DEFAULT_MEMPOOL_EXPIRY_HOURS{336};
 /** Default for -mempoolreplacement; must update docs in init.cpp manually */
-static constexpr RBFPolicy DEFAULT_MEMPOOL_RBF_POLICY{RBFPolicy::OptIn};
+static constexpr RBFPolicy DEFAULT_MEMPOOL_RBF_POLICY{RBFPolicy::Always};
 
 namespace kernel {
 /**

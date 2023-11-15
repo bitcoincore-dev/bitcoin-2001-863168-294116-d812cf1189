@@ -13,15 +13,20 @@
 #include <qt/guiutil.h>
 
 #include <chainparams.h>
+#include <consensus/consensus.h>
 #include <index/blockfilterindex.h>
 #include <interfaces/node.h>
+#include <kernel/mempool_options.h> // for DEFAULT_MAX_MEMPOOL_SIZE_MB, DEFAULT_MEMPOOL_EXPIRY_HOURS
 #include <mapport.h>
+#include <policy/settings.h>
 #include <net.h>
 #include <net_processing.h>
 #include <netbase.h>
 #include <node/context.h>
 #include <outputtype.h>
+#include <policy/settings.h>
 #include <txdb.h>       // for -dbcache defaults
+#include <util/moneystr.h> // for FormatMoney
 #include <util/string.h>
 #include <util/system.h>
 #include <validation.h> // For DEFAULT_SCRIPTCHECK_THREADS
@@ -30,6 +35,8 @@
 #ifdef ENABLE_WALLET
 #include <interfaces/wallet.h>
 #endif
+
+#include <chrono>
 
 #include <QDebug>
 #include <QLatin1Char>
@@ -64,6 +71,7 @@ static const char* SettingName(OptionsModel::OptionID option)
     case OptionsModel::ProxyPortTor: return "onion";
     case OptionsModel::ProxyUseTor: return "onion";
     case OptionsModel::Language: return "lang";
+    case OptionsModel::datacarriercost: return "datacarriercost";
     default: throw std::logic_error(strprintf("GUI option %i has no corresponding node setting.", option));
     }
 }
@@ -197,6 +205,16 @@ OptionsModel::FontChoice OptionsModel::FontChoiceFromString(const QString& s)
     }
 }
 
+static QString CanonicalMempoolReplacement(const OptionsModel& model)
+{
+    switch (model.node().mempool().m_rbf_policy) {
+    case RBFPolicy::Never:  return "never";
+    case RBFPolicy::OptIn:  return "fee,optin";
+    case RBFPolicy::Always: return "fee,-optin";
+    }
+    assert(0);
+}
+
 OptionsModel::OptionsModel(interfaces::Node& node, QObject *parent) :
     QAbstractListModel(parent), m_node{node}
 {
@@ -277,6 +295,7 @@ bool OptionsModel::Init(bilingual_str& error)
     // These are shared with the core or have a command-line parameter
     // and we want command-line parameters to overwrite the GUI settings.
     for (OptionID option : {DatabaseCache, ThreadsScriptVerif, SpendZeroConfChange, ExternalSignerPath, MapPortUPnP,
+                            datacarriercost,
                             MapPortNatpmp, Listen, Server, PruneTristate, ProxyUse, ProxyUseTor, Language}) {
         // isSettingIgnored will have a false positive here during first-run prune changes
         if (option == PruneTristate && m_prune_forced_by_gui) continue;
@@ -315,7 +334,9 @@ bool OptionsModel::Init(bilingual_str& error)
         addOverriddenOption("-port");
 
     // rwconf settings that require a restart
+    // Caution: This is before general initialisation occurs!
     f_peerbloomfilters = gArgs.GetBoolArg("-peerbloomfilters", DEFAULT_PEERBLOOMFILTERS);
+    f_rejectspkreuse = !(gArgs.GetArg("-spkreuse", DEFAULT_SPKREUSE) == "allow" || gArgs.GetBoolArg("-spkreuse", false));
 
     // Display
     if (settings.contains("FontForMoney")) {
@@ -570,6 +591,10 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return QVariant::fromValue(m_font_qrcodes);
     case PeersTabAlternatingRowColors:
         return m_peers_tab_alternating_row_colors;
+#ifdef ENABLE_WALLET
+    case walletrbf:
+        return gArgs.GetBoolArg("-walletrbf", wallet::DEFAULT_WALLET_RBF);
+#endif
     case CoinControlFeatures:
         return fCoinControlFeatures;
     case EnablePSBTControls:
@@ -596,6 +621,58 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return f_peerbloomfilters;
     case peerblockfilters:
         return gArgs.GetBoolArg("-peerblockfilters", DEFAULT_PEERBLOCKFILTERS);
+    case mempoolreplacement:
+        return CanonicalMempoolReplacement(*this);
+    case maxorphantx:
+        return qlonglong(gArgs.GetIntArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS));
+    case maxmempool:
+        return qlonglong(node().mempool().m_max_size_bytes / 1'000'000);
+    case incrementalrelayfee:
+        return qlonglong(node().mempool().m_incremental_relay_feerate.GetFeePerK());
+    case mempoolexpiry:
+        return qlonglong(std::chrono::duration_cast<std::chrono::hours>(node().mempool().m_expiry).count());
+    case rejectunknownscripts:
+        return node().mempool().m_require_standard;
+    case rejectspkreuse:
+        return f_rejectspkreuse;
+    case minrelaytxfee:
+        return qlonglong(node().mempool().m_min_relay_feerate.GetFeePerK());
+    case bytespersigop:
+        return nBytesPerSigOp;
+    case bytespersigopstrict:
+        return nBytesPerSigOpStrict;
+    case limitancestorcount:
+        return qlonglong(node().mempool().m_limits.ancestor_count);
+    case limitancestorsize:
+        return qlonglong(node().mempool().m_limits.ancestor_size_vbytes / 1'000);
+    case limitdescendantcount:
+        return qlonglong(node().mempool().m_limits.descendant_count);
+    case limitdescendantsize:
+        return qlonglong(node().mempool().m_limits.descendant_size_vbytes / 1'000);
+    case rejectbaremultisig:
+        return !node().mempool().m_permit_bare_multisig;
+    case maxscriptsize:
+        return ::g_script_size_policy_limit;
+    case datacarriercost:
+        return double(::g_weight_per_data_byte) / WITNESS_SCALE_FACTOR;
+    case datacarriersize:
+        return qlonglong(node().mempool().m_max_datacarrier_bytes.value_or(0));
+    case dustrelayfee:
+        return qlonglong(node().mempool().m_dust_relay_feerate.GetFeePerK());
+    case blockmintxfee:
+        if (gArgs.IsArgSet("-blockmintxfee")) {
+            return qlonglong(ParseMoney(gArgs.GetArg("-blockmintxfee", "")).value_or(0));
+        } else {
+            return qlonglong(DEFAULT_BLOCK_MIN_TX_FEE);
+        }
+    case blockmaxsize:
+        return qlonglong(gArgs.GetIntArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE) / 1000);
+    case blockprioritysize:
+        return qlonglong(gArgs.GetIntArg("-blockprioritysize", DEFAULT_BLOCK_PRIORITY_SIZE) / 1000);
+    case blockmaxweight:
+        return qlonglong(gArgs.GetIntArg("-blockmaxweight", DEFAULT_BLOCK_MAX_WEIGHT) / 1000);
+    case blockreconstructionextratxn:
+        return qlonglong(gArgs.GetIntArg("-blockreconstructionextratxn", DEFAULT_BLOCK_RECONSTRUCTION_EXTRA_TXN));
     default:
         return QVariant();
     }
@@ -810,6 +887,24 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
         settings.setValue("PeersTabAlternatingRowColors", m_peers_tab_alternating_row_colors);
         Q_EMIT peersTabAlternatingRowColorsChanged(m_peers_tab_alternating_row_colors);
         break;
+#ifdef ENABLE_WALLET
+    case walletrbf:
+        if (changed()) {
+            const bool fNewValue = value.toBool();
+            const std::string newvalue_str = strprintf("%d", fNewValue);
+            gArgs.ModifyRWConfigFile("walletrbf", newvalue_str);
+            gArgs.ForceSetArg("-walletrbf", newvalue_str);
+            for (auto& wallet_interface : m_node.walletLoader().getWallets()) {
+                wallet::CWallet *wallet;
+                if (wallet_interface && (wallet = wallet_interface->wallet())) {
+                    wallet->m_signal_rbf = fNewValue;
+                } else {
+                    setRestartRequired(true);
+                }
+            }
+        }
+        break;
+#endif
     case CoinControlFeatures:
         fCoinControlFeatures = value.toBool();
         settings.setValue("fCoinControlFeatures", fCoinControlFeatures);
@@ -898,6 +993,242 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
         }
         break;
     }
+    case mempoolreplacement:
+    {
+        if (changed()) {
+            QString nv = value.toString();
+            if (nv == "never") {
+                node().mempool().m_rbf_policy = RBFPolicy::Never;
+                node().updateRwSetting("mempoolfullrbf", "0");
+            } else if (nv == "fee,optin") {
+                node().mempool().m_rbf_policy = RBFPolicy::OptIn;
+                node().updateRwSetting("mempoolfullrbf", "0");
+            } else {  // "fee,-optin"
+                node().mempool().m_rbf_policy = RBFPolicy::Always;
+                node().updateRwSetting("mempoolfullrbf", "1");
+            }
+            gArgs.ModifyRWConfigFile("mempoolreplacement", nv.toStdString());
+        }
+        break;
+    }
+    case maxorphantx:
+    {
+        if (changed()) {
+            unsigned int nMaxOrphanTx = gArgs.GetIntArg("-maxorphantx", DEFAULT_MAX_ORPHAN_TRANSACTIONS);
+            unsigned int nNv = value.toLongLong();
+            std::string strNv = value.toString().toStdString();
+            gArgs.ForceSetArg("-maxorphantx", strNv);
+            gArgs.ModifyRWConfigFile("maxorphantx", strNv);
+            if (nNv < nMaxOrphanTx) {
+                assert(node().context() && node().context()->peerman);
+                node().context()->peerman->LimitOrphanTxSize(nNv);
+            }
+        }
+        break;
+    }
+    case maxmempool:
+    {
+        if (changed()) {
+            long long nOldValue = node().mempool().m_max_size_bytes;
+            long long nNv = value.toLongLong();
+            std::string strNv = value.toString().toStdString();
+            node().mempool().m_max_size_bytes = nNv * 1'000'000;
+            gArgs.ForceSetArg("-maxmempool", strNv);
+            gArgs.ModifyRWConfigFile("maxmempool", strNv);
+            if (nNv < nOldValue) {
+                LOCK(cs_main);
+                auto node_ctx = node().context();
+                assert(node_ctx && node_ctx->mempool && node_ctx->chainman);
+                auto& active_chainstate = node_ctx->chainman->ActiveChainstate();
+                LimitMempoolSize(*node_ctx->mempool, active_chainstate.CoinsTip());
+            }
+        }
+        break;
+    }
+    case incrementalrelayfee:
+        if (changed()) {
+            CAmount nNv = value.toLongLong();
+            gArgs.ModifyRWConfigFile("incrementalrelayfee", FormatMoney(nNv));
+            node().mempool().m_incremental_relay_feerate = CFeeRate(nNv);
+        }
+        break;
+    case mempoolexpiry:
+    {
+        if (changed()) {
+            const auto old_value = node().mempool().m_expiry;
+            const std::chrono::hours new_value{value.toLongLong()};
+            std::string strNv = value.toString().toStdString();
+            node().mempool().m_expiry = new_value;
+            gArgs.ForceSetArg("-mempoolexpiry", strNv);
+            gArgs.ModifyRWConfigFile("mempoolexpiry", strNv);
+            if (new_value < old_value) {
+                LOCK(cs_main);
+                auto node_ctx = node().context();
+                assert(node_ctx && node_ctx->mempool && node_ctx->chainman);
+                auto& active_chainstate = node_ctx->chainman->ActiveChainstate();
+                LimitMempoolSize(*node_ctx->mempool, active_chainstate.CoinsTip());
+            }
+        }
+        break;
+    }
+    case rejectunknownscripts:
+    {
+        if (changed()) {
+            const bool fNewValue = value.toBool();
+            node().mempool().m_require_standard = fNewValue;
+            // This option is inverted in the config:
+            gArgs.ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
+        }
+        break;
+    }
+    case rejectspkreuse:
+        if (changed()) {
+            const bool fNewValue = value.toBool();
+            gArgs.ModifyRWConfigFile("spkreuse", fNewValue ? "conflict" : "allow");
+            f_rejectspkreuse = fNewValue;
+            setRestartRequired(true);
+        }
+        break;
+    case minrelaytxfee:
+        if (changed()) {
+            CAmount nNv = value.toLongLong();
+            gArgs.ModifyRWConfigFile("minrelaytxfee", FormatMoney(nNv));
+            node().mempool().m_min_relay_feerate = CFeeRate(nNv);
+        }
+        break;
+    case bytespersigop:
+        if (changed()) {
+            gArgs.ModifyRWConfigFile("bytespersigop", value.toString().toStdString());
+            nBytesPerSigOp = value.toLongLong();
+        }
+        break;
+    case bytespersigopstrict:
+        if (changed()) {
+            gArgs.ModifyRWConfigFile("bytespersigopstrict", value.toString().toStdString());
+            nBytesPerSigOpStrict = value.toLongLong();
+        }
+        break;
+    case limitancestorcount:
+        if (changed()) {
+            long long nNv = value.toLongLong();
+            std::string strNv = value.toString().toStdString();
+            node().mempool().m_limits.ancestor_count = nNv;
+            gArgs.ForceSetArg("-limitancestorcount", strNv);
+            gArgs.ModifyRWConfigFile("limitancestorcount", strNv);
+        }
+        break;
+    case limitancestorsize:
+        if (changed()) {
+            long long nNv = value.toLongLong();
+            std::string strNv = value.toString().toStdString();
+            node().mempool().m_limits.ancestor_size_vbytes = nNv * 1'000;
+            gArgs.ForceSetArg("-limitancestorsize", strNv);
+            gArgs.ModifyRWConfigFile("limitancestorsize", strNv);
+        }
+        break;
+    case limitdescendantcount:
+        if (changed()) {
+            long long nNv = value.toLongLong();
+            std::string strNv = value.toString().toStdString();
+            node().mempool().m_limits.descendant_count = nNv;
+            gArgs.ForceSetArg("-limitdescendantcount", strNv);
+            gArgs.ModifyRWConfigFile("limitdescendantcount", strNv);
+        }
+        break;
+    case limitdescendantsize:
+        if (changed()) {
+            long long nNv = value.toLongLong();
+            std::string strNv = value.toString().toStdString();
+            node().mempool().m_limits.descendant_size_vbytes = nNv * 1'000;
+            gArgs.ForceSetArg("-limitdescendantsize", strNv);
+            gArgs.ModifyRWConfigFile("limitdescendantsize", strNv);
+        }
+        break;
+    case rejectbaremultisig:
+        if (changed()) {
+            // The config and internal option is inverted
+            const bool fNewValue = ! value.toBool();
+            node().mempool().m_permit_bare_multisig = fNewValue;
+            gArgs.ModifyRWConfigFile("permitbaremultisig", strprintf("%d", fNewValue));
+        }
+        break;
+    case maxscriptsize:
+        if (changed()) {
+            const auto nv = value.toLongLong();
+            update(nv);
+            ::g_script_size_policy_limit = nv;
+        }
+        break;
+    case datacarriercost:
+        if (changed()) {
+            const double nNewSize = value.toDouble();
+            update(nNewSize);
+            ::g_weight_per_data_byte = nNewSize * WITNESS_SCALE_FACTOR;
+        }
+        break;
+    case datacarriersize:
+        if (changed()) {
+            const int nNewSize = value.toInt();
+            const bool fNewEn = (nNewSize > 0);
+            if (fNewEn) {
+                if (!node().mempool().m_max_datacarrier_bytes.has_value()) {
+                    gArgs.ModifyRWConfigFile("datacarrier", strprintf("%d", fNewEn));
+                }
+                gArgs.ModifyRWConfigFile("datacarriersize", value.toString().toStdString());
+                node().mempool().m_max_datacarrier_bytes = nNewSize;
+            } else {
+                gArgs.ModifyRWConfigFile("datacarrier", "0");
+                node().mempool().m_max_datacarrier_bytes = std::nullopt;
+            }
+        }
+        break;
+    case dustrelayfee:
+        if (changed()) {
+            CAmount nNv = value.toLongLong();
+            gArgs.ModifyRWConfigFile("dustrelayfee", FormatMoney(nNv));
+            node().mempool().m_dust_relay_feerate = CFeeRate(nNv);
+        }
+        break;
+    case blockmintxfee:
+        if (changed()) {
+            std::string strNv = FormatMoney(value.toLongLong());
+            gArgs.ForceSetArg("-blockmintxfee", strNv);
+            gArgs.ModifyRWConfigFile("blockmintxfee", strNv);
+        }
+        break;
+    case blockmaxsize:
+    case blockprioritysize:
+    case blockmaxweight:
+        if (changed()) {
+            const int nNewValue_kB = value.toInt();
+            std::string strNv = strprintf("%d000", nNewValue_kB);
+            std::string strKey;
+            switch (option) {
+                case blockmaxsize:
+                    strKey = "blockmaxsize";
+                    break;
+                case blockprioritysize:
+                    strKey = "blockprioritysize";
+                    break;
+                case blockmaxweight:
+                    strKey = "blockmaxweight";
+                    break;
+                default: assert(0);
+            }
+            gArgs.ForceSetArg("-" + strKey, strNv);
+            gArgs.ModifyRWConfigFile(strKey, strNv);
+        }
+        break;
+    case blockreconstructionextratxn:
+        if (changed()) {
+            std::string strNv = value.toString().toStdString();
+            gArgs.ForceSetArg("-blockreconstructionextratxn", strNv);
+            gArgs.ModifyRWConfigFile("blockreconstructionextratxn", strNv);
+        }
+        break;
+    case corepolicy:
+        gArgs.ModifyRWConfigFile("corepolicy", value.toString().toStdString());
+        break;
     default:
         break;
     }

@@ -8,12 +8,20 @@
 #include <QDialog>
 #include <QValidator>
 
+class BitcoinAmountField;
 class ClientModel;
 class OptionsModel;
 class QValidatedLineEdit;
 
 QT_BEGIN_NAMESPACE
+class QBoxLayout;
+class QCheckBox;
 class QDataWidgetMapper;
+class QDoubleSpinBox;
+class QSpinBox;
+class QString;
+class QValueComboBox;
+class QWidget;
 QT_END_NAMESPACE
 
 namespace Ui {
@@ -69,6 +77,11 @@ private Q_SLOTS:
     void updateDefaultProxyNets();
     void checkLineEdit();
 
+    void incrementalrelayfee_changed();
+    void blockmaxsize_changed(int);
+    void blockmaxsize_increase(int);
+    void blockmaxweight_changed(int);
+
 Q_SIGNALS:
     void proxyIpChecks(QValidatedLineEdit *pUiProxyIp, uint16_t nProxyPort);
     void quitOnReset();
@@ -78,6 +91,37 @@ private:
     ClientModel* m_client_model{nullptr};
     OptionsModel* model{nullptr};
     QDataWidgetMapper* mapper{nullptr};
+
+    QWidget *prevwidget{nullptr};
+    void FixTabOrder(QWidget *);
+    void CreateOptionUI(QBoxLayout *, QWidget *, const QString& text);
+
+    QCheckBox *walletrbf;
+
+    QSpinBox *blockreconstructionextratxn;
+
+    QValueComboBox *mempoolreplacement;
+    QSpinBox *maxorphantx;
+    BitcoinAmountField *incrementalrelayfee;
+    QSpinBox *maxmempool;
+    QSpinBox *mempoolexpiry;
+
+    QCheckBox *rejectunknownscripts;
+    QCheckBox *rejectspkreuse;
+    BitcoinAmountField *minrelaytxfee;
+    QSpinBox *bytespersigop, *bytespersigopstrict;
+    QSpinBox *limitancestorcount;
+    QSpinBox *limitancestorsize;
+    QSpinBox *limitdescendantcount;
+    QSpinBox *limitdescendantsize;
+    QCheckBox *rejectbaremultisig;
+    QSpinBox *maxscriptsize;
+    QSpinBox *datacarriersize;
+    QDoubleSpinBox *datacarriercost;
+    BitcoinAmountField *dustrelayfee;
+
+    BitcoinAmountField *blockmintxfee;
+    QSpinBox *blockmaxsize, *blockprioritysize, *blockmaxweight;
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H
