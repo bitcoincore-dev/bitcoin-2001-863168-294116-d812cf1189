@@ -132,6 +132,9 @@ static constexpr bool DEFAULT_PROXYRANDOMIZE{true};
 static constexpr bool DEFAULT_REST_ENABLE{false};
 static constexpr bool DEFAULT_I2P_ACCEPT_INCOMING{true};
 
+//! Check if initial sync is done with no change in block height or queued downloads every 30s
+static constexpr auto SYNC_CHECK_INTERVAL{30s};
+
 #ifdef WIN32
 // Win32 LevelDB doesn't use filedescriptors, and the ones used for
 // accessing block files don't count towards the fd_set size limit
@@ -1104,6 +1107,40 @@ bool AppInitLockDataDirectory()
     return true;
 }
 
+/**
+ * Once initial block sync is finished and no change in block height or queued downloads,
+ * sync utxo state to protect against data loss
+ */
+static void SyncCoinsTipAfterChainSync(const NodeContext& node)
+{
+    LOCK(node.chainman->GetMutex());
+    if (node.chainman->ActiveChainstate().IsInitialBlockDownload()) {
+        node.scheduler->scheduleFromNow([&node] {
+            SyncCoinsTipAfterChainSync(node);
+        }, SYNC_CHECK_INTERVAL);
+        return;
+    }
+
+    static auto last_chain_height{-1};
+    const auto current_height{node.chainman->ActiveHeight()};
+    if (last_chain_height != current_height) {
+        last_chain_height = current_height;
+        node.scheduler->scheduleFromNow([&node] {
+            SyncCoinsTipAfterChainSync(node);
+        }, SYNC_CHECK_INTERVAL);
+        return;
+    }
+
+    if (node.peerman->GetNumberOfPeersWithValidatedDownloads() > 0) {
+        node.scheduler->scheduleFromNow([&node] {
+            SyncCoinsTipAfterChainSync(node);
+        }, SYNC_CHECK_INTERVAL);
+        return;
+    }
+
+    node.chainman->ActiveChainstate().CoinsTip().Sync();
+}
+
 bool AppInitInterfaces(NodeContext& node)
 {
     node.chain = node.init->makeChain();
@@ -1960,6 +1997,10 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
 #if HAVE_SYSTEM
     StartupNotify(args);
 #endif
+
+    node.scheduler->scheduleFromNow([&node] {
+        SyncCoinsTipAfterChainSync(node);
+    }, SYNC_CHECK_INTERVAL);
 
     return true;
 }

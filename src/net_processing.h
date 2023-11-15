@@ -90,6 +90,9 @@ public:
 
     /** This function is used for testing the stale tip eviction logic, see denialofservice_tests.cpp */
     virtual void UpdateLastBlockAnnounceTime(NodeId node, int64_t time_in_seconds) = 0;
+
+    /** Get number of peers from which we're downloading blocks */
+    virtual int GetNumberOfPeersWithValidatedDownloads() EXCLUSIVE_LOCKS_REQUIRED(cs_main) = 0;
 };
 
 #endif // BITCOIN_NET_PROCESSING_H
