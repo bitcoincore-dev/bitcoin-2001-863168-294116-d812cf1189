@@ -53,6 +53,14 @@ using node::UpdateTime;
  * If 'height' is nonnegative, compute the estimate at the time when a given block was found.
  */
 static UniValue GetNetworkHashPS(int lookup, int height, const CChain& active_chain) {
+    if (lookup < -1 || lookup == 0) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid nblocks. Must be a positive number or -1.");
+    }
+
+    if (height < -1 || height > active_chain.Height()) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Block does not exist at specified height");
+    }
+
     const CBlockIndex* pb = active_chain.Tip();
 
     if (height >= 0 && height < active_chain.Height()) {
@@ -97,7 +105,7 @@ static RPCHelpMan getnetworkhashps()
                 "Pass in [blocks] to override # of blocks, -1 specifies since last difficulty change.\n"
                 "Pass in [height] to estimate the network speed at the time when a certain block was found.\n",
                 {
-                    {"nblocks", RPCArg::Type::NUM, RPCArg::Default{120}, "The number of blocks, or -1 for blocks since last difficulty change."},
+                    {"nblocks", RPCArg::Type::NUM, RPCArg::Default{120}, "The number of previous blocks to calculate estimate from, or -1 for blocks since last difficulty change."},
                     {"height", RPCArg::Type::NUM, RPCArg::Default{-1}, "To estimate at the time of the given height."},
                 },
                 RPCResult{

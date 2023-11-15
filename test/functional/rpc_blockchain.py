@@ -452,6 +452,35 @@ class BlockchainTest(BitcoinTestFramework):
         # This should be 2 hashes every 10 minutes or 1/300
         assert abs(hashes_per_second * 300 - 1) < 0.0001
 
+        assert_raises_rpc_error(
+            -8,
+            "Block does not exist at specified height",
+            lambda: self.nodes[0].getnetworkhashps(100, self.nodes[0].getblockcount() + 1),
+        )
+        assert_raises_rpc_error(
+            -8,
+            "Block does not exist at specified height",
+            lambda: self.nodes[0].getnetworkhashps(100, -10),
+        )
+        assert_raises_rpc_error(
+            -8,
+            "Invalid nblocks. Must be a positive number or -1.",
+            lambda: self.nodes[0].getnetworkhashps(-100),
+        )
+        assert_raises_rpc_error(
+            -8,
+            "Invalid nblocks. Must be a positive number or -1.",
+            lambda: self.nodes[0].getnetworkhashps(0),
+        )
+
+        # Genesis block height estimate should return 0
+        hashes_per_second = self.nodes[0].getnetworkhashps(100, 0)
+        assert_equal(hashes_per_second, 0)
+
+        # Ensure long lookups get truncated to chain length
+        hashes_per_second = self.nodes[0].getnetworkhashps(self.nodes[0].getblockcount() + 1000)
+        assert hashes_per_second > 0.003
+
     def _test_stopatheight(self):
         self.log.info("Test stopping at height")
         assert_equal(self.nodes[0].getblockcount(), HEIGHT)
