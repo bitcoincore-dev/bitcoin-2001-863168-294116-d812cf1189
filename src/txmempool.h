@@ -607,7 +607,6 @@ public:
      * @param[in]       package                 Transaction package being evaluated for acceptance
      *                                          to mempool. The transactions need not be direct
      *                                          ancestors/descendants of each other.
-     * @param[in]       total_vsize             Sum of virtual sizes for all transactions in package.
      * @param[in]       limits                  Maximum number and size of ancestors and descendants
      * @param[out]      errString               Populated with error reason if a limit is hit.
      */
