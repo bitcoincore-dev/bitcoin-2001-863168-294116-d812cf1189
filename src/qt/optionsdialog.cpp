@@ -18,6 +18,7 @@
 #include <interfaces/node.h>
 #include <validation.h> // for DEFAULT_SCRIPTCHECK_THREADS and MAX_SCRIPTCHECK_THREADS
 #include <netbase.h>
+#include <outputtype.h>
 #include <txdb.h> // for -dbcache defaults
 #include <util/system.h>
 
@@ -101,8 +102,8 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     ui->pruneWarning->setVisible(false);
     ui->pruneWarning->setStyleSheet("QLabel { color: red; }");
 
-    ui->pruneSize->setEnabled(false);
-    connect(ui->prune, &QPushButton::toggled, ui->pruneSize, &QWidget::setEnabled);
+    ui->pruneSizeMiB->setEnabled(false);
+    connect(ui->prune, &QPushButton::toggled, ui->pruneSizeMiB, &QWidget::setEnabled);
 
     ui->networkPort->setValidator(new QIntValidator(1024, 65535, this));
     connect(ui->networkPort, SIGNAL(textChanged(const QString&)), this, SLOT(checkLineEdit()));
@@ -131,6 +132,10 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     connect(ui->connectSocksTor, &QPushButton::toggled, ui->proxyPortTor, &QWidget::setEnabled);
     connect(ui->connectSocksTor, &QPushButton::toggled, this, &OptionsDialog::updateProxyValidationState);
 
+    ui->maxuploadtarget->setMinimum(144 /* MB/day */);
+    ui->maxuploadtarget->setMaximum(std::numeric_limits<int>::max());
+    connect(ui->maxuploadtargetCheckbox, SIGNAL(toggled(bool)), ui->maxuploadtarget, SLOT(setEnabled(bool)));
+
     /* Window elements init */
 #ifdef Q_OS_MACOS
     /* remove Window tab on Mac */
@@ -146,6 +151,15 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
         ui->tabWidget->removeTab(ui->tabWidget->indexOf(ui->tabWallet));
         ui->thirdPartyTxUrlsLabel->setVisible(false);
         ui->thirdPartyTxUrls->setVisible(false);
+    } else {
+        for (OutputType type : OUTPUT_TYPES) {
+            const QString& val = QString::fromStdString(FormatOutputType(type));
+            const auto [text, tooltip] = GetOutputTypeDescription(type);
+
+            const auto index = ui->addressType->count();
+            ui->addressType->addItem(text, val);
+            ui->addressType->setItemData(index, tooltip, Qt::ToolTipRole);
+        }
     }
 
 #ifdef ENABLE_EXTERNAL_SIGNER
@@ -238,9 +252,8 @@ void OptionsDialog::setModel(OptionsModel *_model)
         if (_model->isRestartRequired())
             showRestartWarning(true);
 
-        // Prune values are in GB to be consistent with intro.cpp
-        static constexpr uint64_t nMinDiskSpace = (MIN_DISK_SPACE_FOR_BLOCK_FILES / GB_BYTES) + (MIN_DISK_SPACE_FOR_BLOCK_FILES % GB_BYTES) ? 1 : 0;
-        ui->pruneSize->setRange(nMinDiskSpace, std::numeric_limits<int>::max());
+        static constexpr uint64_t nMinDiskSpace = (MIN_DISK_SPACE_FOR_BLOCK_FILES + MiB_BYTES - 1) / MiB_BYTES;
+        ui->pruneSizeMiB->setRange(nMinDiskSpace, std::numeric_limits<int>::max());
 
         QString strLabel = _model->getOverriddenByCommandLine();
         if (strLabel.isEmpty())
@@ -265,7 +278,7 @@ void OptionsDialog::setModel(OptionsModel *_model)
     /* Main */
     connect(ui->prune, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
     connect(ui->prune, &QCheckBox::clicked, this, &OptionsDialog::togglePruneWarning);
-    connect(ui->pruneSize, qOverload<int>(&QSpinBox::valueChanged), this, &OptionsDialog::showRestartWarning);
+    connect(ui->pruneSizeMiB, qOverload<int>(&QSpinBox::valueChanged), this, &OptionsDialog::showRestartWarning);
     connect(ui->databaseCache, qOverload<int>(&QSpinBox::valueChanged), this, &OptionsDialog::showRestartWarning);
     connect(ui->externalSignerPath, &QLineEdit::textChanged, [this]{ showRestartWarning(); });
     connect(ui->threadsScriptVerif, qOverload<int>(&QSpinBox::valueChanged), this, &OptionsDialog::showRestartWarning);
@@ -277,6 +290,8 @@ void OptionsDialog::setModel(OptionsModel *_model)
     connect(ui->enableServer, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
     connect(ui->connectSocks, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
     connect(ui->connectSocksTor, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
+    connect(ui->peerbloomfilters, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
+    connect(ui->peerblockfilters, &QCheckBox::clicked, this, &OptionsDialog::showRestartWarning);
     /* Display */
     connect(ui->lang, qOverload<>(&QValueComboBox::valueChanged), [this]{ showRestartWarning(); });
     connect(ui->thirdPartyTxUrls, &QLineEdit::textChanged, [this]{ showRestartWarning(); });
@@ -298,10 +313,15 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->bitcoinAtStartup, OptionsModel::StartAtStartup);
     mapper->addMapping(ui->threadsScriptVerif, OptionsModel::ThreadsScriptVerif);
     mapper->addMapping(ui->databaseCache, OptionsModel::DatabaseCache);
-    mapper->addMapping(ui->prune, OptionsModel::Prune);
-    mapper->addMapping(ui->pruneSize, OptionsModel::PruneSize);
+
+    if (model->data(model->index(OptionsModel::PruneTristate, 0), Qt::EditRole).value<Qt::CheckState>() == Qt::PartiallyChecked) {
+        ui->prune->setTristate();
+    }
+    mapper->addMapping(ui->prune, OptionsModel::PruneTristate);
+    mapper->addMapping(ui->pruneSizeMiB, OptionsModel::PruneSizeMiB);
 
     /* Wallet */
+    mapper->addMapping(ui->addressType, OptionsModel::addresstype);
     mapper->addMapping(ui->spendZeroConfChange, OptionsModel::SpendZeroConfChange);
     mapper->addMapping(ui->coinControlFeatures, OptionsModel::CoinControlFeatures);
     mapper->addMapping(ui->subFeeFromAmount, OptionsModel::SubFeeFromAmount);
@@ -322,6 +342,23 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->connectSocksTor, OptionsModel::ProxyUseTor);
     mapper->addMapping(ui->proxyIpTor, OptionsModel::ProxyIPTor);
     mapper->addMapping(ui->proxyPortTor, OptionsModel::ProxyPortTor);
+
+    int current_maxuploadtarget = model->data(model->index(OptionsModel::maxuploadtarget, 0), Qt::EditRole).toInt();
+    if (current_maxuploadtarget == 0) {
+        ui->maxuploadtargetCheckbox->setChecked(false);
+        ui->maxuploadtarget->setEnabled(false);
+        ui->maxuploadtarget->setValue(ui->maxuploadtarget->minimum());
+    } else {
+        if (current_maxuploadtarget < ui->maxuploadtarget->minimum()) {
+            ui->maxuploadtarget->setMinimum(current_maxuploadtarget);
+        }
+        ui->maxuploadtargetCheckbox->setChecked(true);
+        ui->maxuploadtarget->setEnabled(true);
+        ui->maxuploadtarget->setValue(current_maxuploadtarget);
+    }
+
+    mapper->addMapping(ui->peerbloomfilters, OptionsModel::peerbloomfilters);
+    mapper->addMapping(ui->peerblockfilters, OptionsModel::peerblockfilters);
 
     /* Window */
 #ifndef Q_OS_MACOS
@@ -429,6 +466,12 @@ void OptionsDialog::on_okButton_clicked()
 
     model->setData(model->index(OptionsModel::FontForMoney, 0), ui->moneyFont->itemData(ui->moneyFont->currentIndex()));
     model->setData(model->index(OptionsModel::FontForQRCodes, 0), ui->qrFont->itemData(ui->qrFont->currentIndex()));
+
+    if (ui->maxuploadtargetCheckbox->isChecked()) {
+        model->setData(model->index(OptionsModel::maxuploadtarget, 0), ui->maxuploadtarget->value());
+    } else {
+        model->setData(model->index(OptionsModel::maxuploadtarget, 0), 0);
+    }
 
     mapper->submit();
     accept();
