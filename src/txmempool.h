@@ -26,6 +26,7 @@
 #include <policy/feerate.h>
 #include <policy/packages.h>
 #include <primitives/transaction.h>
+#include <script/script.h>
 #include <random.h>
 #include <sync.h>
 #include <util/epochguard.h>
@@ -200,6 +201,8 @@ public:
         }
     }
 };
+
+uint160 ScriptHashkey(const CScript& script);
 
 // Multi_index tag names
 struct descendant_score {};
@@ -418,6 +421,9 @@ public:
     using Limits = kernel::MemPoolLimits;
 
     uint64_t CalculateDescendantMaximum(txiter entry) const EXCLUSIVE_LOCKS_REQUIRED(cs);
+
+    std::map<uint160, std::pair<const CTransaction *, const CTransaction *>> mapUsedSPK;
+
 private:
     typedef std::map<txiter, setEntries, CompareIteratorByHash> cacheMap;
 
