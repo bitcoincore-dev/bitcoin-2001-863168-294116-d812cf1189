@@ -589,6 +589,11 @@ void ArgsManager::ForceSetArg(const std::string& strArg, const std::string& strV
     ForceSetArgV(strArg, util::SettingsValue{strValue});
 }
 
+void ArgsManager::ForceSetArg(const std::string& arg, const int64_t value)
+{
+    ForceSetArg(arg, ToString(value));
+}
+
 void ArgsManager::ForceSetArgV(const std::string& arg, const util::SettingsValue& value)
 {
     LOCK(cs_args);
