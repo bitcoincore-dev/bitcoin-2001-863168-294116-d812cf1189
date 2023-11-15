@@ -184,6 +184,7 @@ ChainTestingSetup::ChainTestingSetup(const std::string& chainName, const std::ve
         .datadir = m_args.GetDataDirNet(),
         .adjusted_time_callback = GetAdjustedTime,
         .check_block_index = true,
+        .checkpoints_enabled = false,
     };
     m_node.chainman = std::make_unique<ChainstateManager>(chainman_opts, node::BlockManager::Options{});
     m_node.chainman->m_blockman.m_block_tree_db = std::make_unique<CBlockTreeDB>(DBParams{
