@@ -18,9 +18,71 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  build-info:
+    name: 'Test obj/build.h generation'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - run: cp cmake/script/GenerateBuildInfo.cmake ${{ runner.temp }}
+
+      - name: Test at HEAD
+        run: |
+          rm -rf src/obj build/src/obj
+          mkdir -p src/obj build/src/obj
+          ./share/genbuild.sh ${PWD}/src/obj/build.h ${PWD}
+          cmake -DBUILD_INFO_HEADER_PATH=${PWD}/build/src/obj/build.h -DSOURCE_DIR=${PWD} -P ${{ runner.temp }}/GenerateBuildInfo.cmake
+          cat src/obj/build.h
+          diff -u src/obj/build.h build/src/obj/build.h
+
+      - name: Test out of tree
+        run: |
+          rm -rf src/obj build/src/obj
+          mkdir -p src/obj build/src/obj
+          ./share/genbuild.sh ${PWD}/src/obj/build.h ${{ runner.temp }}
+          cmake -DBUILD_INFO_HEADER_PATH=${PWD}/build/src/obj/build.h -DSOURCE_DIR=${{ runner.temp }} -P ${{ runner.temp }}/GenerateBuildInfo.cmake
+          cat src/obj/build.h
+          diff -u src/obj/build.h build/src/obj/build.h
+
+      - name: Test at tag
+        run: |
+          rm -rf src/obj build/src/obj
+          mkdir -p src/obj build/src/obj
+          git -c advice.detachedHead=false checkout v25.1
+          ./share/genbuild.sh ${PWD}/src/obj/build.h ${PWD}
+          cmake -DBUILD_INFO_HEADER_PATH=${PWD}/build/src/obj/build.h -DSOURCE_DIR=${PWD} -P ${{ runner.temp }}/GenerateBuildInfo.cmake
+          cat src/obj/build.h
+          diff -u src/obj/build.h build/src/obj/build.h
+
+      - name: Test dirty tree
+        run: |
+          rm -rf src/obj build/src/obj
+          mkdir -p src/obj build/src/obj
+          echo "test" >> README.md
+          ./share/genbuild.sh ${PWD}/src/obj/build.h ${PWD}
+          cmake -DBUILD_INFO_HEADER_PATH=${PWD}/build/src/obj/build.h -DSOURCE_DIR=${PWD} -P ${{ runner.temp }}/GenerateBuildInfo.cmake
+          cat src/obj/build.h
+          diff -u src/obj/build.h build/src/obj/build.h
+
+      - name: Test BITCOIN_GENBUILD_NO_GIT
+        env:
+          BITCOIN_GENBUILD_NO_GIT: '1'
+        run: |
+          rm -rf src/obj build/src/obj
+          mkdir -p src/obj build/src/obj
+          ./share/genbuild.sh ${PWD}/src/obj/build.h ${PWD}
+          cmake -DBUILD_INFO_HEADER_PATH=${PWD}/build/src/obj/build.h -DSOURCE_DIR=${PWD} -P ${{ runner.temp }}/GenerateBuildInfo.cmake
+          cat src/obj/build.h
+          diff -u src/obj/build.h build/src/obj/build.h
+
+
   cross-build:
     name: ${{ matrix.host.name }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
