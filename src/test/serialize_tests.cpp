@@ -344,6 +344,48 @@ public:
     }
 };
 
+struct OtherParam {
+    uint8_t param;
+    SER_PARAMS_OPFUNC
+};
+
+class Other
+{
+public:
+    template <typename Stream>
+    void Serialize(Stream& s) const
+    {
+        const uint8_t param = s.template GetParams<OtherParam>().param;
+        s << param;
+    }
+
+    template <typename Stream>
+    void Unserialize(Stream& s)
+    {
+        const uint8_t param = s.template GetParams<OtherParam>().param;
+        uint8_t value;
+        s >> value;
+        BOOST_CHECK_EQUAL(value, param);
+    }
+};
+
+BOOST_AUTO_TEST_CASE(with_params_multi)
+{
+    const OtherParam other_param{.param = 0x07};
+    DataStream stream;
+    ParamsStream pstream{stream, RAW, other_param};
+
+    Base b1{0x08};
+    Other o1;
+    pstream << b1 << o1;
+    BOOST_CHECK_EQUAL(stream.str(), "\x08\x07");
+
+    Base b2;
+    Other o2;
+    pstream >> b2 >> o2;
+    BOOST_CHECK_EQUAL(b2.m_base_data, 0x08);
+}
+
 BOOST_AUTO_TEST_CASE(with_params_base)
 {
     Base b{0x0F};
