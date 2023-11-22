@@ -195,9 +195,8 @@ const Out& AsBase(const In& x)
     static void SerializationOps(Type& obj, Stream& s, Operation ser_action)
 
 /**
- * Variant of FORMATTER_METHODS that supports a declared parameter type.
- *
- * If a formatter has a declared parameter type, it must be invoked directly or
+ * Formatter methods can retrieve parameters attached to a stream using the
+ * SER_PARAMS(type) macro as long as the stream is created directly or
  * indirectly with a parameter of that type. This permits making serialization
  * depend on run-time context in a type-safe way.
  *
@@ -205,7 +204,8 @@ const Out& AsBase(const In& x)
  *   struct BarParameter { bool fancy; ... };
  *   struct Bar { ... };
  *   struct FooFormatter {
- *     FORMATTER_METHODS(Bar, obj, BarParameter, param) {
+ *     FORMATTER_METHODS(Bar, obj) {
+ *       auto& param = SER_PARAMS(BarParameter);
  *       if (param.fancy) {
  *         READWRITE(VARINT(obj.value));
  *       } else {
@@ -227,13 +227,7 @@ const Out& AsBase(const In& x)
  * Compilation will fail in any context where serialization is invoked but
  * no parameter of a type convertible to BarParameter is provided.
  */
-#define FORMATTER_METHODS_PARAMS(cls, obj, paramcls, paramobj)                                                 \
-    template <typename Stream>                                                                                 \
-    static void Ser(Stream& s, const cls& obj) { SerializationOps(obj, s, ActionSerialize{}, s.GetParams()); } \
-    template <typename Stream>                                                                                 \
-    static void Unser(Stream& s, cls& obj) { SerializationOps(obj, s, ActionUnserialize{}, s.GetParams()); }   \
-    template <typename Stream, typename Type, typename Operation>                                              \
-    static void SerializationOps(Type& obj, Stream& s, Operation ser_action, const paramcls& paramobj)
+#define SER_PARAMS(type) (s.template GetParams<type>())
 
 #define BASE_SERIALIZE_METHODS(cls)                                                                 \
     template <typename Stream>                                                                      \
@@ -259,15 +253,6 @@ const Out& AsBase(const In& x)
 #define SERIALIZE_METHODS(cls, obj) \
     BASE_SERIALIZE_METHODS(cls)     \
     FORMATTER_METHODS(cls, obj)
-
-/**
- * Variant of SERIALIZE_METHODS that supports a declared parameter type.
- *
- *  See FORMATTER_METHODS_PARAMS for more information on parameters.
- */
-#define SERIALIZE_METHODS_PARAMS(cls, obj, paramcls, paramobj) \
-    BASE_SERIALIZE_METHODS(cls)                                \
-    FORMATTER_METHODS_PARAMS(cls, obj, paramcls, paramobj)
 
 // clang-format off
 #ifndef CHAR_EQUALS_INT8
@@ -1142,7 +1127,15 @@ public:
     void ignore(size_t num) { m_substream.ignore(num); }
     bool eof() const { return m_substream.eof(); }
     size_t size() const { return m_substream.size(); }
-    const Params& GetParams() const { return m_params; }
+    template<typename P>
+    const auto& GetParams() const
+    {
+        if constexpr (std::is_convertible_v<Params, P>) {
+            return m_params;
+        } else {
+            return m_substream.template GetParams<P>();
+        }
+    }
     int GetVersion() = delete; // Deprecated with Params usage
     int GetType() = delete;    // Deprecated with Params usage
 };
@@ -1184,7 +1177,7 @@ public:
     /**                                                                                  \
      * Return a wrapper around t that (de)serializes it with specified parameter params. \
      *                                                                                   \
-     * See FORMATTER_METHODS_PARAMS for more information on serialization parameters.    \
+     * See SER_PARAMS for more information on serialization parameters.                  \
      */                                                                                  \
     template <typename T>                                                                \
     auto operator()(T&& t) const                                                         \
