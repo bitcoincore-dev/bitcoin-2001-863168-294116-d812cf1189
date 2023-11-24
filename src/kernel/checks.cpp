@@ -4,6 +4,7 @@
 
 #include <kernel/checks.h>
 
+#include <dbwrapper.h>
 #include <key.h>
 #include <random.h>
 #include <util/time.h>
@@ -15,6 +16,10 @@ namespace kernel {
 
 util::Result<void> SanityChecks(const Context&)
 {
+    if (!dbwrapper_SanityCheck()) {
+        return util::Error{Untranslated("Database sanity check failure. Aborting.")};
+    }
+
     if (!ECC_InitSanityCheck()) {
         return util::Error{Untranslated("Elliptic curve cryptography sanity check failure. Aborting.")};
     }
