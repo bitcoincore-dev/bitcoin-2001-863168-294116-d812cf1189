@@ -44,7 +44,6 @@
 #include <streams.h>
 #include <test/util/net.h>
 #include <test/util/random.h>
-#include <test/util/transaction_utils.h>
 #include <test/util/txmempool.h>
 #include <timedata.h>
 #include <txdb.h>
