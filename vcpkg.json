@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "builtin-baseline": "f14984af3738e69f197bf0e647a8dca12de92996",
+  "dependencies": [
+    "berkeleydb",
+    "boost-date-time",
+    "boost-multi-index",
+    "boost-process",
+    "boost-signals2",
+    "boost-test",
+    "libevent",
+    "miniupnpc",
+    "sqlite3",
+    "zeromq"
+  ]
+}
