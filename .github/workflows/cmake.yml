@@ -159,3 +159,63 @@ jobs:
       - name: Check
         run: |
           ctest --test-dir build -j $(nproc)
+
+
+  win64-native-builtin-tools:
+    name: 'Win64 native, VS 2022, built-in tools'
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove non-MSVC tool installations
+        run: |
+          Remove-Item -Path "$env:ProgramFiles/CMake" -Recurse -Force
+          Remove-Item -Path "$env:VCPKG_INSTALLATION_ROOT" -Recurse -Force
+
+      - name: Configure Visual Studio Developer PowerShell
+        # Using microsoft/setup-msbuild is not enough as it does not add other Visual Studio tools to PATH.
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Check build tools
+        run: |
+          cmake --version | Out-File -FilePath "cmake_version"
+          Get-Content -Path "cmake_version"
+          Write-Output "---"
+          msbuild -version | Out-File -FilePath "msbuild_version"
+          Get-Content -Path "msbuild_version"
+          Write-Output "---"
+          $env:VCToolsVersion | Out-File -FilePath "toolset_version"
+          Get-Content -Path "toolset_version"
+          # GHA Windows images have different versions of MSVC toolsets being installed
+          # side-by-side. Therefore, the VCPKG_PLATFORM_TOOLSET_VERSION must be set explicitly
+          # to avoid linker errors when using vcpkg in the manifest mode.
+          # See: https://github.com/bitcoin/bitcoin/pull/28934
+          Add-Content -Path "$env:VCPKG_ROOT\triplets\x64-windows-static.cmake" -Value "set(VCPKG_PLATFORM_TOOLSET_VERSION $env:VCToolsVersion)"
+
+      - name: Restore vcpkg binary cache
+        uses: actions/cache/restore@v3
+        with:
+          path: ~/AppData/Local/vcpkg/archives
+          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
+
+      - name: Generate build system
+        run: |
+          cmake -B build -A x64 --toolchain $env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static -DWITH_NATPMP=OFF
+
+      - name: Save vcpkg binary cache
+        uses: actions/cache/save@v3
+        with:
+          path: ~/AppData/Local/vcpkg/archives
+          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
+
+      - name: Build Release configuration
+        run: |
+          cmake --build build -j $env:NUMBER_OF_PROCESSORS --config Release
+
+      - name: Test Release configuration
+        run: |
+          # TODO: Re-enable bench_sanity_check_high_priority after fixing a bug.
+          # See: https://github.com/bitcoin/bitcoin/issues/28940
+          ctest --test-dir build -j $env:NUMBER_OF_PROCESSORS -C Release -E bench_sanity_check_high_priority
