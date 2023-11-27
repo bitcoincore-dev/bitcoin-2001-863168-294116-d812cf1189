@@ -61,7 +61,7 @@ check_cxx_source_compiles_with_flags("${SSE42_CXXFLAGS}" "
 )
 
 # Check for ARMv8 w/ CRC and CRYPTO extensions support in the compiler.
-set(ARM_CRC_CXXFLAGS -march=armv8-a+crc)
+set(ARM_CRC_CXXFLAGS -march=armv8-a+crc+crypto)
 check_cxx_source_compiles_with_flags("${ARM_CRC_CXXFLAGS}" "
   #include <arm_acle.h>
   #include <arm_neon.h>
