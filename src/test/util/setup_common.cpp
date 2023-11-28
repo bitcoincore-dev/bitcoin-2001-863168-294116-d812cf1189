@@ -88,6 +88,15 @@ std::ostream& operator<<(std::ostream& os, const uint256& num)
     return os;
 }
 
+struct NetworkSetup
+{
+    NetworkSetup()
+    {
+        SetupNetworking();
+    }
+};
+static NetworkSetup g_networksetup_instance;
+
 BasicTestingSetup::BasicTestingSetup(const ChainType chainType, const std::vector<const char*>& extra_args)
     : m_path_root{fs::temp_directory_path() / "test_common_" PACKAGE_NAME / g_insecure_rand_ctx_temp_path.rand256().ToString()},
       m_args{}
@@ -130,7 +139,6 @@ BasicTestingSetup::BasicTestingSetup(const ChainType chainType, const std::vecto
     LogInstance().StartLogging();
     m_node.kernel = std::make_unique<kernel::Context>();
     SetupEnvironment();
-    SetupNetworking();
 
     ValidationCacheSizes validation_cache_sizes{};
     ApplyArgsManOptions(*m_node.args, validation_cache_sizes);
