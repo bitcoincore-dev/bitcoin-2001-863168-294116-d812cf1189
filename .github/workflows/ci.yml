@@ -117,13 +117,22 @@ jobs:
           key: ${{ github.job }}-ccache-${{ github.run_id }}
 
   win64-native:
-    name: 'Win64 native, VS 2022'
+    name: ${{ matrix.config.name }}
     # Use latest image, but hardcode version to avoid silent upgrades (and breaks).
     # See: https://github.com/actions/runner-images#available-images.
     runs-on: windows-2022
 
     # No need to run on the read-only mirror, unless it is a PR.
     if: github.repository != 'bitcoin-core/gui' || github.event_name == 'pull_request'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: 'Win64, VS 2022 (ext.signer=ON)'
+            external_signer_enabled: true
+          - name: 'Win64, VS 2022 (ext.signer=OFF)'
+            external_signer_enabled: false
 
     env:
       CCACHE_MAXSIZE: '200M'
@@ -252,6 +261,13 @@ jobs:
       - name: Generate project files
         run: py -3 build_msvc\msvc-autogen.py
 
+      - name: Disable external signer support
+        if: ${{ !matrix.config.external_signer_enabled }}
+        run: |
+          Get-Content "src\config\bitcoin-config.h" | Where-Object {$_ -notmatch 'external\ signer\ support|ENABLE_EXTERNAL_SIGNER'} | Set-Content "${{ runner.temp }}\bitcoin-config.h"
+          Remove-Item "src\config\bitcoin-config.h"
+          Move-Item "${{ runner.temp }}\bitcoin-config.h" "src\config\bitcoin-config.h"
+
       - name: Build
         shell: cmd
         run: |
@@ -263,7 +279,7 @@ jobs:
 
       - name: Save Ccache cache
         uses: actions/cache/save@v3
-        if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
+        if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true' && matrix.config.external_signer_enabled
         with:
           path: ~/AppData/Local/ccache
           # https://github.com/actions/cache/blob/main/tips-and-workarounds.md#update-a-cache
