@@ -137,16 +137,13 @@ endif()
 
 if(ENABLE_WALLET)
   if(WITH_SQLITE)
-    # TODO: Consider using the FindSQLite3 module after bumping
-    # the minimum required CMake version up to 3.14+.
-    if(MSVC)
+    if(VCPKG_TARGET_TRIPLET)
       # Use of the `unofficial::` namespace is a vcpkg package manager convention.
       find_package(unofficial-sqlite3 CONFIG)
     else()
-      include(CrossPkgConfig)
-      cross_pkg_check_modules(sqlite3 sqlite3>=3.7.17 IMPORTED_TARGET)
+      find_package(SQLite3 3.7.17)
     endif()
-    if(TARGET unofficial::sqlite3::sqlite3 OR TARGET PkgConfig::sqlite3)
+    if(TARGET unofficial::sqlite3::sqlite3 OR TARGET SQLite::SQLite3)
       set(WITH_SQLITE ON)
       set(USE_SQLITE ON)
     elseif(WITH_SQLITE STREQUAL "AUTO")
