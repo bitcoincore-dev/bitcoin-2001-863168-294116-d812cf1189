@@ -6,6 +6,8 @@
 #include <common/run_command.h>
 #include <univalue.h>
 
+#include <cstring>
+
 #ifdef ENABLE_EXTERNAL_SIGNER
 #include <boost/process.hpp>
 #endif // ENABLE_EXTERNAL_SIGNER
@@ -90,7 +92,15 @@ BOOST_AUTO_TEST_CASE(run_command)
         });
     }
     {
-        BOOST_REQUIRE_THROW(RunCommandParseJSON("echo \"{\""), std::runtime_error); // Unable to parse JSON
+        // Unable to parse JSON
+#ifdef WIN32
+        const std::string command{"cmd.exe /c echo {"};
+#else
+        const std::string command{"echo {"};
+#endif
+        BOOST_CHECK_EXCEPTION(RunCommandParseJSON(command), std::runtime_error, [&](const auto& e) {
+            return std::strstr(e.what(), "Unable to parse JSON: {") != nullptr;
+        });
     }
     // Test std::in, except for Windows
 #ifndef WIN32
