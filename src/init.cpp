@@ -182,17 +182,6 @@ static fs::path GetPidFile(const ArgsManager& args)
     }
 }
 
-static void RemovePidFile(const ArgsManager& args)
-{
-    if (!g_generated_pid) return;
-    const auto pid_path{GetPidFile(args)};
-    if (std::error_code error; !fs::remove(pid_path, error)) {
-        std::string msg{error ? error.message() : "File does not exist"};
-        LogPrintf("Unable to remove PID file (%s): %s\n", fs::PathToString(pid_path), msg);
-    }
-}
-
-
 //////////////////////////////////////////////////////////////////////////////
 //
 // Shutdown
@@ -366,7 +355,15 @@ void Shutdown(NodeContext& node)
     node.chainman.reset();
     node.scheduler.reset();
 
-    RemovePidFile(*node.args);
+    if (g_generated_pid) {
+    try {
+        if (!fs::remove(GetPidFile(*node.args))) {
+            LogPrintf("%s: Unable to remove PID file: File does not exist\n", __func__);
+        }
+    } catch (const fs::filesystem_error& e) {
+        LogPrintf("%s: Unable to remove PID file: %s\n", __func__, fsbridge::get_filesystem_error_message(e));
+        }
+    }
 
     LogPrintf("%s: done\n", __func__);
 }
