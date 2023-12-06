@@ -88,6 +88,8 @@ using common::AmountErrMsg;
 using common::AmountHighWarn;
 using interfaces::FoundBlock;
 using node::TransactionError;
+using util::ReplaceAll;
+using util::ToString;
 
 namespace wallet {
 
