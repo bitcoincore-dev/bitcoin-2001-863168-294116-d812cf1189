@@ -58,10 +58,12 @@ class Coin;
 class SigningProvider;
 enum class MemPoolRemovalReason;
 enum class SigningResult;
-enum class TransactionError;
 namespace interfaces {
 class Wallet;
 }
+namespace node {
+enum class TransactionError;
+} // namespace node
 namespace wallet {
 class CWallet;
 class WalletBatch;

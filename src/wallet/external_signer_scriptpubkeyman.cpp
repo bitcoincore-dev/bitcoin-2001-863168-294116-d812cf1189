@@ -6,6 +6,7 @@
 #include <common/args.h>
 #include <common/system.h>
 #include <external_signer.h>
+#include <node/types.h>
 #include <wallet/external_signer_scriptpubkeyman.h>
 
 #include <iostream>
@@ -16,6 +17,7 @@
 #include <vector>
 
 using common::PSBTError;
+using node::TransactionError;
 
 namespace wallet {
 bool ExternalSignerScriptPubKeyMan::SetupDescriptor(std::unique_ptr<Descriptor> desc)
