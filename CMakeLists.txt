@@ -34,8 +34,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
+
 set(configure_warnings)
 
+include(CheckSourceCompilesAndLinks)
 include(cmake/introspection.cmake)
 
 add_subdirectory(src)
