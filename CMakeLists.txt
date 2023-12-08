@@ -36,6 +36,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 
+# Configurable options.
+# When adding a new option, end the <help_text> with a full stop for consistency.
+option(ASM "Use assembly routines." ON)
+
 set(configure_warnings)
 
 include(CheckPIESupported)
@@ -177,6 +181,7 @@ else()
   message(" - LDFLAGS for executables ............ ${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
   message(" - LDFLAGS for shared libraries ....... ${CMAKE_SHARED_LINKER_FLAGS_RELEASE}")
 endif()
+message("Use assembly routines ................. ${ASM}")
 message("\n")
 if(configure_warnings)
     message("  ******\n")
