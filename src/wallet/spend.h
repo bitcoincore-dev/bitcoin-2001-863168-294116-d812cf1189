@@ -213,10 +213,6 @@ struct CreatedTransactionResult
         : tx(_tx), fee(_fee), fee_calc(_fee_calc), change_pos(_change_pos) {}
 };
 
-/**
- * Set a height-based locktime for new transactions (uses the height of the
- * current chain tip unless we are not synced with the current chain
- */
 void DiscourageFeeSniping(CMutableTransaction& tx, FastRandomContext& rng_fast, interfaces::Chain& chain, const uint256& block_hash, int block_height);
 
 /**
