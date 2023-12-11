@@ -32,9 +32,8 @@ add_subdirectory(univalue)
 add_subdirectory(util)
 
 
-# Stable, backwards-compatible consensus functionality
-# also exposed as a shared library and/or a static one.
-add_library(bitcoin_consensus OBJECT EXCLUDE_FROM_ALL
+add_library(bitcoin_consensus_sources INTERFACE)
+target_sources(bitcoin_consensus_sources INTERFACE
   arith_uint256.cpp
   consensus/merkle.cpp
   consensus/tx_check.cpp
@@ -48,9 +47,15 @@ add_library(bitcoin_consensus OBJECT EXCLUDE_FROM_ALL
   uint256.cpp
   util/strencodings.cpp
 )
+
+# Stable, backwards-compatible consensus functionality
+# also exposed as a shared library or a static one.
+add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL)
 target_link_libraries(bitcoin_consensus
   PRIVATE
     core
+    bitcoin_consensus_sources
+    bitcoin_crypto
     secp256k1
 )
 
