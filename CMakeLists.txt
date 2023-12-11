@@ -90,7 +90,6 @@ unset(check_pie_output)
 # It is intended to be a usage requirement for all other targets.
 add_library(core INTERFACE)
 
-include(TryAppendCXXFlags)
 include(TryAppendLinkerFlag)
 
 if(WIN32)
