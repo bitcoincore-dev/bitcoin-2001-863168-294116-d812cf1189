@@ -265,6 +265,10 @@ if(HARDENING)
 
     try_append_cxx_flags("-Wstack-protector" TARGET hardening)
     try_append_cxx_flags("-fstack-protector-all" TARGET hardening)
+    # The following command mirrors the Libtool behavior, which
+    # passes -fstack-protector* through to a linking context. Effectively,
+    # this makes it possible to compile DLLs without linking to libssp.
+    try_append_linker_flag("-fstack-protector-all" TARGET hardening)
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening)
 
     if(MINGW)
