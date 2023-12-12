@@ -79,6 +79,48 @@ jobs:
           diff -u src/obj/build.h build/src/obj/build.h
 
 
+  ubuntu-focal-native:
+    name: 'Ubuntu 20.04, CMake 3.16, Boost from depends'
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove preinstalled CMake
+        run: |
+          sudo rm /usr/local/bin/cmake /usr/local/bin/ctest
+
+      - name: Install packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends curl g++10 cmake libevent-dev libsqlite3-dev libdb-dev libdb++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev systemtap-sdt-dev
+
+      - name: CMake version
+        run: |
+          cmake --version
+          ctest --version
+
+      - name: Build Boost in depends
+        working-directory: ./depends
+        run: |
+          make -j $(nproc) NO_LIBEVENT=1 NO_QT=1 NO_WALLET=1 NO_NATPMP=1 NO_UPNP=1 NO_ZMQ=1 NO_USDT=1 ALLOW_HOST_PACKAGES=1 CC=gcc-10 CXX=g++-10
+
+      - name: Generate build system
+        run: |
+          cmake -B build -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/share/toolchain.cmake -DENABLE_WALLET=ON -DWITH_NATPMP=ON -DWITH_UPNP=ON -DWITH_ZMQ=ON -DWITH_USDT=ON -DWERROR=ON
+
+      - name: Build
+        working-directory: ./build
+        run: |
+          cmake --build . -j $(nproc)
+
+      - name: Check
+        working-directory: ./build
+        run: |
+          ctest -j $(nproc)
+
+
   cross-build:
     name: ${{ matrix.host.name }}
     runs-on: ubuntu-22.04
