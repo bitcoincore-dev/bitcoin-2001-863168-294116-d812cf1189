@@ -103,7 +103,7 @@ jobs:
           ctest --version
 
       - name: Build Boost in depends
-        working-directory: ./depends
+        working-directory: depends
         run: |
           make -j $(nproc) NO_LIBEVENT=1 NO_QT=1 NO_WALLET=1 NO_NATPMP=1 NO_UPNP=1 NO_ZMQ=1 NO_USDT=1 ALLOW_HOST_PACKAGES=1 CC=gcc-10 CXX=g++-10
 
@@ -120,7 +120,7 @@ jobs:
           cmake -B build -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/share/toolchain.cmake -DENABLE_WALLET=ON -DWITH_NATPMP=ON -DWITH_MINIUPNPC=ON -DWITH_ZMQ=ON -DWITH_USDT=ON -DWERROR=ON
 
       - name: Build
-        working-directory: ./build
+        working-directory: build
         run: |
           cmake --build . -j $(nproc)
 
@@ -137,7 +137,7 @@ jobs:
           key: ${{ github.job }}-ccache-${{ github.run_id }}
 
       - name: Test
-        working-directory: ./build
+        working-directory: build
         run: |
           ctest -j $(nproc)
 
@@ -156,12 +156,17 @@ jobs:
       matrix:
         host:
           - name: 'Linux 32-bit, Clang, link to libatomic'
-            packages: 'clang-14 g++-multilib'
             triplet: 'i686-pc-linux-gnu'
-            c_compiler: 'clang-14 -m32'
-            cxx_compiler: 'clang++-14 -m32'
+            packages: 'clang-14 g++-multilib'
+            c_compiler: 'CC="clang-14 -m32"'
+            cxx_compiler: 'CXX="clang++-14 -m32"'
             depends_options: 'NO_QT=1'
             configure_options: '-DWERROR=ON'
+          - name: 'MinGW-w64'
+            triplet: 'x86_64-w64-mingw32'
+            packages: 'g++-mingw-w64-x86-64-posix'
+            depends_options: 'NO_QT=1'
+            exe_extension: '.exe'
 
     steps:
       - name: Checkout
@@ -190,9 +195,9 @@ jobs:
           key: ${{ matrix.host.triplet }}-depends-${{ steps.depends_fingerprint.outputs.hash }}
 
       - name: Build depends
+        working-directory: depends
         run: |
-          cd depends
-          make -j$(nproc) HOST=${{ matrix.host.triplet }} CC='${{ matrix.host.c_compiler }}' CXX='${{ matrix.host.cxx_compiler }}' ${{ matrix.host.depends_options }} LOG=1
+          make -j$(nproc) HOST=${{ matrix.host.triplet }} ${{ matrix.host.c_compiler }} ${{ matrix.host.cxx_compiler }} ${{ matrix.host.depends_options }} LOG=1
 
       - name: Restore Ccache cache
         uses: actions/cache/restore@v3
@@ -210,7 +215,7 @@ jobs:
         run: |
           ccache --zero-stats
           cmake --build build -j $(nproc)
-          file build/src/bitcoind
+          file build/src/bitcoind${{ matrix.host.exe_extension }}
 
       - name: Ccache stats
         run: |
@@ -225,6 +230,7 @@ jobs:
           key: ${{ matrix.host.triplet }}-ccache-${{ github.run_id }}
 
       - name: Test
+        if: ${{ matrix.host.triplet == 'i686-pc-linux-gnu' }}
         run: |
           ctest --test-dir build -j $(nproc)
 
