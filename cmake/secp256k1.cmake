@@ -24,7 +24,7 @@ if(ASM)
   )
 endif()
 
-add_library(secp256k1 STATIC EXCLUDE_FROM_ALL
+add_library(secp256k1 OBJECT EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/secp256k1.c
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/precomputed_ecmult.c
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/precomputed_ecmult_gen.c
@@ -39,8 +39,6 @@ target_compile_definitions(secp256k1
     ENABLE_MODULE_EXTRAKEYS
     ENABLE_MODULE_ELLSWIFT
     $<$<BOOL:${HAVE_64BIT_ASM}>:USE_ASM_X86_64=1>
-  INTERFACE
-    $<$<PLATFORM_ID:Windows>:SECP256K1_STATIC>
 )
 
 target_include_directories(secp256k1
