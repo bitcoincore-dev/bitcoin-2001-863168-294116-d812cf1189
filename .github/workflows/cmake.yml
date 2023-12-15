@@ -115,10 +115,15 @@ jobs:
         run: |
           cmake --build . -j $(nproc)
 
-      - name: Check
+      - name: Test
         working-directory: ./build
         run: |
           ctest -j $(nproc)
+
+      - name: Install
+        run: |
+          cmake --install build --prefix install
+          tree install
 
 
   cross-build:
@@ -197,9 +202,14 @@ jobs:
           path: ${{ env.CCACHE_DIR }}
           key: ${{ matrix.host.triplet }}-ccache-${{ github.run_id }}
 
-      - name: Check
+      - name: Test
         run: |
           ctest --test-dir build -j $(nproc)
+
+      - name: Install
+        run: |
+          cmake --install build --prefix install
+          tree install
 
 
   win64-native-builtin-tools:
@@ -260,3 +270,8 @@ jobs:
       - name: Test Release configuration
         run: |
           ctest --test-dir build -j $env:NUMBER_OF_PROCESSORS -C Release
+
+      - name: Install Release configuration
+        run: |
+          cmake --install build --prefix install --config Release
+          tree /f install
