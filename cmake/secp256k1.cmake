@@ -24,7 +24,7 @@ if(ASM)
   )
 endif()
 
-add_library(secp256k1 STATIC EXCLUDE_FROM_ALL
+add_library(secp256k1 OBJECT EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/secp256k1.c
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/precomputed_ecmult.c
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/precomputed_ecmult_gen.c
