@@ -237,6 +237,7 @@ jobs:
 
       - name: Restore vcpkg binary cache
         uses: actions/cache/restore@v3
+        id: vcpkg-binary-cache
         with:
           path: ~/AppData/Local/vcpkg/archives
           key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
@@ -247,6 +248,7 @@ jobs:
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v3
+        if: github.event_name != 'pull_request' && steps.vcpkg-binary-cache.outputs.cache-hit != 'true'
         with:
           path: ~/AppData/Local/vcpkg/archives
           key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
