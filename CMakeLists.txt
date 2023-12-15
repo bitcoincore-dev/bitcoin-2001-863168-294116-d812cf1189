@@ -268,6 +268,13 @@ if(HARDENING)
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening)
 
     if(MINGW)
+      # Older versions of gcc required libssp to be linked, but this was fixed
+      # with gcc-11. This can be removed when those older versions are no longer
+      # supported.
+      if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 11.0)
+        target_link_libraries(hardening INTERFACE ssp)
+      endif()
+
       # stack-clash-protection doesn't compile with GCC 10 and earlier.
       # In any case, it is a no-op for Windows.
       # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
