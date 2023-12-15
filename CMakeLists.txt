@@ -314,7 +314,11 @@ if(WERROR)
 endif()
 
 find_package(Python3 3.9 COMPONENTS Interpreter)
-set(PYTHON_COMMAND ${Python3_EXECUTABLE})
+if(Python3_EXECUTABLE)
+  set(PYTHON_COMMAND ${Python3_EXECUTABLE})
+else()
+  configure_warnings(APPEND "Minimum required Python not found. Utils and rpcauth tests are disabled.")
+endif()
 
 add_subdirectory(src)
 add_subdirectory(test)
