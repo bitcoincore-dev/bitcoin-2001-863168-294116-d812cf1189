@@ -127,20 +127,25 @@ jobs:
 
 
   cross-build:
-    name: ${{ matrix.host.name }}
+    name: '${{ matrix.host.name }}, ${{ matrix.libs.type }}'
     runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
       matrix:
         host:
-          - name: 'Linux 32-bit, Clang, link to libatomic'
+          - name: 'Linux 32-bit, Clang, libatomic'
             packages: 'clang-14 g++-multilib'
             triplet: 'i686-pc-linux-gnu'
             c_compiler: 'clang-14 -m32'
             cxx_compiler: 'clang++-14 -m32'
             depends_options: 'NO_QT=1'
             configure_options: '-DWERROR=ON'
+        libs:
+          - type: 'Shared'
+            configure_options: '-DBUILD_SHARED_LIBS=ON'
+          - type: 'Static'
+            configure_options: '-DBUILD_SHARED_LIBS=OFF'
 
     env:
       CCACHE_MAXSIZE: '120M'
@@ -181,12 +186,12 @@ jobs:
         id: ccache-cache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ matrix.host.triplet }}-ccache-${{ github.run_id }}
-          restore-keys: ${{ matrix.host.triplet }}-ccache-
+          key: ${{ matrix.host.triplet }}-${{ matrix.libs.type }}-ccache-${{ github.run_id }}
+          restore-keys: ${{ matrix.host.triplet }}-${{ matrix.libs.type }}-ccache-
 
       - name: Generate build system
         run: |
-          cmake -B build --toolchain depends/${{ matrix.host.triplet }}/share/toolchain.cmake ${{ matrix.host.configure_options }}
+          cmake -B build --toolchain depends/${{ matrix.host.triplet }}/share/toolchain.cmake ${{ matrix.host.configure_options }} ${{ matrix.libs.configure_options }}
 
       - name: Build
         run: |
@@ -200,7 +205,7 @@ jobs:
         if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ matrix.host.triplet }}-ccache-${{ github.run_id }}
+          key: ${{ matrix.host.triplet }}-${{ matrix.libs.type }}-ccache-${{ github.run_id }}
 
       - name: Test
         run: |
@@ -213,8 +218,17 @@ jobs:
 
 
   win64-native-builtin-tools:
-    name: 'Win64 native, VS 2022, built-in tools'
+    name: 'Win64 native, VS 2022, built-in tools, ${{ matrix.libs.type }}'
     runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        libs:
+          - type: 'Shared'
+            configure_options: '-DBUILD_SHARED_LIBS=ON'
+          - type: 'Static'
+            configure_options: '-DBUILD_SHARED_LIBS=OFF'
 
     steps:
       - name: Checkout
@@ -254,7 +268,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build -A x64 --toolchain $env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static -DWITH_NATPMP=OFF
+          cmake -B build -A x64 --toolchain $env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static -DWITH_NATPMP=OFF -DWERROR=ON ${{ matrix.libs.configure_options }}
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v3
