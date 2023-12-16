@@ -167,6 +167,12 @@ jobs:
             packages: 'g++-mingw-w64-x86-64-posix'
             depends_options: 'NO_QT=1'
             exe_extension: '.exe'
+          - name: 'MinGW-w64, debug'
+            triplet: 'x86_64-w64-mingw32'
+            packages: 'g++-mingw-w64-x86-64-posix'
+            depends_options: 'NO_QT=1 DEBUG=1'
+            configure_options: '-DCMAKE_BUILD_TYPE=Debug'
+            exe_extension: '.exe'
 
     steps:
       - name: Checkout
