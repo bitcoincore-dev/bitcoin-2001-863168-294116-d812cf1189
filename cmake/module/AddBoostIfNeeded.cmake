@@ -18,7 +18,7 @@ function(add_boost_if_needed)
   ]=]
 
   set(Boost_NO_BOOST_CMAKE ON)
-  find_package(Boost 1.64.0 REQUIRED)
+  find_package(Boost 1.73.0 REQUIRED)
   set_target_properties(Boost::headers PROPERTIES IMPORTED_GLOBAL TRUE)
   target_compile_definitions(Boost::headers INTERFACE
     # We don't use multi_index serialization.
