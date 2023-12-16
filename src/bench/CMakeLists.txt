@@ -71,6 +71,10 @@ endif()
 
 make_bitcoinconsensus_dll_available(bench_bitcoin)
 
+set_target_properties(bench_bitcoin PROPERTIES
+  INSTALL_RPATH $ORIGIN/../lib
+)
+
 install(TARGETS bench_bitcoin
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
