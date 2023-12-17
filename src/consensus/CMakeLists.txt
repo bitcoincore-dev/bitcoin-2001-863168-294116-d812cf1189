@@ -5,14 +5,45 @@
 # Must be included before CMAKE_INSTALL_INCLUDEDIR is used.
 include(GNUInstallDirs)
 
-add_library(bitcoinconsensus
-  ../script/bitcoinconsensus.cpp
-  ../support/cleanse.cpp
-)
-target_compile_definitions(bitcoinconsensus
-  PRIVATE
-    BUILD_BITCOIN_INTERNAL
-)
+if(BUILD_SHARED_LIBS)
+  add_library(consensus_for_external STATIC EXCLUDE_FROM_ALL
+    ../support/cleanse.cpp
+  )
+  target_compile_definitions(consensus_for_external
+    PUBLIC
+      BUILD_BITCOIN_INTERNAL
+  )
+  target_link_libraries(consensus_for_external
+    PRIVATE
+      core
+      bitcoin_consensus_sources
+      bitcoin_crypto_sources
+      secp256k1
+  )
+  add_library(bitcoinconsensus SHARED
+    ../script/bitcoinconsensus.cpp
+  )
+  target_link_libraries(bitcoinconsensus
+    PRIVATE
+      consensus_for_external
+  )
+else()
+  add_library(bitcoinconsensus STATIC
+    ../script/bitcoinconsensus.cpp
+    ../support/cleanse.cpp
+  )
+  target_compile_definitions(bitcoinconsensus
+    PRIVATE
+      BUILD_BITCOIN_INTERNAL
+  )
+  target_link_libraries(bitcoinconsensus
+    PRIVATE
+      bitcoin_consensus_sources
+      bitcoin_crypto_sources
+      secp256k1
+  )
+endif()
+
 target_include_directories(bitcoinconsensus
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
@@ -22,9 +53,6 @@ target_link_libraries(bitcoinconsensus
   PRIVATE
     core
     external_lib_interface
-    bitcoin_consensus_sources
-    bitcoin_crypto_sources
-    secp256k1
 )
 set_target_properties(bitcoinconsensus PROPERTIES
   SOVERSION 0
