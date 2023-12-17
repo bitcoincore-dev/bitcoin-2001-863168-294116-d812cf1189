@@ -124,6 +124,8 @@ ELF_ALLOWED_LIBRARIES = {
 'libxcb-xfixes.so.0',
 'libxcb-xinerama.so.0',
 'libxcb-xkb.so.1',
+# test_bitcoin and bench_bitcoin
+'libbitcoinconsensus.so.0',
 }
 
 MACHO_ALLOWED_LIBRARIES = {
