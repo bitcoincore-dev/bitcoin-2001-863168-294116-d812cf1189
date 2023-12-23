@@ -265,7 +265,7 @@ bool RenameOver(fs::path src, fs::path dest)
                        MOVEFILE_REPLACE_EXISTING) != 0;
 #else
     std::error_code error;
-    fs::rename(src, dest, error);
+    std::filesystem::rename(src, dest, error);
     return !error;
 #endif
 }
