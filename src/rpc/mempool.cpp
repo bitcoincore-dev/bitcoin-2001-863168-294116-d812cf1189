@@ -403,7 +403,7 @@ static RPCHelpMan maxmempool()
     int64_t nMempoolSizeMin = maxmempoolMinimumBytes(mempool.m_limits.descendant_size_vbytes);
     if (nMempoolSizeMax < 0 || nMempoolSizeMax < nMempoolSizeMin)
         throw JSONRPCError(RPC_INVALID_PARAMETER, strprintf("MaxMempool size %d is too small", nSize));
-    mempool.m_max_size_bytes = nSize;
+    mempool.m_max_size_bytes = nMempoolSizeMax;
 
     auto node_context = util::AnyPtr<NodeContext>(request.context);
     if (node_context && node_context->chainman) {
