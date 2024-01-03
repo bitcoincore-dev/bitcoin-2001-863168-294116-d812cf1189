@@ -1750,7 +1750,7 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
     int nInbound = 0;
     int nMaxInbound = nMaxConnections - m_max_outbound;
 
-    AddWhitelistPermissionFlags(permission_flags, addr, vWhitelistedRangeIncoming);
+    AddWhitelistPermissionFlags(permission_flags, addr, vWhitelistedRange);
 
     {
         LOCK(m_nodes_mutex);
@@ -1805,10 +1805,12 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
     NodeId id = GetNewNodeId();
     uint64_t nonce = GetDeterministicRandomizer(RANDOMIZER_ID_LOCALHOSTNONCE).Write(id).Finalize();
 
+    ServiceFlags nodeServices = nLocalServices;
+
     const bool inbound_onion = std::find(m_onion_binds.begin(), m_onion_binds.end(), addr_bind) != m_onion_binds.end();
     // The V2Transport transparently falls back to V1 behavior when an incoming V1 connection is
     // detected, so use it whenever we signal NODE_P2P_V2.
-    const bool use_v2transport(nLocalServices & NODE_P2P_V2);
+    const bool use_v2transport(nodeServices & NODE_P2P_V2);
 
     CNode* pnode = new CNode(id,
                              std::move(sock),
@@ -1826,7 +1828,7 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
                                  .use_v2transport = use_v2transport,
                              });
     pnode->AddRef();
-    m_msgproc->InitializeNode(*pnode, nLocalServices);
+    m_msgproc->InitializeNode(*pnode, nodeServices);
 
     LogPrint(BCLog::NET, "connection from %s accepted\n", addr.ToStringAddrPort());
 

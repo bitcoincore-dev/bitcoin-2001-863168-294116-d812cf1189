@@ -1858,7 +1858,7 @@ bool AppInitMain(NodeContext& node, interfaces::BlockAndHeaderTipInfo* tip_info)
         if (!NetWhitelistPermissions::TryParse(net, subnet, connection_direction, error)) return InitError(error);
         NetPermissions::AddFlag(all_permission_flags, subnet.m_flags);
         if (connection_direction & ConnectionDirection::In) {
-            connOptions.vWhitelistedRangeIncoming.push_back(subnet);
+            connOptions.vWhitelistedRange.push_back(subnet);
         }
         if (connection_direction & ConnectionDirection::Out) {
             connOptions.vWhitelistedRangeOutgoing.push_back(subnet);

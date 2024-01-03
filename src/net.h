@@ -52,6 +52,11 @@ class CNode;
 class CScheduler;
 struct bilingual_str;
 
+/** Default for -whitelistrelay. */
+static const bool DEFAULT_WHITELISTRELAY = true;
+/** Default for -whitelistforcerelay. */
+static const bool DEFAULT_WHITELISTFORCERELAY = false;
+
 /** Time after which to disconnect, after waiting for a ping response (or inactivity). */
 static constexpr std::chrono::minutes TIMEOUT_INTERVAL{20};
 /** Run the feeler connection loop once every 2 minutes. **/
@@ -1053,7 +1058,7 @@ public:
         uint64_t nMaxOutboundLimit = 0;
         int64_t m_peer_connect_timeout = DEFAULT_PEER_CONNECT_TIMEOUT;
         std::vector<std::string> vSeedNodes;
-        std::vector<NetWhitelistPermissions> vWhitelistedRangeIncoming;
+        std::vector<NetWhitelistPermissions> vWhitelistedRange;
         std::vector<NetWhitelistPermissions> vWhitelistedRangeOutgoing;
         std::vector<NetWhitebindPermissions> vWhiteBinds;
         std::vector<CService> vBinds;
@@ -1089,7 +1094,7 @@ public:
             LOCK(m_total_bytes_sent_mutex);
             nMaxOutboundLimit = connOptions.nMaxOutboundLimit;
         }
-        vWhitelistedRangeIncoming = connOptions.vWhitelistedRangeIncoming;
+        vWhitelistedRange = connOptions.vWhitelistedRange;
         vWhitelistedRangeOutgoing = connOptions.vWhitelistedRangeOutgoing;
         {
             LOCK(m_added_nodes_mutex);
@@ -1396,7 +1401,7 @@ private:
 
     // Whitelisted ranges. Any node connecting from these is automatically
     // whitelisted (as well as those connecting to whitelisted binds).
-    std::vector<NetWhitelistPermissions> vWhitelistedRangeIncoming;
+    std::vector<NetWhitelistPermissions> vWhitelistedRange;
     // Whitelisted ranges for outgoing connections.
     std::vector<NetWhitelistPermissions> vWhitelistedRangeOutgoing;
 
