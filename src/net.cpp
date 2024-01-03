@@ -566,8 +566,12 @@ void CConnman::AddWhitelistPermissionFlags(NetPermissionFlags& flags, const CNet
     }
     if (NetPermissions::HasFlag(flags, NetPermissionFlags::Implicit)) {
         NetPermissions::ClearFlag(flags, NetPermissionFlags::Implicit);
-        if (whitelist_forcerelay) NetPermissions::AddFlag(flags, NetPermissionFlags::ForceRelay);
-        if (whitelist_relay) NetPermissions::AddFlag(flags, NetPermissionFlags::Relay);
+        if (gArgs.GetBoolArg("-whitelistforcerelay", DEFAULT_WHITELISTFORCERELAY)) {
+            NetPermissions::AddFlag(flags, NetPermissionFlags::ForceRelay);
+        }
+        if (gArgs.GetBoolArg("-whitelistrelay", DEFAULT_WHITELISTRELAY)) {
+            NetPermissions::AddFlag(flags, NetPermissionFlags::Relay);
+        }
         NetPermissions::AddFlag(flags, NetPermissionFlags::Mempool);
         NetPermissions::AddFlag(flags, NetPermissionFlags::NoBan);
     }
