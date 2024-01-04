@@ -20,15 +20,8 @@ namespace wallet {
 static const std::string DUMP_MAGIC = "BITCOIN_CORE_WALLET_DUMP";
 uint32_t DUMP_VERSION = 1;
 
-bool DumpWallet(const ArgsManager& args, CWallet& wallet, bilingual_str& error)
+bool DumpWallet(CWallet& wallet, bilingual_str& error, const std::string& dump_filename)
 {
-    // Get the dumpfile
-    std::string dump_filename = args.GetArg("-dumpfile", "");
-    if (dump_filename.empty()) {
-        error = _("No dump file provided. To use dump, -dumpfile=<filename> must be provided.");
-        return false;
-    }
-
     fs::path path = fs::PathFromString(dump_filename);
     path = fs::absolute(path);
     if (fs::exists(path)) {
@@ -89,9 +82,6 @@ bool DumpWallet(const ArgsManager& args, CWallet& wallet, bilingual_str& error)
 
     cursor.reset();
     batch.reset();
-
-    // Close the wallet after we're done with it. The caller won't be doing this
-    wallet.Close();
 
     if (ret) {
         // Write the hash
