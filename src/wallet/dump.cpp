@@ -81,9 +81,6 @@ bool DumpWallet(CWallet& wallet, bilingual_str& error, const std::string& dump_f
     batch->CloseCursor();
     batch.reset();
 
-    // Close the wallet after we're done with it. The caller won't be doing this
-    wallet.Close();
-
     if (ret) {
         // Write the hash
         tfm::format(dump_file, "checksum,%s\n", HexStr(hasher.GetHash()));

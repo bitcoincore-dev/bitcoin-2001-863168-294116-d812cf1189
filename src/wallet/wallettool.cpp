@@ -206,6 +206,7 @@ bool ExecuteWalletToolFunc(const ArgsManager& args, const std::string& command)
 
         bilingual_str error;
         bool ret = DumpWallet(*wallet_instance, error, dump_filename);
+        wallet_instance->Close();
         if (!ret && !error.empty()) {
             tfm::format(std::cerr, "%s\n", error.original);
             return ret;
