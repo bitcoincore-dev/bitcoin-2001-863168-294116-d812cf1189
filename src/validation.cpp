@@ -2754,7 +2754,8 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
         int unexpected_bit_count[VERSIONBITS_NUM_BITS], nonversionbit_count = 0;
         for (size_t i = 0; i < VERSIONBITS_NUM_BITS; ++i) unexpected_bit_count[i] = 0;
         static constexpr int WARNING_THRESHOLD = 100/2;
-        bool warning_threshold_hit = false;
+        std::set<uint8_t> warning_threshold_hit_bits;
+        int32_t warning_threshold_hit_int{-1};
         for (int i = 0; i < 100 && pindex != nullptr; i++)
         {
             int32_t nExpectedVersion = m_chainman.m_versionbitscache.ComputeBlockVersion(pindex->pprev, params.GetConsensus());
@@ -2765,21 +2766,34 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
                         const int32_t mask = 1 << bit;
                         if ((pindex->nVersion & mask) && !(nExpectedVersion & mask)) {
                             if (++unexpected_bit_count[bit] > WARNING_THRESHOLD) {
-                                warning_threshold_hit = true;
+                                warning_threshold_hit_bits.insert(bit);
                             }
                         }
                     }
                 } else {
                     // Non-versionbits upgrade
                     if (++nonversionbit_count > WARNING_THRESHOLD) {
-                        warning_threshold_hit = true;
+                        if (warning_threshold_hit_int == -1) {
+                            warning_threshold_hit_int = pindex->nVersion;
+                        } else if (warning_threshold_hit_int != pindex->nVersion) {
+                            warning_threshold_hit_int = -2;
+                        }
                     }
                 }
             }
             pindex = pindex->pprev;
         }
-        if (warning_threshold_hit) {
-            const auto warning = _("Warning: Unrecognised block version being mined! Unknown rules may or may not be in effect");
+        if (!warning_threshold_hit_bits.empty()) {
+            const auto warning = strprintf(_("Warning: Miners are attempting to activate unknown new rules (bit %s)! You may or may not need to act to remain secure"), Join(warning_threshold_hit_bits, ", ", [](const uint8_t bit){ return ::ToString(int(bit)); }));
+            AppendWarning(warning_messages, warning);
+        }
+        if (warning_threshold_hit_int != -1) {
+            bilingual_str warning;
+            if (warning_threshold_hit_int == -2) {
+                warning = _("Warning: Unrecognised block versions are being mined! Unknown rules may or may not be in effect");
+            } else {
+                warning = strprintf(_("Warning: Unrecognised block version (0x%08x) is being mined! Unknown rules may or may not be in effect"), warning_threshold_hit_int);
+            }
             AppendWarning(warning_messages, warning);
         }
     }

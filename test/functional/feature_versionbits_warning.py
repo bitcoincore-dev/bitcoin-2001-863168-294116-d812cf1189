@@ -23,7 +23,8 @@ VB_UNKNOWN_VERSION = VB_TOP_BITS | (1 << VB_UNKNOWN_BIT)
 UNKNOWN_VERSION_SCHEMA = 0x60000000
 UNKNOWN_VERSION_SCHEMA_THRESHOLD = 51
 
-WARN_UNKNOWN_RULES_MINED = "Warning: Unrecognised block version being mined! Unknown rules may or may not be in effect"
+WARN_UNKNOWN_RULES_MINED = "Warning: Unrecognised block version (0x%08x) is being mined! Unknown rules may or may not be in effect" % (UNKNOWN_VERSION_SCHEMA,)
+WARN_UNKNOWN_BIT_MINED = f"Warning: Miners are attempting to activate unknown new rules (bit {VB_UNKNOWN_BIT})"
 WARN_UNKNOWN_RULES_ACTIVE = f"Unknown new rules activated (versionbit {VB_UNKNOWN_BIT})"
 VB_PATTERN = re.compile("Unknown new rules activated.*versionbit")
 
@@ -103,8 +104,8 @@ class VersionBitsWarningTest(BitcoinTestFramework):
         self.generatetoaddress(node, VB_PERIOD - VB_THRESHOLD, node_deterministic_address)
 
         # Check that get*info() shows the 51/100 unknown block version error.
-        assert(WARN_UNKNOWN_RULES_MINED in node.getmininginfo()["warnings"])
-        assert(WARN_UNKNOWN_RULES_MINED in node.getnetworkinfo()["warnings"])
+        assert(WARN_UNKNOWN_BIT_MINED in node.getmininginfo()["warnings"])
+        assert(WARN_UNKNOWN_BIT_MINED in node.getnetworkinfo()["warnings"])
 
         self.log.info("Check that there is a warning if previous VB_BLOCKS have >=VB_THRESHOLD blocks with unknown versionbits version.")
         # Mine a period worth of expected blocks so the generic block-version warning
