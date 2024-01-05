@@ -2763,7 +2763,7 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
                 if ((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) {
                     for (int bit = 0; bit < VERSIONBITS_NUM_BITS; ++bit) {
                         const int32_t mask = 1 << bit;
-                        if ((nExpectedVersion & mask) != (pindex->nVersion & mask)) {
+                        if ((pindex->nVersion & mask) && !(nExpectedVersion & mask)) {
                             if (++unexpected_bit_count[bit] > WARNING_THRESHOLD) {
                                 warning_threshold_hit = true;
                             }
