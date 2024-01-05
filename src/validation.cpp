@@ -2746,10 +2746,7 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
             ThresholdState state = checker.GetStateFor(pindex, params.GetConsensus(), m_chainman.m_warningcache.at(bit));
             if (state == ThresholdState::ACTIVE || state == ThresholdState::LOCKED_IN) {
                 const bilingual_str warning = strprintf(_("Unknown new rules activated (versionbit %i)"), bit);
-                {
-                    m_chainman.GetNotifications().warning(warning);
-                    AppendWarning(warning_messages, warning);
-                }
+                AppendWarning(warning_messages, warning);
             }
         }
 
@@ -2782,13 +2779,14 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
             pindex = pindex->pprev;
         }
         if (warning_threshold_hit) {
-            auto strWarning = _("Warning: Unrecognised block version being mined! Unknown rules may or may not be in effect");
-            // notify GetWarnings(), called by Qt and the JSON-RPC code to warn the user:
-            m_chainman.GetNotifications().warning(strWarning);
-            AppendWarning(warning_messages, strWarning);
+            const auto warning = _("Warning: Unrecognised block version being mined! Unknown rules may or may not be in effect");
+            AppendWarning(warning_messages, warning);
         }
     }
     UpdateTipLog(coins_tip, pindexNew, params, __func__, "", warning_messages.original);
+    if (!warning_messages.empty()) {
+        m_chainman.GetNotifications().warning(warning_messages);
+    }
 }
 
 /** Disconnect m_chain's tip.
