@@ -2785,6 +2785,7 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
             auto strWarning = _("Warning: Unrecognised block version being mined! Unknown rules may or may not be in effect");
             // notify GetWarnings(), called by Qt and the JSON-RPC code to warn the user:
             m_chainman.GetNotifications().warning(strWarning);
+            AppendWarning(warning_messages, strWarning);
         }
     }
     UpdateTipLog(coins_tip, pindexNew, params, __func__, "", warning_messages.original);
