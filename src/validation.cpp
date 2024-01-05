@@ -2745,7 +2745,7 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
             WarningBitsConditionChecker checker(m_chainman, bit);
             ThresholdState state = checker.GetStateFor(pindex, params.GetConsensus(), m_chainman.m_warningcache.at(bit));
             if (state == ThresholdState::ACTIVE || state == ThresholdState::LOCKED_IN) {
-                const bilingual_str warning = strprintf(_("Unknown new rules activated (versionbit %i)"), bit);
+                const bilingual_str warning = strprintf(_("WARNING: Unknown new rules activated (versionbit %i) - this software is not secure"), bit);
                 AppendWarning(warning_messages, warning);
             }
         }
