@@ -2799,10 +2799,18 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
             AppendWarning(warning_messages, warning);
         }
     }
-    UpdateTipLog(coins_tip, pindexNew, params, __func__, "", warning_messages.original);
+
     if (!warning_messages.empty()) {
         m_chainman.GetNotifications().warning(warning_messages);
     }
+
+    static constexpr int32_t BIP320_MASK = 0x1fffe000UL;
+    if ((pindexNew->nVersion & BIP320_MASK) && pindexNew->nVersion != m_chainman.m_versionbitscache.ComputeBlockVersion(pindexNew->pprev, params.GetConsensus())) {
+        const auto warning = _("Miner violated version bit protocol");
+        AppendWarning(warning_messages, warning);
+    }
+
+    UpdateTipLog(coins_tip, pindexNew, params, __func__, "", warning_messages.original);
 }
 
 /** Disconnect m_chain's tip.
