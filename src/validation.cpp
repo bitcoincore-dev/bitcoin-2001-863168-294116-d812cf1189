@@ -2753,7 +2753,6 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
         // Check the version of the last 100 blocks to see if we need to upgrade:
         int unexpected_bit_count[VERSIONBITS_NUM_BITS], nonversionbit_count = 0;
         for (size_t i = 0; i < VERSIONBITS_NUM_BITS; ++i) unexpected_bit_count[i] = 0;
-        static constexpr int WARNING_THRESHOLD = 100/2;
         std::set<uint8_t> warning_threshold_hit_bits;
         int32_t warning_threshold_hit_int{-1};
         for (int i = 0; i < 100 && pindex != nullptr; i++)
@@ -2765,13 +2764,15 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
                     for (int bit = 0; bit < VERSIONBITS_NUM_BITS; ++bit) {
                         const int32_t mask = 1 << bit;
                         if ((pindex->nVersion & mask) && !(nExpectedVersion & mask)) {
-                            if (++unexpected_bit_count[bit] > WARNING_THRESHOLD) {
+                            const int warning_threshold = (bit > 12 ? 75 : 50);
+                            if (++unexpected_bit_count[bit] > warning_threshold) {
                                 warning_threshold_hit_bits.insert(bit);
                             }
                         }
                     }
                 } else {
                     // Non-versionbits upgrade
+                    static constexpr int WARNING_THRESHOLD = 100/2;
                     if (++nonversionbit_count > WARNING_THRESHOLD) {
                         if (warning_threshold_hit_int == -1) {
                             warning_threshold_hit_int = pindex->nVersion;
