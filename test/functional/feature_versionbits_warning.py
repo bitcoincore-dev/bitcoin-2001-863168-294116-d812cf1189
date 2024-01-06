@@ -83,7 +83,7 @@ class VersionBitsWarningTest(BitcoinTestFramework):
         self.log.info("Check that there is a warning if >50 blocks in the last 100 were an unknown version schema")
         # Build UNKNOWN_VERSION_SCHEMA_THRESHOLD blocks signaling some unknown schema
         self.send_blocks_with_version(peer, UNKNOWN_VERSION_SCHEMA_THRESHOLD, UNKNOWN_VERSION_SCHEMA)
-        # Check that get*info() shows the 51/100 unknown block version error.
+        # Check that get*info() shows the 51/100 unknown block version warning
         assert(WARN_UNKNOWN_RULES_MINED in node.getmininginfo()["warnings"])
         assert(WARN_UNKNOWN_RULES_MINED in node.getnetworkinfo()["warnings"])
         # Close the period normally
@@ -103,7 +103,7 @@ class VersionBitsWarningTest(BitcoinTestFramework):
         self.send_blocks_with_version(peer, VB_THRESHOLD, VB_UNKNOWN_VERSION)
         self.generatetoaddress(node, VB_PERIOD - VB_THRESHOLD, node_deterministic_address)
 
-        # Check that get*info() shows the 51/100 unknown block version error.
+        # Check that get*info() shows the 51/100 unknown block version warning
         assert(WARN_UNKNOWN_BIT_MINED in node.getmininginfo()["warnings"])
         assert(WARN_UNKNOWN_BIT_MINED in node.getnetworkinfo()["warnings"])
 
