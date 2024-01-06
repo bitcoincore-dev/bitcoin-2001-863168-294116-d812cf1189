@@ -28,7 +28,8 @@ UNKNOWN_VERSION_SCHEMA_THRESHOLD = 51
 
 WARN_UNKNOWN_RULES_MINED = "Warning: Unrecognised block version (0x%08x) is being mined! Unknown rules may or may not be in effect" % (UNKNOWN_VERSION_SCHEMA,)
 WARN_UNKNOWN_BIT_MINED = f"Warning: Miners are attempting to activate unknown new rules (bit {VB_UNKNOWN_BIT})"
-WARN_BIP320_BIT_MINED = f"Warning: Miners are attempting to activate unknown new rules (bit {VB_BIP320_BIT})"
+# NOTE: WARN_BIP320_BIT_MINED includes VB_UNKNOWN_BIT because it persists from the earlier check
+WARN_BIP320_BIT_MINED = f"Warning: Miners are attempting to activate unknown new rules (bit {VB_UNKNOWN_BIT}, {VB_BIP320_BIT})"
 WARN_UNKNOWN_RULES_ACTIVE = f"Unknown new rules activated (versionbit {VB_UNKNOWN_BIT})"
 VB_PATTERN = re.compile("Unknown new rules activated.*versionbit")
 

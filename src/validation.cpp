@@ -2753,8 +2753,9 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
         // Check the version of the last 100 blocks to see if we need to upgrade:
         int unexpected_bit_count[VERSIONBITS_NUM_BITS], nonversionbit_count = 0;
         for (size_t i = 0; i < VERSIONBITS_NUM_BITS; ++i) unexpected_bit_count[i] = 0;
-        std::set<uint8_t> warning_threshold_hit_bits;
-        int32_t warning_threshold_hit_int{-1};
+        // NOTE: The warning_threshold_hit* variables are static to ensure the warnings persist even after the condition changes, until the node is restarted
+        static std::set<uint8_t> warning_threshold_hit_bits;
+        static int32_t warning_threshold_hit_int{-1};
         for (int i = 0; i < 100 && pindex != nullptr; i++)
         {
             int32_t nExpectedVersion = m_chainman.m_versionbitscache.ComputeBlockVersion(pindex->pprev, params.GetConsensus());
