@@ -72,6 +72,9 @@ tristate_option(WITH_USDT
 
 option(BUILD_TESTS "Build test_bitcoin executable." ON)
 option(BUILD_BENCH "Build bench_bitcoin executable." ON)
+cmake_dependent_option(BUILD_FUZZ_BINARY "Build fuzz binary." ON "NOT MSVC" OFF)
+cmake_dependent_option(FUZZ "Build for fuzzing. Enabling this will disable all other targets and override BUILD_FUZZ_BINARY." OFF "NOT MSVC" OFF)
+
 option(INSTALL_MAN "Install man pages." ON)
 
 set(configure_warnings)
@@ -90,6 +93,28 @@ unset(check_pie_output)
 # The core_interface library aims to encapsulate common build flags.
 # It is intended to be a usage requirement for all other targets.
 add_library(core_interface INTERFACE)
+
+if(FUZZ)
+  message(WARNING "FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
+  set(BUILD_DAEMON OFF)
+  set(BUILD_CLI OFF)
+  set(BUILD_TX OFF)
+  set(BUILD_UTIL OFF)
+  set(BUILD_UTIL_CHAINSTATE OFF)
+  set(BUILD_SHARED_LIBS OFF)
+  set(BUILD_WALLET_TOOL OFF)
+  set(WITH_GUI OFF)
+  set(WITH_NATPMP OFF)
+  set(WITH_MINIUPNPC OFF)
+  set(WITH_ZMQ OFF)
+  set(BUILD_TESTS OFF)
+  set(BUILD_BENCH OFF)
+  set(BUILD_FUZZ_BINARY ON)
+
+  target_compile_definitions(core_interface INTERFACE
+    ABORT_ON_FAILED_ASSUME
+  )
+endif()
 
 include(TryAppendCXXFlags)
 include(TryAppendLinkerFlag)
@@ -383,6 +408,7 @@ message("  USDT tracing ........................ ${WITH_USDT}")
 message("Tests:")
 message("  test_bitcoin ........................ ${BUILD_TESTS}")
 message("  bench_bitcoin ....................... ${BUILD_BENCH}")
+message("  fuzz binary ......................... ${BUILD_FUZZ_BINARY}")
 message("")
 if(CMAKE_CROSSCOMPILING)
   set(cross_status "TRUE, for ${CMAKE_SYSTEM_NAME}, ${CMAKE_SYSTEM_PROCESSOR}")
