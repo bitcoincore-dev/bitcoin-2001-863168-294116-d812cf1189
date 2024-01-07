@@ -303,3 +303,78 @@ jobs:
         run: |
           cmake --install build --prefix install --config Release
           tree /f install
+
+
+  macos-native-x86_64:
+    name: ${{ matrix.conf.name }}
+    runs-on:  macos-13
+
+    strategy:
+      fail-fast: false
+      matrix:
+        conf:
+          - name: 'macOS 13 native, x86_64, Xcode 14.3.1'
+            xcode_path: '/Applications/Xcode_14.3.1.app'
+            ccache_id: 'macos-13-xcode-14.3.1'
+          - name: 'macOS 13 native, x86_64, Xcode 15.1'
+            xcode_path: '/Applications/Xcode_15.1.app'
+            ccache_id: 'macos-13-xcode-15.1'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Clang version
+        run: |
+          sudo xcode-select --switch ${{ matrix.conf.xcode_path }}
+          clang --version
+
+      - name: Install Homebrew packages
+        env:
+          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
+        run: |
+          brew install ccache cmake pkg-config boost libevent berkeley-db@4 libnatpmp miniupnpc zeromq tree
+          echo "CCACHE_DIR=${{ runner.temp }}/ccache" >> "$GITHUB_ENV"
+
+      - name: CMake version
+        run: |
+          cmake --version
+          ctest --version
+
+      - name: Restore Ccache cache
+        uses: actions/cache/restore@v3
+        id: ccache-cache
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ matrix.conf.ccache_id }}-ccache-${{ github.run_id }}
+          restore-keys: ${{ matrix.conf.ccache_id }}-ccache-
+
+      - name: Generate build system
+        run: |
+          cmake -B build
+
+      - name: Build
+        run: |
+          ccache --zero-stats
+          cmake --build build -j $(sysctl -n hw.logicalcpu)
+
+      - name: Ccache stats
+        run: |
+          ccache --version | head -n 1
+          ccache --show-stats --verbose
+
+      - name: Save Ccache cache
+        uses: actions/cache/save@v3
+        if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ matrix.conf.ccache_id }}-ccache-${{ github.run_id }}
+
+      - name: Test
+        run: |
+          ctest --test-dir build -j $(sysctl -n hw.logicalcpu)
+
+      - name: Install
+        run: |
+          cmake --install build --prefix install
+          tree install
