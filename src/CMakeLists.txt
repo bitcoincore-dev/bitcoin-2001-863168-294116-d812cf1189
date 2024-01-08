@@ -25,6 +25,10 @@ target_compile_definitions(bitcoin_clientversion
   PRIVATE
     HAVE_BUILD_INFO
 )
+target_link_libraries(bitcoin_clientversion
+  PRIVATE
+    core
+)
 add_dependencies(bitcoin_clientversion generate_build_info)
 
 add_subdirectory(crypto)
