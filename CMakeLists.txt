@@ -47,6 +47,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 
+# Configurable options.
+# When adding a new option, end the <help_text> with a full stop for consistency.
+option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
+
 set(configure_warnings)
 
 include(CheckPIESupported)
@@ -136,6 +140,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     MAC_OSX
   )
 endif()
+
+include(AddThreadsIfNeeded)
+add_threads_if_needed()
 
 include(cmake/introspection.cmake)
 
