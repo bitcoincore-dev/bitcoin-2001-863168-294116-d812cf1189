@@ -121,6 +121,8 @@ endif()
 
 include(cmake/introspection.cmake)
 
+include(cmake/crc32c.cmake)
+
 add_subdirectory(src)
 
 message("\n")
