@@ -24,6 +24,12 @@ project("Bitcoin Core"
   LANGUAGES CXX ASM
 )
 
+set(CLIENT_VERSION_IS_RELEASE "false")
+set(COPYRIGHT_YEAR "2023")
+set(COPYRIGHT_HOLDERS "The %s developers")
+set(COPYRIGHT_HOLDERS_FINAL "The ${PROJECT_NAME} developers")
+set(PACKAGE_BUGREPORT "https://github.com/bitcoin/bitcoin/issues")
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -35,6 +41,8 @@ set(configure_warnings)
 # The core_interface library aims to encapsulate common build flags.
 # It is intended to be a usage requirement for all other targets.
 add_library(core_interface INTERFACE)
+
+add_subdirectory(src)
 
 message("\n")
 message("Configure summary")
