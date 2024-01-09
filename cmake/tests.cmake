@@ -55,3 +55,15 @@ if(TARGET test_bitcoin)
 
   add_all_test_targets()
 endif()
+
+if(TARGET unitester)
+  add_test(NAME univalue_test
+    COMMAND unitester
+  )
+endif()
+
+if(TARGET object)
+  add_test(NAME univalue_object_test
+    COMMAND object
+  )
+endif()
