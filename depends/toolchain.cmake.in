@@ -1,3 +1,7 @@
+# Copyright (c) 2023-present The Bitcoin Core developers
+# Distributed under the MIT software license, see the accompanying
+# file COPYING or https://opensource.org/license/mit/.
+
 # This file is expected to be highly volatile and may still change substantially.
 
 set(CMAKE_SYSTEM_NAME @host_system@)
@@ -137,4 +141,8 @@ endif()
 
 if(NOT WITH_USDT AND "@no_usdt@" STREQUAL "1")
   set(WITH_USDT OFF CACHE STRING "")
+endif()
+
+if(NOT HARDENING AND "@no_harden@" STREQUAL "1")
+  set(HARDENING OFF CACHE STRING "")
 endif()
