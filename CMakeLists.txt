@@ -256,6 +256,9 @@ try_append_cxx_flags("-fno-extended-identifiers" TARGET core_interface SKIP_LINK
 # -fstack-reuse=none for all gcc builds. (Only gcc understands this flag).
 try_append_cxx_flags("-fstack-reuse=none" TARGET core_interface)
 
+if(BUILD_TESTS)
+  enable_testing()
+endif()
 # TODO: The `CMAKE_SKIP_BUILD_RPATH` variable setting can be deleted
 #       in the future after reordering Guix script commands to
 #       perform binary checks after the installation step.
@@ -265,6 +268,8 @@ try_append_cxx_flags("-fstack-reuse=none" TARGET core_interface)
 set(CMAKE_SKIP_BUILD_RPATH TRUE)
 set(CMAKE_SKIP_INSTALL_RPATH TRUE)
 add_subdirectory(src)
+
+include(cmake/tests.cmake)
 
 message("\n")
 message("Configure summary")
