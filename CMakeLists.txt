@@ -191,6 +191,7 @@ include(cmake/secp256k1.cmake)
 include(cmake/optional.cmake)
 
 add_subdirectory(src)
+add_subdirectory(test)
 
 message("\n")
 message("Configure summary")
