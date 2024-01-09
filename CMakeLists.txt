@@ -130,6 +130,7 @@ include(cmake/introspection.cmake)
 
 include(cmake/crc32c.cmake)
 include(cmake/leveldb.cmake)
+include(cmake/minisketch.cmake)
 
 add_subdirectory(src)
 
