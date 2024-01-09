@@ -16,7 +16,7 @@ Usage examples:
   )
 
 
-  try_append_cxx_flags("-fsanitize=${SANITIZERS}" TARGET core
+  try_append_cxx_flags("-fsanitize=${SANITIZERS}" TARGET core_interface
     RESULT_VAR cxx_supports_sanitizers
   )
   if(NOT cxx_supports_sanitizers)
@@ -24,12 +24,12 @@ Usage examples:
   endif()
 
 
-  try_append_cxx_flags("-Wunused-parameter" TARGET core
+  try_append_cxx_flags("-Wunused-parameter" TARGET core_interface
     IF_CHECK_PASSED "-Wno-unused-parameter"
   )
 
 
-  try_append_cxx_flags("-Werror=return-type" TARGET core
+  try_append_cxx_flags("-Werror=return-type" TARGET core_interface
     IF_CHECK_FAILED "-Wno-error=return-type"
     SOURCE "#include <cassert>\nint f(){ assert(false); }"
   )

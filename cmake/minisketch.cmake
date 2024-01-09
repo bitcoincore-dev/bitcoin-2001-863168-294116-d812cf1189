@@ -55,7 +55,7 @@ if(HAVE_CLMUL)
   target_compile_options(minisketch_clmul PRIVATE ${CLMUL_CXXFLAGS})
   target_link_libraries(minisketch_clmul
     PRIVATE
-      core
+      core_interface
       minisketch_common
   )
 endif()
@@ -79,7 +79,7 @@ target_include_directories(minisketch
 
 target_link_libraries(minisketch
   PRIVATE
-    core
+    core_interface
     minisketch_common
     $<TARGET_NAME_IF_EXISTS:minisketch_clmul>
 )

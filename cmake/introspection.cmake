@@ -77,12 +77,12 @@ if(HAVE_SYS_TYPES_H AND HAVE_IFADDRS_H)
   check_cxx_symbol_exists(getifaddrs "sys/types.h;ifaddrs.h" HAVE_DECL_GETIFADDRS)
   if(HAVE_DECL_GETIFADDRS AND HAVE_DECL_FREEIFADDRS)
     include(TestAppendRequiredLibraries)
-    test_append_socket_library(core)
+    test_append_socket_library(core_interface)
   endif()
 endif()
 
 include(TestAppendRequiredLibraries)
-test_append_atomic_library(core)
+test_append_atomic_library(core_interface)
 
 # Check for gmtime_r(), fallback to gmtime_s() if that is unavailable.
 # Fail if neither are available.

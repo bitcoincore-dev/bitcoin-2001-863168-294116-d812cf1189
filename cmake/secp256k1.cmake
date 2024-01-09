@@ -57,4 +57,4 @@ if(MSVC)
   )
 endif()
 
-target_link_libraries(secp256k1 PRIVATE core)
+target_link_libraries(secp256k1 PRIVATE core_interface)

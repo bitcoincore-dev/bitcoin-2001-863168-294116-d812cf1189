@@ -91,4 +91,4 @@ endif()
 #TODO: figure out how to filter out:
 # -Wconditional-uninitialized -Werror=conditional-uninitialized -Wsuggest-override -Werror=suggest-override
 
-target_link_libraries(leveldb PRIVATE core crc32c)
+target_link_libraries(leveldb PRIVATE core_interface crc32c)

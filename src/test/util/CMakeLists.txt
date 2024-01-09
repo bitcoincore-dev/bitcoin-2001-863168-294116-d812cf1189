@@ -22,7 +22,7 @@ add_library(test_util STATIC EXCLUDE_FROM_ALL
 
 target_link_libraries(test_util
   PRIVATE
-    core
+    core_interface
     Boost::headers
   PUBLIC
     univalue

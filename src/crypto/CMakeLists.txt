@@ -93,7 +93,7 @@ target_compile_definitions(bitcoin_crypto
 )
 target_link_libraries(bitcoin_crypto
   PRIVATE
-    core
+    core_interface
     bitcoin_crypto_sources
 )
 
