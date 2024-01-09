@@ -33,7 +33,7 @@ function(test_append_socket_library target)
   endif()
 endfunction()
 
-# Clang prior to version 15, when building for 32-bit,
+# Clang, when building for 32-bit,
 # and linking against libstdc++, requires linking with
 # -latomic if using the C++ atomic library.
 # Can be tested with: clang++ test.cpp -m32
@@ -53,6 +53,8 @@ function(test_append_atomic_library target)
 
       std::atomic<std::chrono::seconds> t{0s};
       t.store(2s);
+      auto t1 = t.load();
+      t.compare_exchange_strong(t1, 3s);
 
       std::atomic<int64_t> a{};
 
