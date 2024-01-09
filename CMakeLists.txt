@@ -192,6 +192,7 @@ include(cmake/secp256k1.cmake)
 include(cmake/optional.cmake)
 
 add_subdirectory(src)
+add_subdirectory(test)
 
 include(GetTargetInterface)
 get_target_interface(definitions core_interface COMPILE_DEFINITIONS)
