@@ -180,8 +180,19 @@ include(cmake/secp256k1.cmake)
 
 include(cmake/optional.cmake)
 
+find_package(Python3 3.9 COMPONENTS Interpreter)
+if(Python3_EXECUTABLE)
+  set(PYTHON_COMMAND ${Python3_EXECUTABLE})
+else()
+  list(APPEND configure_warnings
+    "Minimum required Python not found. Utils and rpcauth tests are disabled."
+  )
+endif()
+
 add_subdirectory(src)
 add_subdirectory(test)
+
+include(cmake/tests.cmake)
 
 message("\n")
 message("Configure summary")
