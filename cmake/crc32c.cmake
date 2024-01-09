@@ -112,4 +112,4 @@ if(HAVE_ARM64_CRC32C)
   )
 endif()
 
-target_link_libraries(crc32c PRIVATE core)
+target_link_libraries(crc32c PRIVATE core_interface)

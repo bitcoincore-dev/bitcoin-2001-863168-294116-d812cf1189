@@ -50,7 +50,7 @@ target_compile_definitions(bitcoin_util
 
 target_link_libraries(bitcoin_util
   PRIVATE
-    core
+    core_interface
     bitcoin_clientversion
     bitcoin_crypto
     Threads::Threads

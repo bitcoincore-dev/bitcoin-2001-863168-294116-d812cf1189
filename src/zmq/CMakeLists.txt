@@ -15,7 +15,7 @@ target_compile_definitions(bitcoin_zmq
 )
 target_link_libraries(bitcoin_zmq
   PRIVATE
-    core
+    core_interface
     univalue
     $<TARGET_NAME_IF_EXISTS:libzmq>
     $<TARGET_NAME_IF_EXISTS:PkgConfig::libzmq>

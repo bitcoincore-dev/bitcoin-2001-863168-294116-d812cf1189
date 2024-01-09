@@ -123,7 +123,7 @@ if(WITH_USDT)
   endif()
 
   if(HAVE_USDT_H)
-    target_include_directories(core INTERFACE
+    target_include_directories(core_interface INTERFACE
       ${SystemTap_INCLUDE_DIR}
     )
     set(ENABLE_TRACING TRUE)

@@ -8,7 +8,7 @@ include(CheckCXXSourceCompiles)
 #[=[
 Usage example:
 
-  try_append_linker_flag("-Wl,--major-subsystem-version,6" TARGET core)
+  try_append_linker_flag("-Wl,--major-subsystem-version,6" TARGET core_interface)
 
 
 In configuration output, this function prints a string by the following pattern:

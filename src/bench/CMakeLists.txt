@@ -50,7 +50,7 @@ add_executable(bench_bitcoin
 )
 
 target_link_libraries(bench_bitcoin
-  core
+  core_interface
   test_util
   bitcoin_node
   Boost::headers

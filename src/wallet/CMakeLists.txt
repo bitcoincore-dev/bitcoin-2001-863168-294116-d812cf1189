@@ -34,7 +34,7 @@ add_library(bitcoin_wallet STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_wallet
   PRIVATE
-    core
+    core_interface
     bitcoin_common
     univalue
     Boost::headers

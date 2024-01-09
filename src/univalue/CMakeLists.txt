@@ -14,4 +14,4 @@ target_include_directories(univalue
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
-target_link_libraries(univalue PRIVATE core)
+target_link_libraries(univalue PRIVATE core_interface)

@@ -27,7 +27,7 @@ target_compile_definitions(bitcoin_clientversion
 )
 target_link_libraries(bitcoin_clientversion
   PRIVATE
-    core
+    core_interface
 )
 add_dependencies(bitcoin_clientversion generate_build_info)
 
@@ -57,7 +57,7 @@ target_sources(bitcoin_consensus_sources INTERFACE
 add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL)
 target_link_libraries(bitcoin_consensus
   PRIVATE
-    core
+    core_interface
     bitcoin_consensus_sources
     bitcoin_crypto
     secp256k1
@@ -121,7 +121,7 @@ target_compile_definitions(bitcoin_common
 )
 target_link_libraries(bitcoin_common
   PRIVATE
-    core
+    core_interface
     bitcoin_consensus
     bitcoin_util
     univalue
@@ -142,7 +142,7 @@ if(ENABLE_WALLET)
       wallet/wallettool.cpp
     )
     target_link_libraries(bitcoin-wallet
-      core
+      core_interface
       bitcoin_wallet
       bitcoin_common
       bitcoin_util
@@ -250,7 +250,7 @@ add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_node
   PRIVATE
-    core
+    core_interface
     bitcoin_common
     bitcoin_util
     leveldb
@@ -272,7 +272,7 @@ if(BUILD_DAEMON)
     init/bitcoind.cpp
   )
   target_link_libraries(bitcoind
-    core
+    core_interface
     bitcoin_node
     $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
@@ -286,7 +286,7 @@ add_library(bitcoin_cli STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_cli
   PUBLIC
-    core
+    core_interface
     univalue
 )
 
@@ -295,7 +295,7 @@ target_link_libraries(bitcoin_cli
 if(BUILD_CLI)
   add_executable(bitcoin-cli bitcoin-cli.cpp)
   target_link_libraries(bitcoin-cli
-    core
+    core_interface
     bitcoin_cli
     bitcoin_common
     bitcoin_util
@@ -308,7 +308,7 @@ endif()
 if(BUILD_TX)
   add_executable(bitcoin-tx bitcoin-tx.cpp)
   target_link_libraries(bitcoin-tx
-    core
+    core_interface
     bitcoin_common
     bitcoin_util
     univalue
@@ -320,7 +320,7 @@ endif()
 if(BUILD_UTIL)
   add_executable(bitcoin-util bitcoin-util.cpp)
   target_link_libraries(bitcoin-util
-    core
+    core_interface
     bitcoin_common
     bitcoin_util
   )
