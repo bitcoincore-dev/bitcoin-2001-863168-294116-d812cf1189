@@ -8,6 +8,10 @@ include_guard(GLOBAL)
 # using getifaddrs & freeifaddrs.
 # See: https://github.com/bitcoin/bitcoin/pull/21486
 function(test_append_socket_library target)
+  if (NOT TARGET ${target})
+    message(FATAL_ERROR "test_append_socket_library() called with non-existent target \"${target}\".")
+  endif()
+
   set(check_socket_source "
     #include <sys/types.h>
     #include <ifaddrs.h>
@@ -40,6 +44,10 @@ endfunction()
 #
 # Sourced from http://bugs.debian.org/797228
 function(test_append_atomic_library target)
+  if (NOT TARGET ${target})
+    message(FATAL_ERROR "test_append_atomic_library() called with non-existent target \"${target}\".")
+  endif()
+
   set(check_atomic_source "
     #include <atomic>
     #include <cstdint>

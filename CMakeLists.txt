@@ -194,8 +194,6 @@ add_threads_if_needed()
 include(AddBoostIfNeeded)
 add_boost_if_needed()
 
-include(CheckSourceCompilesAndLinks)
-
 include(AddLibeventIfNeeded)
 add_libevent_if_needed()
 

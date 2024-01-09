@@ -5,6 +5,7 @@
 # Check whether evhttp_connection_get_peer expects const char**.
 # See https://github.com/libevent/libevent/commit/a18301a2bb160ff7c3ffaf5b7653c39ffe27b385
 macro(check_evhttp_connection_get_peer target)
+  include(CMakePushCheckState)
   cmake_push_check_state(RESET)
   set(CMAKE_REQUIRED_LIBRARIES ${target})
   check_cxx_source_compiles("
