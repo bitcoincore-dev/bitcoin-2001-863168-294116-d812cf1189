@@ -87,6 +87,8 @@ unset(check_pie_output)
 # It is intended to be a usage requirement for all other targets.
 add_library(core_interface INTERFACE)
 
+include(TryAppendCXXFlags)
+
 if(WIN32)
   #[=[
   This build system supports two ways to build binaries for Windows.
@@ -124,6 +126,12 @@ if(WIN32)
     # See: https://devblogs.microsoft.com/cppblog/improved-parallelism-in-msbuild/.
     list(APPEND CMAKE_VS_GLOBALS "UseMultiToolTask=true")
 
+    try_append_cxx_flags("/W3" TARGET core_interface)
+    try_append_cxx_flags("/wd4018" TARGET core_interface)
+    try_append_cxx_flags("/wd4244" TARGET core_interface)
+    try_append_cxx_flags("/wd4267" TARGET core_interface)
+    try_append_cxx_flags("/wd4715" TARGET core_interface)
+    try_append_cxx_flags("/wd4805" TARGET core_interface)
     target_compile_definitions(core_interface INTERFACE
       _CRT_SECURE_NO_WARNINGS
       _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
@@ -136,6 +144,9 @@ if(WIN32)
       _WINDOWS
       _MT
     )
+    # Avoid the use of aligned vector instructions when building for Windows.
+    # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=54412.
+    try_append_cxx_flags("-Wa,-muse-unaligned-vector-move" TARGET core_interface)
   endif()
 endif()
 
