@@ -215,7 +215,8 @@ mkdir -p "$OUTDIR"
 ###########################
 
 # CONFIGFLAGS
-CONFIGFLAGS="--enable-reduce-exports --disable-bench --disable-gui-tests --disable-fuzz-binary"
+# TODO: Re-add CMake's analogue of --disable-gui-tests.
+CONFIGFLAGS="-DREDUCE_EXPORTS=ON -DBUILD_BENCH=OFF -DBUILD_FUZZ_BINARY=OFF"
 
 # CFLAGS
 HOST_CFLAGS="-O2 -g"
@@ -248,38 +249,31 @@ mkdir -p "$DISTSRC"
     # Extract the source tarball
     tar --strip-components=1 -xf "${GIT_ARCHIVE}"
 
-    ./autogen.sh
-
     # Configure this DISTSRC for $HOST
     # shellcheck disable=SC2086
-    env CONFIG_SITE="${BASEPREFIX}/${HOST}/share/config.site" \
-        ./configure --prefix=/ \
-                    --disable-ccache \
-                    --disable-maintainer-mode \
-                    --disable-dependency-tracking \
-                    ${CONFIGFLAGS} \
-                    ${HOST_CFLAGS:+CFLAGS="${HOST_CFLAGS}"} \
-                    ${HOST_CXXFLAGS:+CXXFLAGS="${HOST_CXXFLAGS}"} \
-                    ${HOST_LDFLAGS:+LDFLAGS="${HOST_LDFLAGS}"}
-
-    sed -i.old 's/-lstdc++ //g' config.status libtool
+    env CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}" \
+    cmake -S . -B build \
+          --toolchain "${BASEPREFIX}/${HOST}/share/toolchain.cmake" \
+          -DCCACHE=OFF \
+          ${CONFIGFLAGS}
 
     # Build Bitcoin Core
-    make --jobs="$JOBS" ${V:+V=1}
+    cmake --build build -j "$JOBS" ${V:+--verbose}
 
     # Check that symbol/security checks tools are sane.
-    make test-security-check ${V:+V=1}
+    cmake --build build --target test-security-check ${V:+--verbose}
     # Perform basic security checks on a series of executables.
-    make -C src --jobs=1 check-security ${V:+V=1}
+    cmake --build build -j 1 --target check-security ${V:+--verbose}
     # Check that executables only contain allowed version symbols.
-    make -C src --jobs=1 check-symbols  ${V:+V=1}
+    cmake --build build -j 1 --target check-symbols ${V:+--verbose}
 
     mkdir -p "$OUTDIR"
 
     # Make the os-specific installers
     case "$HOST" in
         *mingw*)
-            make deploy ${V:+V=1} BITCOIN_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
+            cmake --build build -j "$JOBS" -t deploy ${V:+--verbose}
+            mv build/bitcoin-win64-setup.exe "${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
             ;;
     esac
 
@@ -294,7 +288,7 @@ mkdir -p "$DISTSRC"
             make install-strip DESTDIR="${INSTALLPATH}" ${V:+V=1}
             ;;
         *)
-            make install DESTDIR="${INSTALLPATH}" ${V:+V=1}
+            cmake --install build --prefix "${INSTALLPATH}" ${V:+--verbose}
             ;;
     esac
 
@@ -323,25 +317,20 @@ mkdir -p "$DISTSRC"
 
         case "$HOST" in
             *mingw*)
-                mv --target-directory="$DISTNAME"/lib/ "$DISTNAME"/bin/*.dll
+                # TODO: Re-enable code for libbitcoinkernel.
+                # mv --target-directory="$DISTNAME"/lib/ "$DISTNAME"/bin/*.dll
                 ;;
         esac
-
-        # Prune libtool and object archives
-        find . -name "lib*.la" -delete
-        find . -name "lib*.a" -delete
-
-        # Prune pkg-config files
-        rm -rf "${DISTNAME}/lib/pkgconfig"
 
         case "$HOST" in
             *darwin*) ;;
             *)
                 # Split binaries and libraries from their debug symbols
+                # TODO: Re-enable code for libbitcoinkernel.
                 {
                     find "${DISTNAME}/bin" -type f -executable -print0
-                    find "${DISTNAME}/lib" -type f -print0
-                } | xargs -0 -P"$JOBS" -I{} "${DISTSRC}/contrib/devtools/split-debug.sh" {} {} {}.dbg
+                    # find "${DISTNAME}/lib" -type f -print0
+                } | xargs -0 -P"$JOBS" -I{} "${DISTSRC}/build/split-debug.sh" {} {} {}.dbg
                 ;;
         esac
 
@@ -401,7 +390,7 @@ mkdir -p "$DISTSRC"
 
     case "$HOST" in
         *mingw*)
-            cp -rf --target-directory=. contrib/windeploy
+            cp -rf --target-directory=. "${DISTSRC}/contrib/windeploy"
             (
                 cd ./windeploy
                 mkdir -p unsigned
