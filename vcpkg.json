@@ -11,6 +11,8 @@
     "libevent",
     "miniupnpc",
     "sqlite3",
+    "qt5-base",
+    "qt5-tools",
     "zeromq"
   ]
 }
