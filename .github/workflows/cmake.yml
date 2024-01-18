@@ -259,17 +259,17 @@ jobs:
             packages: 'clang-14 g++-multilib'
             c_compiler: 'clang-14 -m32'
             cxx_compiler: 'clang++-14 -m32'
-            depends_options: 'NO_QT=1'
+            depends_options: ''
             configure_options: '-DWERROR=ON'
           - name: 'MinGW-w64'
             triplet: 'x86_64-w64-mingw32'
             packages: 'g++-mingw-w64-x86-64-posix'
-            depends_options: 'NO_QT=1'
+            depends_options: ''
             exe_extension: '.exe'
           - name: 'MinGW-w64, debug'
             triplet: 'x86_64-w64-mingw32'
             packages: 'g++-mingw-w64-x86-64-posix'
-            depends_options: 'NO_QT=1 DEBUG=1'
+            depends_options: 'DEBUG=1'
             configure_options: '-DCMAKE_BUILD_TYPE=Debug'
             cache_suffix: '-debug'
             exe_extension: '.exe'
@@ -453,7 +453,7 @@ jobs:
         env:
           HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
         run: |
-          brew install ccache cmake pkg-config boost libevent berkeley-db@4 libnatpmp miniupnpc zeromq tree
+          brew install ccache cmake pkg-config boost libevent berkeley-db@4 qt@5 libnatpmp miniupnpc zeromq tree
           echo "CCACHE_DIR=${{ runner.temp }}/ccache" >> "$GITHUB_ENV"
 
       - name: CMake version
