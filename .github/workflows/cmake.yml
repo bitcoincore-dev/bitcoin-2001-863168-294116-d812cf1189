@@ -179,7 +179,7 @@ jobs:
 
 
   ubuntu-focal-native:
-    name: 'Ubuntu 20.04, CMake 3.16, Boost from depends'
+    name: 'Ubuntu 20.04, CMake 3.16, downloaded Boost'
     runs-on: ubuntu-20.04
 
     steps:
@@ -201,10 +201,10 @@ jobs:
           cmake --version
           ctest --version
 
-      - name: Build Boost in depends
-        working-directory: depends
+      - name: Download Boost
         run: |
-          make -j $(nproc) NO_LIBEVENT=1 NO_QT=1 NO_WALLET=1 NO_NATPMP=1 NO_UPNP=1 NO_ZMQ=1 NO_USDT=1 ALLOW_HOST_PACKAGES=1 CC=gcc-10 CXX=g++-10
+          curl --location --remote-name https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz
+          tar -xf boost_1_84_0.tar.gz
 
       - name: Restore Ccache cache
         uses: actions/cache/restore@v3
@@ -216,7 +216,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/share/toolchain.cmake -DENABLE_WALLET=ON -DWITH_NATPMP=ON -DWITH_MINIUPNPC=ON -DWITH_ZMQ=ON -DWITH_USDT=ON -DWERROR=ON
+          cmake -B build -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DBoost_INCLUDE_DIR="${PWD}/boost_1_84_0" -DENABLE_WALLET=ON -DWITH_MINIUPNPC=ON -DWITH_NATPMP=ON -DWITH_ZMQ=ON -DWITH_USDT=ON -DWERROR=ON
 
       - name: Build
         working-directory: build
