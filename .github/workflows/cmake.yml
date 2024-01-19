@@ -407,6 +407,10 @@ jobs:
         run: |
           cmake -B build -A x64 --toolchain $env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static -DWITH_NATPMP=OFF
 
+      - name: Measure vcpkg_installed folder
+        run: |
+          (Get-ChildItem -Path "build\vcpkg_installed" -Recurse | Measure-Object -Property Length -Sum).Sum
+
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v3
         if: github.event_name != 'pull_request' && steps.vcpkg-binary-cache.outputs.cache-hit != 'true'
