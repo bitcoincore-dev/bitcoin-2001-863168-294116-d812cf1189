@@ -264,6 +264,7 @@ if(HARDENING)
 
     try_append_cxx_flags("-Wstack-protector" TARGET hardening_interface)
     try_append_cxx_flags("-fstack-protector-all" TARGET hardening_interface)
+    try_append_linker_flag("-fstack-protector-all" TARGET hardening_interface)
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening_interface)
 
     if(MINGW)
