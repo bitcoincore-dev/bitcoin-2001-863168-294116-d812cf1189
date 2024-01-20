@@ -316,7 +316,10 @@ if(HARDENING)
     )
 
     try_append_cxx_flags("-Wstack-protector" TARGET hardening_interface)
+    # The -fstack-protector-all option might impact the linking stage as well.
+    # Hence, it should be applied to both the compilation and linking stages.
     try_append_cxx_flags("-fstack-protector-all" TARGET hardening_interface)
+    try_append_linker_flag("-fstack-protector-all" TARGET hardening_interface)
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening_interface)
 
     if(MINGW)
