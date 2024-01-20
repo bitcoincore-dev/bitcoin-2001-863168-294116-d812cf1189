@@ -263,16 +263,37 @@ if(HARDENING)
     )
 
     try_append_cxx_flags("-Wstack-protector" TARGET hardening_interface)
-    try_append_cxx_flags("-fstack-protector-all" TARGET hardening_interface)
+    try_append_cxx_flags("-fstack-protector-all" TARGET hardening_interface
+      RESULT_VAR cxx_supports_stack_protector_all
+    )
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening_interface)
 
     if(MINGW)
+      # Older versions of Mingw-w64 required libssp to be linked or passing
+      # the -fstack-protector-all option to a linker, as Autotools do.
+      # However, this was resolved with Mingw-w64 v11;
+      # see https://sourceforge.net/p/mingw-w64/mailman/message/37837156/.
+      # This can be removed when those older versions are no longer
+      # supported.
+      if(cxx_supports_stack_protector_all)
+        try_compile(hardened_links_without_ssp
+          ${CMAKE_BINARY_DIR}/test_projects/ssp
+          ${CMAKE_SOURCE_DIR}/cmake/test/ssp
+          TestSSP
+        )
+        if(NOT hardened_links_without_ssp)
+          target_link_libraries(hardening_interface INTERFACE ssp)
+        endif()
+        unset(hardened_links_without_ssp)
+      endif()
+
       # stack-clash-protection doesn't compile with GCC 10 and earlier.
       # In any case, it is a no-op for Windows.
       # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90458 for more details.
     else()
       try_append_cxx_flags("-fstack-clash-protection" TARGET hardening_interface)
     endif()
+    unset(cxx_supports_stack_protector_all)
 
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
       try_append_cxx_flags("-mbranch-protection=bti" TARGET hardening_interface)
