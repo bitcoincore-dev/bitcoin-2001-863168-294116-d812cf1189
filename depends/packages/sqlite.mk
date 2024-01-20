@@ -11,7 +11,8 @@ $(package)_config_opts_linux=--with-pic
 $(package)_config_opts_freebsd=--with-pic
 $(package)_config_opts_netbsd=--with-pic
 $(package)_config_opts_openbsd=--with-pic
-$(package)_config_opts_debug=--enable-debug
+# We avoid using `--enable-debug` because it overrides CFLAGS, a behavior we want to prevent.
+$(package)_cppflags_debug += -DSQLITE_DEBUG -DSQLITE_ENABLE_SELECTTRACE -DSQLITE_ENABLE_WHERETRACE
 $(package)_cflags+=-DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_OMIT_DEPRECATED
 $(package)_cflags+=-DSQLITE_OMIT_SHARED_CACHE -DSQLITE_OMIT_JSON -DSQLITE_LIKE_DOESNT_MATCH_BLOBS
 $(package)_cflags+=-DSQLITE_OMIT_DECLTYPE -DSQLITE_OMIT_PROGRESS_CALLBACK -DSQLITE_OMIT_AUTOINIT
