@@ -44,7 +44,10 @@ if(NOT CMAKE_C_COMPILER)
     string(PREPEND CMAKE_C_FLAGS_INIT "${mandatory_c_compiler_flags} ")
     unset(mandatory_c_compiler_flags)
   endif()
-  set(DEPENDS_C_COMPILER_FLAGS @CFLAGS@)
+endif()
+
+if(NOT CMAKE_C_FLAGS)
+  set(CMAKE_C_FLAGS "@CFLAGS@")
 endif()
 
 if(NOT CMAKE_CXX_COMPILER)
@@ -66,11 +69,13 @@ if(NOT CMAKE_CXX_COMPILER)
     string(PREPEND CMAKE_SHARED_LINKER_FLAGS_INIT "${mandatory_cxx_compiler_flags} ")
     unset(mandatory_cxx_compiler_flags)
   endif()
-  set(DEPENDS_CXX_COMPILER_FLAGS @CXXFLAGS@)
-
   set(CMAKE_OBJCXX_COMPILER ${CMAKE_CXX_COMPILER})
   set(CMAKE_OBJCXX_COMPILER_LAUNCHER ${CMAKE_CXX_COMPILER_LAUNCHER})
   set(CMAKE_OBJCXX_LINKER_LAUNCHER ${CMAKE_CXX_LINKER_LAUNCHER})
+endif()
+
+if(NOT CMAKE_CXX_FLAGS)
+  set(CMAKE_CXX_FLAGS "@CXXFLAGS@")
 endif()
 
 set(DEPENDS_COMPILE_DEFINITIONS @CPPFLAGS@)
