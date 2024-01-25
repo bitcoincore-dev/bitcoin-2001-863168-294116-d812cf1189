@@ -72,6 +72,26 @@ tristate_option(WITH_USDT
 
 option(BUILD_TESTS "Build test_bitcoin executable." ON)
 option(BUILD_BENCH "Build bench_bitcoin executable." ON)
+cmake_dependent_option(BUILD_FUZZ_BINARY "Build fuzz binary." ON "NOT MSVC" OFF)
+cmake_dependent_option(FUZZ "Build for fuzzing. Enabling this will disable all other targets and override BUILD_FUZZ_BINARY." OFF "NOT MSVC" OFF)
+
+if(FUZZ)
+  message(WARNING "FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
+  set(BUILD_DAEMON OFF)
+  set(BUILD_CLI OFF)
+  set(BUILD_TX OFF)
+  set(BUILD_UTIL OFF)
+  set(BUILD_UTIL_CHAINSTATE OFF)
+  set(BUILD_SHARED_LIBS OFF)
+  set(BUILD_WALLET_TOOL OFF)
+  set(WITH_NATPMP OFF)
+  set(WITH_MINIUPNPC OFF)
+  set(WITH_ZMQ OFF)
+  set(BUILD_TESTS OFF)
+  set(BUILD_BENCH OFF)
+  set(BUILD_FUZZ_BINARY ON)
+endif()
+
 option(INSTALL_MAN "Install man pages." ON)
 
 set(configure_warnings)
@@ -187,6 +207,40 @@ endif()
 
 include(AddThreadsIfNeeded)
 add_threads_if_needed()
+
+add_library(sanitizing_interface INTERFACE)
+target_link_libraries(core_interface INTERFACE sanitizing_interface)
+if(SANITIZERS)
+  # First check if the compiler accepts flags. If an incompatible pair like
+  # -fsanitize=address,thread is used here, this check will fail. This will also
+  # fail if a bad argument is passed, e.g. -fsanitize=undfeined
+  try_append_cxx_flags("-fsanitize=${SANITIZERS}" TARGET sanitizing_interface
+    RESULT_VAR cxx_supports_sanitizers
+  )
+  if(NOT cxx_supports_sanitizers)
+    message(FATAL_ERROR "Compiler did not accept requested flags.")
+  endif()
+
+  # Some compilers (e.g. GCC) require additional libraries like libasan,
+  # libtsan, libubsan, etc. Make sure linking still works with the sanitize
+  # flag. This is a separate check so we can give a better error message when
+  # the sanitize flags are supported by the compiler but the actual sanitizer
+  # libs are missing.
+  try_append_linker_flag("-fsanitize=${SANITIZERS}" VAR SANITIZER_LDFLAGS
+    SOURCE "
+      #include <cstdint>
+      #include <cstddef>
+      extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) { return 0; }
+      __attribute__((weak)) // allow for libFuzzer linking
+      int main() { return 0; }
+    "
+    RESULT_VAR linker_supports_sanitizers
+  )
+  if(NOT linker_supports_sanitizers)
+    message(FATAL_ERROR "Linker did not accept requested flags, you are missing required libraries.")
+  endif()
+endif()
+target_link_options(sanitizing_interface INTERFACE ${SANITIZER_LDFLAGS})
 
 include(AddBoostIfNeeded)
 add_boost_if_needed()
@@ -349,6 +403,7 @@ message("  USDT tracing ........................ ${WITH_USDT}")
 message("Tests:")
 message("  test_bitcoin ........................ ${BUILD_TESTS}")
 message("  bench_bitcoin ....................... ${BUILD_BENCH}")
+message("  fuzz binary ......................... ${BUILD_FUZZ_BINARY}")
 message("")
 if(CMAKE_CROSSCOMPILING)
   set(cross_status "TRUE, for ${CMAKE_SYSTEM_NAME}, ${CMAKE_SYSTEM_PROCESSOR}")
