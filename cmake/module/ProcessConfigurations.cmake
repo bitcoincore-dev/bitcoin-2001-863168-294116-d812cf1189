@@ -54,6 +54,27 @@ function(set_default_config config)
   endif()
 endfunction()
 
+#[=[
+By default, CMake passes flags in the CMAKE_<LANG>_FLAGS variable before
+those in the per-configuration CMAKE_<LANG>_FLAGS_<CONFIG> variable.
+Such a behaviour breaks our integration with the depends build system.
+Therefore, we _append_ flags from the CMAKE_<LANG>_FLAGS variable to
+the CMAKE_<LANG>_FLAGS_<CONFIG> ones explicitly, while clearing the former.
+]=]
+function(reorder_flags_for_all_configs)
+  get_all_configs(all_configs)
+  foreach(config IN LISTS all_configs)
+    string(TOUPPER "${config}" config_uppercase)
+    string(STRIP "${CMAKE_C_FLAGS_${config_uppercase}} ${CMAKE_C_FLAGS}" CMAKE_C_FLAGS_${config_uppercase})
+    set(CMAKE_C_FLAGS_${config_uppercase} "${CMAKE_C_FLAGS_${config_uppercase}}" PARENT_SCOPE)
+    string(STRIP "${CMAKE_CXX_FLAGS_${config_uppercase}} ${CMAKE_CXX_FLAGS}" CMAKE_CXX_FLAGS_${config_uppercase})
+    set(CMAKE_CXX_FLAGS_${config_uppercase} "${CMAKE_CXX_FLAGS_${config_uppercase}}" PARENT_SCOPE)
+    set(CMAKE_OBJCXX_FLAGS_${config_uppercase} "${CMAKE_CXX_FLAGS_${config_uppercase}}" PARENT_SCOPE)
+  endforeach()
+  set(CMAKE_C_FLAGS PARENT_SCOPE)
+  set(CMAKE_CXX_FLAGS PARENT_SCOPE)
+endfunction()
+
 function(remove_c_flag_from_all_configs flag)
   get_all_configs(all_configs)
   foreach(config IN LISTS all_configs)
