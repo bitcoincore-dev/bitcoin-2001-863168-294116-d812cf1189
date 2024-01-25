@@ -151,6 +151,7 @@ class HTTPBasicsTest(BitcoinTestFramework):
             actual_perms = file_stat.st_mode & PERM_BITS_UMASK
             expected_perms = p[perm]
             assert_equal(expected_perms, actual_perms)
+            return actual_perms
 
         # Remove any leftover rpc{user|password} config options from previous tests
         conf = self.nodes[1].bitcoinconf
@@ -161,11 +162,31 @@ class HTTPBasicsTest(BitcoinTestFramework):
             file.writelines(filtered_lines)
 
         self.log.info('Check default cookie permission')
-        test_perm(None)
+        default_perms = test_perm(None)
 
         self.log.info('Check custom cookie permissions')
         for perm in p.keys():
             test_perm(perm)
+
+        self.log.info('Check leaving cookie permissions alone')
+        unassigned_perms = os.stat(self.nodes[1].chain_path / 'debug.log').st_mode & PERM_BITS_UMASK
+        self.restart_node(1, extra_args=["-rpccookieperms=0"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(unassigned_perms, actual_perms)
+        self.restart_node(1, extra_args=["-norpccookieperms"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(unassigned_perms, actual_perms)
+
+        self.log.info('Check -norpccookieperms -rpccookieperms')
+        self.restart_node(1, extra_args=["-rpccookieperms=0", "-rpccookieperms=1"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(default_perms, actual_perms)
+        self.restart_node(1, extra_args=["-norpccookieperms", "-rpccookieperms"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(default_perms, actual_perms)
+        self.restart_node(1, extra_args=["-rpccookieperms=1660", "-norpccookieperms", "-rpccookieperms"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(default_perms, actual_perms)
 
     def run_test(self):
         self.conf_setup()

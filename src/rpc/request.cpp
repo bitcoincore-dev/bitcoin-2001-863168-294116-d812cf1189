@@ -14,6 +14,7 @@
 #include <util/strencodings.h>
 
 #include <fstream>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -81,7 +82,7 @@ static fs::path GetAuthCookieFile(bool temp=false)
 
 static std::optional<std::string> g_generated_cookie;
 
-bool GenerateAuthCookie(std::string* cookie_out, fs::perms cookie_perms)
+bool GenerateAuthCookie(std::string* cookie_out, std::optional<fs::perms> cookie_perms)
 {
     const size_t COOKIE_SIZE = 32;
     unsigned char rand_pwd[COOKIE_SIZE];
@@ -103,11 +104,13 @@ bool GenerateAuthCookie(std::string* cookie_out, fs::perms cookie_perms)
         LogInfo("Unable to rename cookie authentication file %s to %s\n", fs::PathToString(filepath_tmp), fs::PathToString(filepath));
         return false;
     }
-    std::error_code code;
-    fs::permissions(filepath, cookie_perms, fs::perm_options::replace, code);
-    if (code) {
-        LogInfo("Unable to set permissions on cookie authentication file %s\n", fs::PathToString(filepath_tmp));
-        return false;
+    if (cookie_perms) {
+        std::error_code code;
+        fs::permissions(filepath, *cookie_perms, fs::perm_options::replace, code);
+        if (code) {
+            LogInfo("Unable to set permissions on cookie authentication file %s\n", fs::PathToString(filepath_tmp));
+            return false;
+        }
     }
 
     g_generated_cookie = cookie;

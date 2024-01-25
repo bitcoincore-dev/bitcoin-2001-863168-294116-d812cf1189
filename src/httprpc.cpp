@@ -22,6 +22,7 @@
 #include <iterator>
 #include <map>
 #include <memory>
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
@@ -249,15 +250,21 @@ static bool InitRPCAuthentication()
     {
         LogInfo("Using random cookie authentication.\n");
 
-        fs::perms cookie_perms{DEFAULT_COOKIE_PERMS};
+        std::optional<fs::perms> cookie_perms{DEFAULT_COOKIE_PERMS};
         auto cookie_perms_arg{gArgs.GetArg("-rpccookieperms")};
         if (cookie_perms_arg) {
-            auto perm_opt = StringToPerms(*cookie_perms_arg);
-            if (!perm_opt) {
-                LogInfo("Invalid -rpccookieperms=%s; must be one of 'owner', 'group', or 'all'.\n", *cookie_perms_arg);
-                return false;
+            if (*cookie_perms_arg == "0") {
+                cookie_perms = std::nullopt;
+            } else if (cookie_perms_arg->empty() || *cookie_perms_arg == "1") {
+                // leave at default
+            } else {
+                auto perm_opt = StringToPerms(*cookie_perms_arg);
+                if (!perm_opt) {
+                    LogInfo("Invalid -rpccookieperms=%s; must be one of 'owner', 'group', or 'all'.\n", *cookie_perms_arg);
+                    return false;
+                }
+                cookie_perms = *perm_opt;
             }
-            cookie_perms = *perm_opt;
         }
 
         if (!GenerateAuthCookie(&strRPCUserColonPass, cookie_perms)) {
