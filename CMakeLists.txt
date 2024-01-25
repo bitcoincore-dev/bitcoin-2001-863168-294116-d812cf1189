@@ -45,14 +45,11 @@ option(BUILD_TX "Build bitcoin-tx executable." ON)
 option(BUILD_UTIL "Build bitcoin-util executable." ON)
 option(ASM "Use assembly routines." ON)
 
-option(ENABLE_WALLET "Enable wallet." ON)
-# TODO: These tri-state options will be removed and most features
-#       will become opt-in by default before merging into master.
-include(TristateOption)
-tristate_option(WITH_SQLITE "Enable SQLite wallet support." "if libsqlite3 is found." AUTO)
-tristate_option(WITH_BDB "Enable Berkeley DB (BDB) wallet support." "if libdb_cxx is found." AUTO)
-option(WARN_INCOMPATIBLE_BDB "Warn when using a Berkeley DB (BDB) version other than 4.8." ON)
+option(ENABLE_WALLET "Enable wallet." OFF)
 include(CMakeDependentOption)
+cmake_dependent_option(WITH_SQLITE "Enable SQLite wallet support." OFF "ENABLE_WALLET" OFF)
+cmake_dependent_option(WITH_BDB "Enable Berkeley DB (BDB) wallet support." OFF "ENABLE_WALLET" OFF)
+cmake_dependent_option(WARN_INCOMPATIBLE_BDB "Warn when using a Berkeley DB (BDB) version other than 4.8." ON "WITH_BDB" OFF)
 cmake_dependent_option(BUILD_WALLET_TOOL "Build bitcoin-wallet tool." ON "ENABLE_WALLET" OFF)
 
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
@@ -60,15 +57,11 @@ option(HARDENING "Attempt to harden the resulting executables." ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables." OFF)
 option(WERROR "Treat compiler warnings as errors." OFF)
 
-tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
-tristate_option(WITH_NATPMP "Enable NAT-PMP." "if libnatpmp is found." AUTO)
-tristate_option(WITH_MINIUPNPC "Enable UPnP." "if libminiupnpc is found." AUTO)
-tristate_option(WITH_ZMQ "Enable ZMQ notifications." "if libzmq is found." AUTO)
-tristate_option(WITH_USDT
-  "Enable tracepoints for Userspace, Statically Defined Tracing."
-  "if sys/sdt.h is found."
-  AUTO
-)
+option(CCACHE "Use ccache for compiling." OFF)
+option(WITH_NATPMP "Enable NAT-PMP." OFF)
+option(WITH_MINIUPNPC "Enable UPnP." OFF)
+option(WITH_ZMQ "Enable ZMQ notifications." OFF)
+option(WITH_USDT "Enable tracepoints for Userspace, Statically Defined Tracing." OFF)
 
 option(BUILD_TESTS "Build test_bitcoin executable." ON)
 option(BUILD_BENCH "Build bench_bitcoin executable." ON)
