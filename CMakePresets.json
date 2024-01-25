@@ -1,0 +1,25 @@
+{
+  "cmakeMinimumRequired": {"major": 3, "minor": 21, "patch": 0}, 
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "dev-mode",
+      "displayName": "Development mode (intended only for Bitcoin Core developers)",
+      "cacheVariables": {
+        "ENABLE_WALLET": "ON",
+        "WITH_SQLITE": "ON",
+        "WITH_BDB": "ON",
+        "WERROR": "ON",
+        "CCACHE": "ON",
+        "WITH_NATPMP": "ON",
+        "WITH_MINIUPNPC": "ON",
+        "WITH_ZMQ": "ON",
+        "WITH_USDT": "ON"
+      },
+      "warnings": {
+        "dev": true,
+        "uninitialized": false
+      }
+    }
+  ]
+}
