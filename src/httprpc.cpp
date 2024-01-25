@@ -252,17 +252,12 @@ static bool InitRPCAuthentication()
         fs::perms cookie_perms{DEFAULT_COOKIE_PERMS};
         auto cookie_perms_arg{gArgs.GetArg("-rpccookieperms")};
         if (cookie_perms_arg) {
-#ifdef WIN32
-            LogInfo("Unable to set unix-style file permissions on cookie via -rpccookieperms on Windows systems\n");
-            return false;
-#else
             auto perm_opt = StringToPerms(*cookie_perms_arg);
             if (!perm_opt) {
                 LogInfo("Invalid -rpccookieperms=%s; must be one of 'owner', 'group', or 'all'.\n", *cookie_perms_arg);
                 return false;
             }
             cookie_perms = *perm_opt;
-#endif
         }
 
         if (!GenerateAuthCookie(&strRPCUserColonPass, cookie_perms)) {
