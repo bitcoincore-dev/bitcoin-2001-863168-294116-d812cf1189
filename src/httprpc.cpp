@@ -19,6 +19,7 @@
 #include <iterator>
 #include <map>
 #include <memory>
+#include <optional>
 #include <set>
 #include <string>
 #include <vector>
@@ -262,15 +263,21 @@ static bool InitRPCAuthentication()
     {
         LogPrintf("Using random cookie authentication.\n");
 
-        fs::perms cookie_perms{DEFAULT_COOKIE_PERMS};
+        std::optional<fs::perms> cookie_perms{DEFAULT_COOKIE_PERMS};
         auto cookie_perms_arg{gArgs.GetArg("-rpccookieperms")};
         if (cookie_perms_arg) {
-            auto perms{ConvertPermsToOctal(*cookie_perms_arg)};
-            if (!perms) {
-                LogPrintf("Invalid -rpccookieperms=%s; must be a 3 digit octal number (e.g. 400, 440 or 444).\n", *cookie_perms_arg);
-                return false;
+            if (*cookie_perms_arg == "0") {
+                cookie_perms = std::nullopt;
+            } else if (cookie_perms_arg->empty() || *cookie_perms_arg == "1") {
+                // leave at default
+            } else {
+                auto perms{ConvertPermsToOctal(*cookie_perms_arg)};
+                if (!perms) {
+                    LogPrintf("Invalid -rpccookieperms=%s; must be a 3 digit octal number (e.g. 400, 440 or 444).\n", *cookie_perms_arg);
+                    return false;
+                }
+                cookie_perms = static_cast<fs::perms>(*perms);
             }
-            cookie_perms = static_cast<fs::perms>(*perms);
         }
 
         if (!GenerateAuthCookie(&strRPCUserColonPass, cookie_perms)) {

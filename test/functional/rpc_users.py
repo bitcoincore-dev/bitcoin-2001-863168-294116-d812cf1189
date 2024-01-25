@@ -162,6 +162,28 @@ class HTTPBasicsTest(BitcoinTestFramework):
         for perm in ["440", "0640", "444", "1660"]:
             test_perm(perm)
 
+        self.log.info('Check leaving cookie permissions alone')
+        unassigned_perms = os.stat(self.nodes[1].chain_path / 'debug.log').st_mode & PERM_BITS_UMASK
+        self.restart_node(1, extra_args=["-rpccookieperms=0"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(unassigned_perms, actual_perms)
+        self.restart_node(1, extra_args=["-norpccookieperms"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(unassigned_perms, actual_perms)
+
+        self.log.info('Check -norpccookieperms -rpccookieperms')
+        default_perms = DEFAULT_COOKIE_PERMISSION & PERM_BITS_UMASK
+        assert(default_perms != unassigned_perms)
+        self.restart_node(1, extra_args=["-rpccookieperms=0", "-rpccookieperms=1"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(default_perms, actual_perms)
+        self.restart_node(1, extra_args=["-norpccookieperms", "-rpccookieperms"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(default_perms, actual_perms)
+        self.restart_node(1, extra_args=["-rpccookieperms=1660", "-norpccookieperms", "-rpccookieperms"])
+        actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
+        assert_equal(default_perms, actual_perms)
+
     def run_test(self):
         self.conf_setup()
         self.log.info('Check correctness of the rpcauth config option')
