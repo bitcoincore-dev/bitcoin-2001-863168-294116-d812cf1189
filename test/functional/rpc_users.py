@@ -127,8 +127,9 @@ class HTTPBasicsTest(BitcoinTestFramework):
             "group": 0o640,
             "all": 0o644,
             "440": 0o440,
-            "640": 0o640,
+            "0640": 0o640,
             "444": 0o444,
+            "1660": 0o1660,
         }
 
         if os.name == 'nt':
@@ -137,7 +138,7 @@ class HTTPBasicsTest(BitcoinTestFramework):
         self.log.info('Check cookie file permissions can be set using -rpccookieperms')
 
         cookie_file_path = self.nodes[1].chain_path / '.cookie'
-        PERM_BITS_UMASK = 0o777
+        PERM_BITS_UMASK = 0o7777
 
         def test_perm(perm: Optional[str]):
             if not perm:
