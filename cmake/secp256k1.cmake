@@ -57,4 +57,6 @@ if(MSVC)
   )
 endif()
 
-target_link_libraries(secp256k1 PRIVATE core_interface)
+# Using core_base_interface instead of core_interface
+# to avoid C++-specific flags from warn_interface.
+target_link_libraries(secp256k1 PRIVATE core_base_interface)
