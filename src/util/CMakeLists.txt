@@ -43,7 +43,6 @@ add_library(bitcoin_util STATIC EXCLUDE_FROM_ALL
 
 target_compile_definitions(bitcoin_util
   PRIVATE
-    ${THREAD_LOCAL_IF_AVAILABLE}
     $<$<CXX_COMPILER_ID:MSVC>:_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING>
 )
 
