@@ -74,21 +74,23 @@ target_include_directories(leveldb
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/leveldb/include>
 )
 
+add_library(warn_leveldb_interface INTERFACE)
 if(MSVC)
-  target_compile_options(leveldb
-    PRIVATE
-      /wd4244
-      /wd4267
-      $<$<CONFIG:Release>:/wd4722>
+  target_compile_options(warn_leveldb_interface INTERFACE
+    /wd4722
   )
-  target_compile_definitions(leveldb
-    PRIVATE
-      _CRT_NONSTDC_NO_DEPRECATE
-      _CRT_SECURE_NO_WARNINGS
+  target_compile_definitions(warn_leveldb_interface INTERFACE
+    _CRT_NONSTDC_NO_WARNINGS
+  )
+else()
+  target_compile_options(warn_leveldb_interface INTERFACE
+    -Wno-conditional-uninitialized
+    -Wno-suggest-override
   )
 endif()
 
-#TODO: figure out how to filter out:
-# -Wconditional-uninitialized -Werror=conditional-uninitialized -Wsuggest-override -Werror=suggest-override
-
-target_link_libraries(leveldb PRIVATE core_interface crc32c)
+target_link_libraries(leveldb PRIVATE
+  core_interface
+  warn_leveldb_interface
+  crc32c
+)
