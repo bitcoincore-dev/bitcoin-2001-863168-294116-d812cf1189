@@ -104,7 +104,12 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
         fs::permissions(filepath_tmp, *(cookie_perms.first), fs::perm_options::replace, code);
         if (code) {
             LogPrintf("Unable to set permissions on cookie authentication file %s\n", fs::PathToString(filepath_tmp));
+#ifdef WIN32
+            // Allow default permission assignment to fail on Windows
+            if (cookie_perms.second) return false;
+#else
             return false;
+#endif
         }
     }
 
