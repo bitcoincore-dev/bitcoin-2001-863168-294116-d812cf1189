@@ -182,9 +182,7 @@ esac
 ####################
 
 # Build the depends tree, overriding variables that assume multilib gcc
-# TODO: Drop NO_QT=1
 make -C depends --jobs="$JOBS" HOST="$HOST" \
-                                   NO_QT=1 \
                                    ${V:+V=1} \
                                    ${SOURCES_PATH+SOURCES_PATH="$SOURCES_PATH"} \
                                    ${BASE_CACHE+BASE_CACHE="$BASE_CACHE"} \
@@ -274,7 +272,8 @@ mkdir -p "$DISTSRC"
     # Make the os-specific installers
     case "$HOST" in
         *mingw*)
-            make deploy ${V:+V=1} BITCOIN_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
+            cmake --build build -j "$JOBS" -t deploy ${V:+--verbose}
+            mv build/bitcoin-win64-setup.exe "${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
             ;;
     esac
 
@@ -318,7 +317,8 @@ mkdir -p "$DISTSRC"
 
         case "$HOST" in
             *mingw*)
-                mv --target-directory="$DISTNAME"/lib/ "$DISTNAME"/bin/*.dll
+                # TODO: Re-enable code for libbitcoinkernel.
+                # mv --target-directory="$DISTNAME"/lib/ "$DISTNAME"/bin/*.dll
                 ;;
         esac
 
@@ -390,7 +390,7 @@ mkdir -p "$DISTSRC"
 
     case "$HOST" in
         *mingw*)
-            cp -rf --target-directory=. contrib/windeploy
+            cp -rf --target-directory=. "${DISTSRC}/contrib/windeploy"
             (
                 cd ./windeploy
                 mkdir -p unsigned
