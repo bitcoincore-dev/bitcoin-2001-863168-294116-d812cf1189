@@ -276,7 +276,8 @@ mkdir -p "$DISTSRC"
     # Make the os-specific installers
     case "$HOST" in
         *mingw*)
-            make deploy ${V:+V=1} BITCOIN_WIN_INSTALLER="${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
+            cmake --build build -j "$JOBS" -t deploy ${V:+--verbose}
+            mv build/bitcoin-win64-setup.exe "${OUTDIR}/${DISTNAME}-win64-setup-unsigned.exe"
             ;;
     esac
 
@@ -320,7 +321,8 @@ mkdir -p "$DISTSRC"
 
         case "$HOST" in
             *mingw*)
-                mv --target-directory="$DISTNAME"/lib/ "$DISTNAME"/bin/*.dll
+                # TODO: Re-enable code for libbitcoinkernel.
+                # mv --target-directory="$DISTNAME"/lib/ "$DISTNAME"/bin/*.dll
                 ;;
         esac
 
@@ -392,7 +394,7 @@ mkdir -p "$DISTSRC"
 
     case "$HOST" in
         *mingw*)
-            cp -rf --target-directory=. contrib/windeploy
+            cp -rf --target-directory=. "${DISTSRC}/contrib/windeploy"
             (
                 cd ./windeploy
                 mkdir -p unsigned
