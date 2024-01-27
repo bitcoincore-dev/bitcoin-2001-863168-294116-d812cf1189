@@ -382,6 +382,7 @@ include(cmake/tests.cmake)
 include(Maintenance)
 setup_split_debug_script()
 add_maintenance_targets()
+add_windows_deploy_target()
 
 get_target_property(definitions core_interface INTERFACE_COMPILE_DEFINITIONS)
 separate_by_configs(definitions)
