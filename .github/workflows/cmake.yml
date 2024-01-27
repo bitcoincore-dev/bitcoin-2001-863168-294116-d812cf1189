@@ -260,7 +260,8 @@ jobs:
             c_compiler: 'clang-14 -m32'
             cxx_compiler: 'clang++-14 -m32'
             depends_options: ''
-            configure_options: '-DWERROR=ON'
+            # For -Wno-error=unreachable-code, please refer to https://github.com/bitcoin/bitcoin/issues/29334
+            configure_options: '-DWERROR=ON -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g -Wno-error=unreachable-code"'
           - name: 'MinGW-w64'
             triplet: 'x86_64-w64-mingw32'
             packages: 'g++-mingw-w64-x86-64-posix'
@@ -412,7 +413,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build --preset vs2022
+          cmake -B build --preset vs2022 -DWERROR=ON
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v4
@@ -467,9 +468,12 @@ jobs:
           - name: 'macOS 13 native, x86_64, Xcode 14.3.1'
             xcode_path: '/Applications/Xcode_14.3.1.app'
             ccache_id: 'macos-13-xcode-14.3.1'
+            # For -Wno-error=unreachable-code, please refer to https://github.com/bitcoin/bitcoin/issues/29334
+            build_options: '-DWERROR=ON -DCMAKE_CXX_FLAGS_RELWITHDEBINFO="-O2 -g -Wno-error=unreachable-code"'
           - name: 'macOS 13 native, x86_64, Xcode 15.1'
             xcode_path: '/Applications/Xcode_15.1.app'
             ccache_id: 'macos-13-xcode-15.1'
+            build_options: '-DWERROR=ON'
 
     steps:
       - name: Checkout
@@ -502,7 +506,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build
+          cmake -B build ${{ matrix.conf.build_options }}
 
       - name: Build
         run: |
