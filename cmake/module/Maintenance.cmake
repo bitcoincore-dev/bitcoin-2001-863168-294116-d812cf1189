@@ -48,7 +48,7 @@ function(add_maintenance_targets)
     VERBATIM
   )
 
-  foreach(target IN ITEMS bitcoind bitcoin-cli bitcoin-tx bitcoin-util bitcoin-wallet test_bitcoin bench_bitcoin)
+  foreach(target IN ITEMS bitcoind bitcoin-qt bitcoin-cli bitcoin-tx bitcoin-util bitcoin-wallet test_bitcoin bench_bitcoin)
     if(TARGET ${target})
       # Not using the TARGET_FILE generator expression because it creates excessive
       # target-level dependencies in the following custom targets.
@@ -70,5 +70,28 @@ function(add_maintenance_targets)
     )
   else()
     add_custom_target(check-security)
+  endif()
+endfunction()
+
+function(add_windows_deploy_target)
+  if(MINGW AND TARGET bitcoin-qt AND TARGET bitcoind AND TARGET bitcoin-cli AND TARGET bitcoin-tx AND TARGET bitcoin-wallet AND TARGET bitcoin-util AND TARGET test_bitcoin)
+    # TODO: Consider replacing this code with the CPack NSIS Generator.
+    #       See https://cmake.org/cmake/help/latest/cpack_gen/nsis.html
+    include(GenerateSetupNsi)
+    generate_setup_nsi()
+    add_custom_command(
+      OUTPUT ${CMAKE_BINARY_DIR}/bitcoin-win64-setup.exe
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/release
+      COMMAND ${CMAKE_STRIP} $<TARGET_FILE:bitcoin-qt> -o ${CMAKE_BINARY_DIR}/release/$<TARGET_FILE_NAME:bitcoin-qt>
+      COMMAND ${CMAKE_STRIP} $<TARGET_FILE:bitcoind> -o ${CMAKE_BINARY_DIR}/release/$<TARGET_FILE_NAME:bitcoind>
+      COMMAND ${CMAKE_STRIP} $<TARGET_FILE:bitcoin-cli> -o ${CMAKE_BINARY_DIR}/release/$<TARGET_FILE_NAME:bitcoin-cli>
+      COMMAND ${CMAKE_STRIP} $<TARGET_FILE:bitcoin-tx> -o ${CMAKE_BINARY_DIR}/release/$<TARGET_FILE_NAME:bitcoin-tx>
+      COMMAND ${CMAKE_STRIP} $<TARGET_FILE:bitcoin-wallet> -o ${CMAKE_BINARY_DIR}/release/$<TARGET_FILE_NAME:bitcoin-wallet>
+      COMMAND ${CMAKE_STRIP} $<TARGET_FILE:bitcoin-util> -o ${CMAKE_BINARY_DIR}/release/$<TARGET_FILE_NAME:bitcoin-util>
+      COMMAND ${CMAKE_STRIP} $<TARGET_FILE:test_bitcoin> -o ${CMAKE_BINARY_DIR}/release/$<TARGET_FILE_NAME:test_bitcoin>
+      COMMAND makensis -V2 ${CMAKE_BINARY_DIR}/bitcoin-win64-setup.nsi
+      VERBATIM
+    )
+    add_custom_target(deploy DEPENDS ${CMAKE_BINARY_DIR}/bitcoin-win64-setup.exe)
   endif()
 endfunction()
