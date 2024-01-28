@@ -256,7 +256,7 @@ include(cmake/secp256k1.cmake)
 include(ProcessConfigurations)
 set_default_config(RelWithDebInfo)
 
-# Redefine configuration flags.
+# Adjust per-configuration flags.
 target_compile_definitions(core_interface INTERFACE
   $<$<CONFIG:Debug>:DEBUG>
   $<$<CONFIG:Debug>:DEBUG_LOCKORDER>
@@ -272,20 +272,25 @@ else()
   remove_c_flag_from_all_configs(-DNDEBUG)
   remove_cxx_flag_from_all_configs(-DNDEBUG)
 
+  # Adjust the "Release" configuration flags.
   # Prefer -O2 optimization level. (-O3 is CMake's default for Release for many compilers.)
   replace_c_flag_in_config(Release -O3 -O2)
   replace_cxx_flag_in_config(Release -O3 -O2)
 
-  set(debug_flags)
-  try_append_cxx_flags("-O0" VAR debug_flags)
-  try_append_cxx_flags("-g3" VAR debug_flags RESULT_VAR compiler_supports_g3)
-  if(NOT compiler_supports_g3)
-    try_append_cxx_flags("-g" VAR debug_flags)
+  # Adjust the "Debug" configuration flags.
+  try_append_cxx_flags("-g3" RESULT_VAR compiler_supports_g3)
+  if(compiler_supports_g3)
+    replace_c_flag_in_config(Debug -g -g3)
+    replace_cxx_flag_in_config(Debug -g -g3)
   endif()
-  set(CMAKE_C_FLAGS_DEBUG "${debug_flags}")
-  try_append_cxx_flags("-ftrapv" VAR debug_flags)
-  set(CMAKE_CXX_FLAGS_DEBUG "${debug_flags}")
-  unset(debug_flags)
+  unset(compiler_supports_g3)
+  try_append_cxx_flags("-ftrapv" RESULT_VAR compiler_supports_ftrapv)
+  if(compiler_supports_ftrapv)
+    string(PREPEND CMAKE_CXX_FLAGS_DEBUG "-ftrapv ")
+  endif()
+  unset(compiler_supports_ftrapv)
+  string(PREPEND CMAKE_C_FLAGS_DEBUG "-O0 ")
+  string(PREPEND CMAKE_CXX_FLAGS_DEBUG "-O0 ")
 endif()
 
 include(cmake/optional_qt.cmake)
