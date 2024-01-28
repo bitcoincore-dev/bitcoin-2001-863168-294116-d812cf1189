@@ -270,7 +270,7 @@ jobs:
             triplet: 'x86_64-w64-mingw32'
             packages: 'g++-mingw-w64-x86-64-posix'
             depends_options: 'DEBUG=1'
-            configure_options: '-DCMAKE_BUILD_TYPE=Debug'
+            configure_options: '-DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS_DEBUG="-O1 -g"'
             cache_suffix: '-debug'
             exe_extension: '.exe'
 
