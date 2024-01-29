@@ -177,14 +177,17 @@ case "$HOST" in
         ;;
 esac
 
+# Unsetting the CMAKE_PREFIX_PATH variable resolves linking issues
+# with bitcoin-qt. This action is possible because other packages
+# using Guix's cmake-build-system continue to build without issues.
+unset CMAKE_PREFIX_PATH
+
 ####################
 # Depends Building #
 ####################
 
 # Build the depends tree, overriding variables that assume multilib gcc
-# TODO: Drop NO_QT=1
 make -C depends --jobs="$JOBS" HOST="$HOST" \
-                                   NO_QT=1 \
                                    ${V:+V=1} \
                                    ${SOURCES_PATH+SOURCES_PATH="$SOURCES_PATH"} \
                                    ${BASE_CACHE+BASE_CACHE="$BASE_CACHE"} \
