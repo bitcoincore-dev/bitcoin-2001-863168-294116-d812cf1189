@@ -182,9 +182,7 @@ esac
 ####################
 
 # Build the depends tree, overriding variables that assume multilib gcc
-# TODO: Drop NO_QT=1
 make -C depends --jobs="$JOBS" HOST="$HOST" \
-                                   NO_QT=1 \
                                    ${V:+V=1} \
                                    ${SOURCES_PATH+SOURCES_PATH="$SOURCES_PATH"} \
                                    ${BASE_CACHE+BASE_CACHE="$BASE_CACHE"} \
@@ -255,6 +253,10 @@ mkdir -p "$DISTSRC"
     # shellcheck disable=SC2086
     env CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}" \
     cmake -S . -B build \
+          `# Required to ignore the CMAKE_PREFIX_PATH environment` \
+          `# variable set by Guix, which works for native search paths,` \
+          `# but not for cross-compiling.` \
+          -DCMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH=OFF \
           --toolchain "${BASEPREFIX}/${HOST}/share/toolchain.cmake" \
           -DCCACHE=OFF \
           ${CONFIGFLAGS}
