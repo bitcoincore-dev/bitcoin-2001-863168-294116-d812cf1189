@@ -392,7 +392,10 @@ protected:
     std::vector<std::byte> m_xor;
 
 public:
-    explicit AutoFile(std::FILE* file, std::vector<std::byte> data_xor={}) : m_file{file}, m_xor{std::move(data_xor)} {}
+    explicit AutoFile(std::FILE* file, std::vector<std::byte> data_xor={}) : m_file{file}, m_xor{std::move(data_xor)}
+    {
+        assert(m_file);
+    }
 
     ~AutoFile() { fclose(); }
 
