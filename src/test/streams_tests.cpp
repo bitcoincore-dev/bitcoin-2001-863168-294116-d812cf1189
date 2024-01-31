@@ -29,7 +29,18 @@ BOOST_AUTO_TEST_CASE(xor_file)
         BOOST_CHECK_EXCEPTION(xor_file.ignore(1), std::ios_base::failure, HasReason{"AutoFile::ignore: file handle is nullpt"});
     }
     {
-        AutoFile xor_file{raw_file("wbx"), xor_pat};
+#ifdef __MINGW64__
+        // The MinGW-w64 toolchain links executables to the old msvcrt C Runtime
+        // Library that does not support the `x` modifier for the _wfopen()
+        // function. It is possible to link to the new UCRT library instead.
+        // However, the most easiest way to do it is to use a new GCC with
+        // the -mcrtdll=ucrt option, which has been available since the commit
+        // https://gcc.gnu.org/git/?p=gcc.git;a=commit;h=453cb585f0f8673a5d69d1b420ffd4b3f53aca00
+        const char* mode = "wb";
+#else
+        const char* mode = "wbx";
+#endif
+        AutoFile xor_file{raw_file(mode), xor_pat};
         xor_file << test1 << test2;
     }
     {
