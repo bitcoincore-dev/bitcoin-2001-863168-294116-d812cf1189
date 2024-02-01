@@ -882,7 +882,7 @@ class WalletMigrationTest(BitcoinTestFramework):
         assert_equal(wallet.getwalletinfo()["blank"], True)
         wallet.migratewallet()
         assert_equal(wallet.getwalletinfo()["blank"], True)
-
+        assert_equal(wallet.getwalletinfo()["descriptors"], True)
 
     def run_test(self):
         self.generate(self.nodes[0], 101)
