@@ -18,6 +18,8 @@ export RUN_UNIT_TESTS=false
 export RUN_FUNCTIONAL_TESTS=false
 export GOAL="deploy"
 
+# -Wno-error=deprecated-declarations is to disable errors for deprecation warnings:
+# "'NSUserNotificationCenter' is deprecated: first deprecated in macOS 11.0".
 # False-positive warning is fixed with clang 17, remove this when that version
 # can be used.
-export BITCOIN_CONFIG="--with-gui --enable-reduce-exports LDFLAGS=-Wno-error=unused-command-line-argument"
+export BITCOIN_CONFIG="--with-gui --enable-reduce-exports CXXFLAGS=-Wno-error=deprecated-declarations LDFLAGS=-Wno-error=unused-command-line-argument"
