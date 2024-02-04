@@ -91,6 +91,10 @@ if(FUZZ)
   set(BUILD_TESTS OFF)
   set(BUILD_BENCH OFF)
   set(BUILD_FUZZ_BINARY ON)
+
+  target_compile_definitions(core_interface INTERFACE
+    ABORT_ON_FAILED_ASSUME
+  )
 endif()
 
 option(INSTALL_MAN "Install man pages." ON)
