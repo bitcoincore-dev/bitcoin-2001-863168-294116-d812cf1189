@@ -217,6 +217,7 @@ if(SANITIZERS)
   # fail if a bad argument is passed, e.g. -fsanitize=undfeined
   try_append_cxx_flags("-fsanitize=${SANITIZERS}" TARGET sanitizing_interface
     RESULT_VAR cxx_supports_sanitizers
+    SKIP_LINK
   )
   if(NOT cxx_supports_sanitizers)
     message(FATAL_ERROR "Compiler did not accept requested flags.")
