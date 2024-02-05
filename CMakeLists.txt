@@ -316,7 +316,7 @@ if(HARDENING)
       $<$<NOT:$<CONFIG:Debug>>:-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3>
     )
 
-    try_append_cxx_flags("-Wstack-protector" TARGET hardening_interface)
+    try_append_cxx_flags("-Wstack-protector" TARGET hardening_interface SKIP_LINK)
     try_append_cxx_flags("-fstack-protector-all" TARGET hardening_interface)
     try_append_cxx_flags("-fcf-protection=full" TARGET hardening_interface)
 
