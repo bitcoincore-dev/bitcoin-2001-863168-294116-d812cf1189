@@ -6,6 +6,9 @@ include_guard(GLOBAL)
 include(CheckCXXSourceCompiles)
 
 #[=[
+Add language-wide flags, which will be passed to all invocations of the compiler.
+This includes invocations that drive compiling and those that drive linking.
+
 Usage examples:
 
   try_append_cxx_flags("-Wformat -Wformat-security" VAR warn_cxx_flags)
@@ -44,7 +47,7 @@ In configuration output, this function prints a string by the following pattern:
 function(try_append_cxx_flags flags)
   cmake_parse_arguments(PARSE_ARGV 1
     TACXXF                            # prefix
-    ""                                # options
+    "SKIP_LINK"                       # options
     "TARGET;VAR;SOURCE;RESULT_VAR"    # one_value_keywords
     "IF_CHECK_PASSED;IF_CHECK_FAILED" # multi_value_keywords
   )
@@ -98,10 +101,33 @@ function(try_append_cxx_flags flags)
   if(DEFINED TACXXF_RESULT_VAR)
     set(${TACXXF_RESULT_VAR} "${${result}}" PARENT_SCOPE)
   endif()
+
+  if(TACXXF_SKIP_LINK)
+    return()
+  endif()
+
+  # This forces running a linker.
+  set(CMAKE_TRY_COMPILE_TARGET_TYPE EXECUTABLE)
+  set(CMAKE_REQUIRED_FLAGS "${flags} ${working_linker_werror_flag}")
+  check_cxx_source_compiles("${source}" ${result})
+
+  if(${result})
+    if(DEFINED TACXXF_IF_CHECK_PASSED)
+      if(DEFINED TACXXF_TARGET)
+        target_link_options(${TACXXF_TARGET} INTERFACE ${TACXXF_IF_CHECK_PASSED})
+      endif()
+    else()
+      if(DEFINED TACXXF_TARGET)
+        target_link_options(${TACXXF_TARGET} INTERFACE ${flags})
+      endif()
+    endif()
+  else()
+    message(WARNING "The ${flags} fail(s) to link.")
+  endif()
 endfunction()
 
 if(MSVC)
-  try_append_cxx_flags("/WX /options:strict" VAR working_compiler_werror_flag)
+  try_append_cxx_flags("/WX /options:strict" VAR working_compiler_werror_flag SKIP_LINK)
 else()
-  try_append_cxx_flags("-Werror" VAR working_compiler_werror_flag)
+  try_append_cxx_flags("-Werror" VAR working_compiler_werror_flag SKIP_LINK)
 endif()
