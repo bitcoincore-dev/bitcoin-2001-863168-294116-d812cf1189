@@ -289,6 +289,14 @@ jobs:
             exe_extension: '.exe'
             # Avoid "No space left on device" error.
             skip_install: 'true'
+          - name: 'macOS x86_64'
+            triplet: 'x86_64-apple-darwin'
+            macos_sdk: 'Xcode-15.0-15A240d-extracted-SDK-with-libcxx-headers'
+            configure_options: '-DWERROR=ON'
+          - name: 'macOS arm64'
+            triplet: 'arm64-apple-darwin'
+            macos_sdk: 'Xcode-15.0-15A240d-extracted-SDK-with-libcxx-headers'
+            configure_options: '-DWERROR=ON'
 
     steps:
       - name: Checkout
@@ -315,9 +323,21 @@ jobs:
           echo ${{ matrix.host.depends_options }} > depends/depends_options
 
       - name: Depends fingerprint (4)
+        if: ${{ matrix.host.triplet == 'x86_64-apple-darwin' || matrix.host.triplet == 'arm64-apple-darwin' }}
+        run: |
+          echo ${{ matrix.host.macos_sdk }} > depends/macos_sdk
+
+      - name: Depends fingerprint (5)
         id: depends_fingerprint
         run: |
           echo "hash=${{ hashFiles('depends/**') }}" >> "$GITHUB_OUTPUT"
+
+      - name: Download macOS SDK
+        if: ${{ matrix.host.triplet == 'x86_64-apple-darwin' || matrix.host.triplet == 'arm64-apple-darwin' }}
+        run: |
+          wget --no-verbose https://bitcoincore.org/depends-sources/sdks/${{ matrix.host.macos_sdk }}.tar.gz
+          mkdir depends/SDKs
+          tar -xf ${{ matrix.host.macos_sdk }}.tar.gz --directory depends/SDKs
 
       - name: Depends cache
         id: depends_cache
