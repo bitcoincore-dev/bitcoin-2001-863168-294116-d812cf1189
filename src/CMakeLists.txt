@@ -5,8 +5,13 @@
 include(GNUInstallDirs)
 
 configure_file(${CMAKE_SOURCE_DIR}/cmake/bitcoin-config.h.in config/bitcoin-config.h @ONLY)
-add_compile_definitions(HAVE_CONFIG_H)
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(core_interface INTERFACE
+  HAVE_CONFIG_H
+)
+target_include_directories(core_interface INTERFACE
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 # After the transition from Autotools to CMake, the obj/ subdirectory
 # could be dropped as its only purpose was to separate a generated header
