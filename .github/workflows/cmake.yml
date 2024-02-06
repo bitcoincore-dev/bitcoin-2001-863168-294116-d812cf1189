@@ -207,7 +207,7 @@ jobs:
           tar -xf boost_1_84_0.tar.gz
 
       - name: Restore Ccache cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: ccache-cache
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -229,7 +229,7 @@ jobs:
           ccache --show-stats
 
       - name: Save Ccache cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -305,7 +305,7 @@ jobs:
 
       - name: Depends cache
         id: depends_cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             depends/built
@@ -320,7 +320,7 @@ jobs:
           make -j$(nproc) HOST=${{ matrix.host.triplet }} ${{ matrix.host.depends_options }} LOG=1
 
       - name: Restore Ccache cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: ccache-cache
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -343,7 +343,7 @@ jobs:
           ccache --show-stats --verbose
 
       - name: Save Ccache cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -397,7 +397,7 @@ jobs:
           Add-Content -Path "$env:VCPKG_ROOT\triplets\x64-windows-static.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
 
       - name: Restore vcpkg binary cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: vcpkg-binary-cache
         with:
           path: ~/AppData/Local/vcpkg/archives
@@ -408,7 +408,7 @@ jobs:
           cmake -B build -A x64 --toolchain $env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows-static -DWITH_NATPMP=OFF
 
       - name: Save vcpkg binary cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: github.event_name != 'pull_request' && steps.vcpkg-binary-cache.outputs.cache-hit != 'true'
         with:
           path: ~/AppData/Local/vcpkg/archives
@@ -465,7 +465,7 @@ jobs:
           ctest --version
 
       - name: Restore Ccache cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         id: ccache-cache
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -487,7 +487,7 @@ jobs:
           ccache --show-stats --verbose
 
       - name: Save Ccache cache
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
         with:
           path: ${{ env.CCACHE_DIR }}
