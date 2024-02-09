@@ -102,7 +102,7 @@ function(try_append_cxx_flags flags)
     set(${TACXXF_RESULT_VAR} "${${result}}" PARENT_SCOPE)
   endif()
 
-  if(TACXXF_SKIP_LINK)
+  if(NOT ${result} OR TACXXF_SKIP_LINK)
     return()
   endif()
 
