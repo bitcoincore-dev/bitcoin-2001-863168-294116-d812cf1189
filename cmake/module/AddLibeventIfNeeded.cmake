@@ -46,10 +46,14 @@ function(add_libevent_if_needed)
     REQUIRED IMPORTED_TARGET GLOBAL
     libevent>=${libevent_minimum_version}
   )
+  if(MINGW)
+    target_link_libraries(PkgConfig::libevent INTERFACE
+      iphlpapi
+      ws2_32
+    )
+  endif()
+
   check_evhttp_connection_get_peer(PkgConfig::libevent)
-  target_link_libraries(PkgConfig::libevent INTERFACE
-    $<$<BOOL:${MINGW}>:iphlpapi;ws2_32>
-  )
   add_library(libevent::libevent ALIAS PkgConfig::libevent)
 
   if(NOT WIN32)
