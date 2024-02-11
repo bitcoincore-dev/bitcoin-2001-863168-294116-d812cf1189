@@ -463,8 +463,11 @@ jobs:
 
       - name: Test Release configuration
         working-directory: build
+        # TODO: Reenable test_bitcoin-qt after fixing the following bugs:
+        #  - https://github.com/bitcoin-core/gui/pull/569#issuecomment-1962423712
+        #  - https://github.com/bitcoin-core/gui/issues/799
         run: |
-          ctest -j $env:NUMBER_OF_PROCESSORS -C Release
+          ctest -j $env:NUMBER_OF_PROCESSORS -C Release --exclude-regex test_bitcoin-qt
 
       - name: Install Release configuration
         run: |
