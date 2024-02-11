@@ -53,5 +53,10 @@ target_link_libraries(bitcoin_util
     bitcoin_clientversion
     bitcoin_crypto
     Threads::Threads
-    $<$<BOOL:${MINGW}>:ws2_32>
 )
+if(MINGW)
+  target_link_libraries(bitcoin_util
+    PRIVATE
+      ws2_32
+  )
+endif()
