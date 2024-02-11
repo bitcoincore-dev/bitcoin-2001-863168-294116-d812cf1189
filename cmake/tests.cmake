@@ -55,3 +55,9 @@ if(TARGET test_bitcoin)
 
   add_all_test_targets()
 endif()
+
+if(TARGET test_bitcoin-qt)
+  add_test(NAME test_bitcoin-qt
+    COMMAND test_bitcoin-qt
+  )
+endif()
