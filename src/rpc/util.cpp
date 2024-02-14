@@ -74,6 +74,13 @@ CAmount AmountFromValue(const UniValue& value, int decimals)
     return amount;
 }
 
+CFeeRate ParseFeeRate(const UniValue& json)
+{
+    CAmount val{AmountFromValue(json)};
+    if (val >= COIN) throw JSONRPCError(RPC_INVALID_PARAMETER, "Fee rates larger than or equal to 1BTC/kvB are not accepted");
+    return CFeeRate{val};
+}
+
 uint256 ParseHashV(const UniValue& v, std::string strName)
 {
     const std::string& strHex(v.get_str());
