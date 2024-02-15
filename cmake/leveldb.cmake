@@ -90,7 +90,7 @@ else()
 endif()
 
 target_link_libraries(leveldb PRIVATE
-  core_interface
+  core_base_interface
   nowarn_leveldb_interface
   crc32c
 )
