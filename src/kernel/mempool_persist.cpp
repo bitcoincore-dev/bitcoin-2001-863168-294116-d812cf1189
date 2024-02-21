@@ -153,8 +153,7 @@ bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path, FopenFn mock
     auto mid = SteadyClock::now();
 
     try {
-        const fs::path file_fspath{dump_path + ".new"};
-        FILE* filestr{mockable_fopen_function(file_fspath, "wb")};
+        FILE* filestr{mockable_fopen_function(dump_path + ".new", "wb")};
         if (!filestr) {
             return false;
         }
@@ -180,6 +179,7 @@ bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path, FopenFn mock
         if (!skip_file_commit && !FileCommit(file.Get()))
             throw std::runtime_error("FileCommit failed");
         if (file.fclose() != 0) {
+            const fs::path file_fspath{dump_path + ".new"};
             throw std::runtime_error(
                 strprintf("Error closing %s: %s", fs::PathToString(file_fspath), SysErrorString(errno)));
         }

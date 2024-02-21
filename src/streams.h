@@ -476,12 +476,7 @@ protected:
 public:
     explicit AutoFile(std::FILE* file, std::vector<std::byte> data_xor={}) : m_file{file}, m_xor{std::move(data_xor)} {}
 
-    ~AutoFile()
-    {
-        (void)fclose(); /* XXX ignoring the result of fclose() may hide failures to store data on disk via
-                           fflush(3). Can't throw from the destructor because this may cause an "exception
-                           within exception". */
-    }
+    ~AutoFile() { fclose(); }
 
     // Disallow copies
     AutoFile(const AutoFile&) = delete;
@@ -489,7 +484,7 @@ public:
 
     bool feof() const { return std::feof(m_file); }
 
-    [[nodiscard]] int fclose()
+    int fclose()
     {
         if (auto rel{release()}) return std::fclose(rel);
         return 0;

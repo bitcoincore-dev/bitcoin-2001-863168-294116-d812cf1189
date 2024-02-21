@@ -59,18 +59,19 @@ bool SerializeFileDB(const std::string& prefix, const fs::path& path, const Data
     FILE *file = fsbridge::fopen(pathTmp, "wb");
     AutoFile fileout{file};
     if (fileout.IsNull()) {
+        fileout.fclose();
         remove(pathTmp);
         return error("%s: Failed to open file %s", __func__, fs::PathToString(pathTmp));
     }
 
     // Serialize
     if (!SerializeDB(fileout, data)) {
-        (void)fileout.fclose();
+        fileout.fclose();
         remove(pathTmp);
         return false;
     }
     if (!FileCommit(fileout.Get())) {
-        (void)fileout.fclose();
+        fileout.fclose();
         remove(pathTmp);
         return error("%s: Failed to flush file %s", __func__, fs::PathToString(pathTmp));
     }
