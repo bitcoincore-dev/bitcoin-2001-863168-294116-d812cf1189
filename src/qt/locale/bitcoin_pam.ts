@@ -34,6 +34,14 @@
         <translation type="unfinished">Magpalub kang address o label para pantunan</translation>
     </message>
     <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation type="unfinished">Export me ing data king tab a ini anting metung a file</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation type="unfinished">I&amp;Export</translation>
+    </message>
+    <message>
         <source>&amp;Delete</source>
         <translation type="unfinished">&amp;Ilako</translation>
     </message>
@@ -48,14 +56,6 @@
     <message>
         <source>C&amp;hoose</source>
         <translation type="unfinished">P&amp;ilinan</translation>
-    </message>
-    <message>
-        <source>Sending addresses</source>
-        <translation type="unfinished">Address king pamag-Send</translation>
-    </message>
-    <message>
-        <source>Receiving addresses</source>
-        <translation type="unfinished">Address king pamag-Tanggap</translation>
     </message>
     <message>
         <source>These are your Bitcoin addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
@@ -542,6 +542,13 @@
     </message>
     </context>
 <context>
+    <name>PSBTOperationsDialog</name>
+    <message>
+        <source>own address</source>
+        <translation type="unfinished">sariling address</translation>
+    </message>
+    </context>
+<context>
     <name>PeerTableModel</name>
     <message>
         <source>Type</source>
@@ -969,10 +976,6 @@
         <translation type="unfinished">Mipadala kang</translation>
     </message>
     <message>
-        <source>Payment to yourself</source>
-        <translation type="unfinished">Kabayaran keka</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation type="unfinished">Me-mina</translation>
     </message>
@@ -1032,10 +1035,6 @@
         <translation type="unfinished">Mipadala kang</translation>
     </message>
     <message>
-        <source>To yourself</source>
-        <translation type="unfinished">Keng sarili mu</translation>
-    </message>
-    <message>
         <source>Mined</source>
         <translation type="unfinished">Me-mina</translation>
     </message>
@@ -1080,6 +1079,17 @@
     <message>
         <source>Send Coins</source>
         <translation type="unfinished">Magpadalang Barya</translation>
+    </message>
+    </context>
+<context>
+    <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation type="unfinished">I&amp;Export</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation type="unfinished">Export me ing data king tab a ini anting metung a file</translation>
     </message>
     </context>
 <context>
