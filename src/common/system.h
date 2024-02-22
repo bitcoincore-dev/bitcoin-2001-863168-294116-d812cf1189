@@ -21,10 +21,8 @@
 int64_t GetStartupTime();
 
 void SetupEnvironment();
-bool SetupNetworking();
-#ifndef WIN32
+[[nodiscard]] bool SetupNetworking();
 std::string ShellEscape(const std::string& arg);
-#endif
 #if HAVE_SYSTEM
 void runCommand(const std::string& strCommand);
 #endif
