@@ -338,6 +338,9 @@ class RESTTest (BitcoinTestFramework):
 
         mempool_info = self.nodes[0].getmempoolinfo()
         assert_equal(json_obj, mempool_info)
+        json_obj = self.test_rest_request("/mempool/info/with_fee_histogram")
+        mempool_info = self.nodes[0].getmempoolinfo(with_fee_histogram=True)
+        assert_equal(json_obj, mempool_info)
 
         # Check that there are our submitted transactions in the TX memory pool
         json_obj = self.test_rest_request("/mempool/contents")
