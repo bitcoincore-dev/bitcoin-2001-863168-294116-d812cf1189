@@ -64,8 +64,13 @@ target_compile_definitions(leveldb
     $<$<NOT:$<BOOL:${WIN32}>>:LEVELDB_PLATFORM_POSIX>
     $<$<BOOL:${WIN32}>:LEVELDB_PLATFORM_WINDOWS>
     $<$<BOOL:${WIN32}>:_UNICODE;UNICODE>
-    $<$<BOOL:${MINGW}>:__USE_MINGW_ANSI_STDIO=1>
 )
+if(MINGW)
+  target_compile_definitions(leveldb
+    PRIVATE
+      __USE_MINGW_ANSI_STDIO=1
+  )
+endif()
 
 target_include_directories(leveldb
   PRIVATE
