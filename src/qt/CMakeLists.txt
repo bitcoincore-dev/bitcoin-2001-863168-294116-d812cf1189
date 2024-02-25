@@ -140,16 +140,6 @@ if(ENABLE_WALLET)
   )
 endif()
 
-if(CMAKE_CROSSCOMPILING)
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET Qt5::QXcbIntegrationPlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_XCB)
-  elseif(WIN32 AND TARGET Qt5::QWindowsIntegrationPlugin AND TARGET Qt5::QWindowsVistaStylePlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_WINDOWS)
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND TARGET Qt5::QCocoaIntegrationPlugin AND TARGET Qt5::QMacStylePlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_COCOA)
-  endif()
-endif()
-
 add_executable(bitcoin-qt
   main.cpp
   ../init/bitcoin-qt.cpp
