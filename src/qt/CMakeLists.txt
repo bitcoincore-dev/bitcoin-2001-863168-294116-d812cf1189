@@ -80,6 +80,7 @@ target_compile_definitions(bitcoinqt
   PUBLIC
     QT_NO_KEYWORDS
     QT_USE_QSTRINGBUILDER
+    $<$<BOOL:${CMAKE_CROSSCOMPILING}>:QT_STATICPLUGIN>
 )
 target_include_directories(bitcoinqt
   PUBLIC
@@ -138,17 +139,6 @@ if(ENABLE_WALLET)
       bitcoin_wallet
       Qt5::Network
   )
-endif()
-
-if(CMAKE_CROSSCOMPILING)
-  target_compile_definitions(bitcoinqt PRIVATE QT_STATICPLUGIN)
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET Qt5::QXcbIntegrationPlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_XCB)
-  elseif(WIN32 AND TARGET Qt5::QWindowsIntegrationPlugin AND TARGET Qt5::QWindowsVistaStylePlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_WINDOWS)
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND TARGET Qt5::QCocoaIntegrationPlugin AND TARGET Qt5::QMacStylePlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_COCOA)
-  endif()
 endif()
 
 add_executable(bitcoin-qt
