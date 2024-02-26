@@ -27,6 +27,7 @@
 
 #if !defined(WINDRES_PREPROC)
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
