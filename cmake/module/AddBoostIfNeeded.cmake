@@ -24,6 +24,12 @@ function(add_boost_if_needed)
     # We don't use multi_index serialization.
     BOOST_MULTI_INDEX_DISABLE_SERIALIZATION
   )
+  if(DEFINED VCPKG_TARGET_TRIPLET)
+    # Workaround for https://github.com/microsoft/vcpkg/issues/36955.
+    target_compile_definitions(Boost::headers INTERFACE
+      BOOST_NO_USER_CONFIG
+    )
+  endif()
 
   if(BUILD_TESTS)
     include(CheckCXXSourceCompiles)
