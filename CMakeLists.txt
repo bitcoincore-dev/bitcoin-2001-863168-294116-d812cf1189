@@ -17,18 +17,18 @@
 # See: https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html
 cmake_minimum_required(VERSION 3.16...3.28)
 
-project("Bitcoin Core"
+project(BitcoinCore
   VERSION 26.99.0
   DESCRIPTION "Bitcoin client software"
   HOMEPAGE_URL "https://bitcoincore.org/"
   LANGUAGES CXX ASM
 )
 
-set(PACKAGE_NAME ${PROJECT_NAME})
+set(PACKAGE_NAME "Bitcoin Core")
 set(CLIENT_VERSION_IS_RELEASE "false")
-set(COPYRIGHT_YEAR "2023")
+set(COPYRIGHT_YEAR "2024")
 set(COPYRIGHT_HOLDERS "The %s developers")
-set(COPYRIGHT_HOLDERS_FINAL "The ${PROJECT_NAME} developers")
+set(COPYRIGHT_HOLDERS_FINAL "The ${PACKAGE_NAME} developers")
 set(PACKAGE_BUGREPORT "https://github.com/bitcoin/bitcoin/issues")
 
 set(CMAKE_CXX_STANDARD 20)
