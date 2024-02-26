@@ -364,8 +364,19 @@ jobs:
 
 
   win64-native-builtin-tools:
-    name: 'Win64 native, VS 2022, built-in tools'
+    name: ${{ matrix.conf.name }}
     runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        conf:
+          - name: 'Win64, VS 2022, dynamic'
+            triplet: 'x64-windows'
+            preset: 'vs2022'
+          - name: 'Win64, VS 2022, static'
+            triplet: 'x64-windows-static'
+            preset: 'vs2022-static'
 
     steps:
       - name: Checkout
@@ -394,17 +405,17 @@ jobs:
           # side-by-side. Therefore, the VCPKG_PLATFORM_TOOLSET_VERSION must be set explicitly
           # to avoid linker errors when using vcpkg in the manifest mode.
           # See: https://github.com/bitcoin/bitcoin/pull/28934
-          Add-Content -Path "$env:VCPKG_ROOT\triplets\x64-windows-static.cmake" -Value "set(VCPKG_PLATFORM_TOOLSET_VERSION $env:VCToolsVersion)"
+          Add-Content -Path "$env:VCPKG_ROOT\triplets\${{ matrix.conf.triplet }}.cmake" -Value "set(VCPKG_PLATFORM_TOOLSET_VERSION $env:VCToolsVersion)"
           # Skip debug configuration to speed up build and minimize cache size.
           Add-Content -Path "$env:VCPKG_ROOT\triplets\x64-windows.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
-          Add-Content -Path "$env:VCPKG_ROOT\triplets\x64-windows-static.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
+          Add-Content -Path "$env:VCPKG_ROOT\triplets\${{ matrix.conf.triplet }}.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
 
       - name: Restore vcpkg binary cache
         uses: actions/cache/restore@v4
         id: vcpkg-binary-cache
         with:
           path: ~/AppData/Local/vcpkg/archives
-          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
+          key: ${{ matrix.conf.triplet }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
 
       - name: Install Ccache
         run: |
@@ -412,27 +423,31 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build --preset vs2022
+          cmake -B build --preset ${{ matrix.conf.preset }}
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v4
         if: github.event_name != 'pull_request' && steps.vcpkg-binary-cache.outputs.cache-hit != 'true'
         with:
           path: ~/AppData/Local/vcpkg/archives
-          key: ${{ runner.os }}-${{ runner.arch }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
+          key: ${{ matrix.conf.triplet }}-vcpkg-binary-${{ hashFiles('cmake_version', 'msbuild_version', 'toolset_version', 'vcpkg.json') }}
 
       - name: Restore Ccache cache
         id: ccache-cache
         uses: actions/cache/restore@v4
         with:
           path: ~/AppData/Local/ccache
-          key: ${{ github.job }}-ccache-${{ github.run_id }}
-          restore-keys: ${{ github.job }}-ccache-
+          key: ${{ matrix.conf.triplet }}-ccache-${{ github.run_id }}
+          restore-keys: ${{ matrix.conf.triplet }}-ccache-
 
       - name: Build Release configuration
+        working-directory: build
         run: |
           ccache --zero-stats
-          cmake --build build -j $env:NUMBER_OF_PROCESSORS --config Release
+          cmake --build . -j $env:NUMBER_OF_PROCESSORS --config Release
+          dumpbin /imports src\Release\bitcoind.exe | Select-String -Pattern "\.(?i:dll)"
+          ""
+          (Get-Item src\Release\bitcoind.exe).Length
 
       - name: Ccache stats
         run: |
@@ -444,11 +459,12 @@ jobs:
         if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
         with:
           path: ~/AppData/Local/ccache
-          key: ${{ github.job }}-ccache-${{ github.run_id }}
+          key: ${{ matrix.conf.triplet }}-ccache-${{ github.run_id }}
 
       - name: Test Release configuration
+        working-directory: build
         run: |
-          ctest --test-dir build -j $env:NUMBER_OF_PROCESSORS -C Release
+          ctest -j $env:NUMBER_OF_PROCESSORS -C Release
 
       - name: Install Release configuration
         run: |
