@@ -144,10 +144,17 @@ if(WIN32)
   )
 
   if(MSVC)
+    if(VCPKG_TARGET_TRIPLET MATCHES "-static")
+      set(msvc_library_linkage "")
+    else()
+      set(msvc_library_linkage "DLL")
+    endif()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>${msvc_library_linkage}")
+    unset(msvc_library_linkage)
+
     target_compile_definitions(core_interface INTERFACE
       _UNICODE;UNICODE
     )
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     target_compile_options(core_interface INTERFACE
       /utf-8
       /Zc:__cplusplus
