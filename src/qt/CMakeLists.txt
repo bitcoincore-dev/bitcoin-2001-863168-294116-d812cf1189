@@ -141,7 +141,6 @@ if(ENABLE_WALLET)
 endif()
 
 if(CMAKE_CROSSCOMPILING)
-  target_compile_definitions(bitcoinqt PRIVATE QT_STATICPLUGIN)
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET Qt5::QXcbIntegrationPlugin)
     target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_XCB)
   elseif(WIN32 AND TARGET Qt5::QWindowsIntegrationPlugin AND TARGET Qt5::QWindowsVistaStylePlugin)
