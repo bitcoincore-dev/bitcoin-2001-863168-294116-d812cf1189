@@ -51,7 +51,7 @@ void ReceiveRequestDialog::setInfo(const SendCoinsRecipient &_info)
 #ifdef USE_QRCODE
     if (ui->qr_code->setQR(uri, info.address, model->getOptionsModel()->getFontChoiceForQRCodes())) {
         connect(ui->btnSaveAs, &QPushButton::clicked, ui->qr_code, &QRImageWidget::saveImage);
-        connect(model->getOptionsModel(), &OptionsModel::fontForQRCodesChanged, this, [=](const OptionsModel::FontChoice& fontchoice){
+        connect(model->getOptionsModel(), &OptionsModel::fontForQRCodesChanged, this, [&](const OptionsModel::FontChoice& fontchoice){
             ui->qr_code->setQR(uri, info.address, fontchoice);
         });
     } else {
