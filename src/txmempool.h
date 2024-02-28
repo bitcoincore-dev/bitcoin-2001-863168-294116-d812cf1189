@@ -459,7 +459,7 @@ public:
     CFeeRate m_dust_relay_feerate_floor;
     int32_t m_dust_relay_target;
     int m_dust_relay_multiplier;
-    const bool m_permit_bare_pubkey;
+    bool m_permit_bare_pubkey;
     bool m_permit_bare_multisig;
     bool m_reject_parasites;
     bool m_reject_tokens;
