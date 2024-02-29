@@ -418,14 +418,14 @@ if os.path.exists("dist"):
     print("+ Removing existing dist folder +")
     shutil.rmtree("dist")
 
-if os.path.exists(appname + ".dmg"):
+if config.dmg is not None and os.path.exists(appname + ".dmg"):
     print("+ Removing existing DMG +")
     os.unlink(appname + ".dmg")
 
 if os.path.exists(appname + ".temp.dmg"):
     os.unlink(appname + ".temp.dmg")
 
-if os.path.exists(appname + ".zip"):
+if config.zip is not None and os.path.exists(appname + ".zip"):
     print("+ Removing existing .zip +")
     os.unlink(appname + ".zip")
 
