@@ -91,6 +91,12 @@ mkdir -p "$DISTSRC"
                 | xargs -0r touch --no-dereference --date="@${SOURCE_DATE_EPOCH}"
             find . | sort \
                 | zip -X@ "${OUTDIR}/${DISTNAME}-${HOST}.zip"
+
+            # Make a DMG from dist/
+            xorrisofs -D -l -V "$(< ../osx_volname)" -no-pad -r -dir-mode 0755 \
+                      -o "${OUTDIR}/${DISTNAME}-${HOST}.dmg" \
+                      . \
+                      -- -volume_date all_file_dates ="$SOURCE_DATE_EPOCH"
             ;;
         *)
             exit 1
