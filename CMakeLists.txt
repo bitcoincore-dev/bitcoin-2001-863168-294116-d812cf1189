@@ -49,6 +49,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 
 # Configurable options.
 # When adding a new option, end the <help_text> with a full stop for consistency.
+option(BUILD_DAEMON "Build bitcoind executable." ON)
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
 
 set(configure_warnings)
@@ -144,6 +145,12 @@ endif()
 include(AddThreadsIfNeeded)
 add_threads_if_needed()
 
+include(AddBoostIfNeeded)
+add_boost_if_needed()
+
+include(AddLibeventIfNeeded)
+add_libevent_if_needed()
+
 include(cmake/introspection.cmake)
 
 include(cmake/crc32c.cmake)
@@ -156,6 +163,9 @@ add_subdirectory(src)
 message("\n")
 message("Configure summary")
 message("=================")
+message("Executables:")
+message("  bitcoind ............................ ${BUILD_DAEMON}")
+message("")
 get_directory_property(definitions COMPILE_DEFINITIONS)
 string(REPLACE ";" " " definitions "${definitions}")
 message("Preprocessor defined macros ........... ${definitions}")
