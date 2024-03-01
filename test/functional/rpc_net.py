@@ -152,6 +152,7 @@ class NetTest(BitcoinTestFramework):
                 "timeoffset": 0,
                 "transport_protocol_type": "v1",
                 "version": 0,
+                "misbehavior_score": 0,
             },
         )
         no_version_peer.peer_disconnect()
