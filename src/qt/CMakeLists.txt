@@ -2,6 +2,23 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
+function(import_plugins target)
+  if(CMAKE_CROSSCOMPILING OR VCPKG_TARGET_TRIPLET MATCHES "-static")
+    set(plugins Qt5::QMinimalIntegrationPlugin)
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+      list(APPEND plugins Qt5::QXcbIntegrationPlugin)
+    elseif(WIN32)
+      list(APPEND plugins Qt5::QWindowsIntegrationPlugin Qt5::QWindowsVistaStylePlugin)
+    elseif(APPLE)
+      list(APPEND plugins Qt5::QCocoaIntegrationPlugin Qt5::QMacStylePlugin)
+    endif()
+    qt5_import_plugins(${target}
+        INCLUDE ${plugins}
+        EXCLUDE_BY_TYPE imageformats iconengines
+    )
+  endif()
+endfunction()
+
 # See:
 #  - https://cmake.org/cmake/help/latest/manual/cmake-qt.7.html
 #  - https://doc.qt.io/qt-5/cmake-manual.html
@@ -140,14 +157,12 @@ if(ENABLE_WALLET)
   )
 endif()
 
-if(CMAKE_CROSSCOMPILING)
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND TARGET Qt5::QXcbIntegrationPlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_XCB)
-  elseif(WIN32 AND TARGET Qt5::QWindowsIntegrationPlugin AND TARGET Qt5::QWindowsVistaStylePlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_WINDOWS)
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND TARGET Qt5::QCocoaIntegrationPlugin AND TARGET Qt5::QMacStylePlugin)
-    target_compile_definitions(bitcoinqt PRIVATE QT_QPA_PLATFORM_COCOA)
-  endif()
+if(CMAKE_CROSSCOMPILING OR VCPKG_TARGET_TRIPLET MATCHES "-static")
+  # We want to define static plugins to link ourselves, thus preventing
+  # automatic linking against a "sane" set of default static plugins.
+  qt5_import_plugins(bitcoinqt
+      EXCLUDE_BY_TYPE bearer iconengines imageformats platforms styles
+  )
 endif()
 
 add_executable(bitcoin-qt
@@ -162,6 +177,8 @@ target_link_libraries(bitcoin-qt
   bitcoinqt
   bitcoin_node
 )
+
+import_plugins(bitcoin-qt)
 
 if(WIN32)
   set_target_properties(bitcoin-qt PROPERTIES WIN32_EXECUTABLE TRUE)
