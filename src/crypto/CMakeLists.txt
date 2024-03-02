@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-if(ASM AND NOT MSVC)
+if(NOT MSVC)
   include(CheckSourceCompilesAndLinks)
 
   # Check for SSE4.1 intrinsics.
@@ -66,8 +66,7 @@ endif()
 include(CheckCXXSymbolExists)
 check_cxx_symbol_exists(timingsafe_bcmp "string.h" HAVE_TIMINGSAFE_BCMP)
 
-add_library(bitcoin_crypto_sources INTERFACE)
-target_sources(bitcoin_crypto_sources INTERFACE
+add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL
   aes.cpp
   chacha20.cpp
   chacha20poly1305.cpp
@@ -79,22 +78,19 @@ target_sources(bitcoin_crypto_sources INTERFACE
   ripemd160.cpp
   sha1.cpp
   sha256.cpp
-  $<$<BOOL:${ASM}>:${CMAKE_CURRENT_SOURCE_DIR}/sha256_sse4.cpp>
+  sha256_sse4.cpp
   sha3.cpp
   sha512.cpp
   siphash.cpp
 )
 
-add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL)
 target_compile_definitions(bitcoin_crypto
   PRIVATE
-    $<$<BOOL:${ASM}>:USE_ASM>
     $<$<BOOL:${HAVE_TIMINGSAFE_BCMP}>:HAVE_TIMINGSAFE_BCMP>
 )
 target_link_libraries(bitcoin_crypto
   PRIVATE
     core_interface
-    bitcoin_crypto_sources
 )
 
 if(HAVE_SSE41)
