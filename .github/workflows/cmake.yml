@@ -473,27 +473,32 @@ jobs:
 
 
   macos-native-x86_64:
-    name: ${{ matrix.conf.name }}
-    runs-on:  macos-13
+    name: '${{ matrix.os.name }}, ${{ matrix.xcode.name }}'
+    runs-on: ${{ matrix.os.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        conf:
-          - name: 'macOS 13 native, x86_64, Xcode 14.3.1'
-            xcode_path: '/Applications/Xcode_14.3.1.app'
-            ccache_id: 'macos-13-xcode-14.3.1'
-          - name: 'macOS 13 native, x86_64, Xcode 15.1'
-            xcode_path: '/Applications/Xcode_15.1.app'
-            ccache_id: 'macos-13-xcode-15.1'
+        os:
+          - name: 'macOS 13 native, x86_64'
+            os: macos-13
+          - name: 'macOS 14 native, arm64'
+            os: macos-14
+        xcode:
+          - name: 'Xcode 14.3'
+            id: 'xcode-14.3'
+            path: '/Applications/Xcode_14.3.app'
+          - name: 'Xcode 15.2'
+            id: 'xcode-15.2'
+            path: '/Applications/Xcode_15.2.app'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Clang version
+      - name: Clang version, ${{ runner.arch }}
         run: |
-          sudo xcode-select --switch ${{ matrix.conf.xcode_path }}
+          sudo xcode-select --switch ${{ matrix.xcode.path }}
           clang --version
 
       - name: Install Homebrew packages
@@ -513,8 +518,8 @@ jobs:
         id: ccache-cache
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ matrix.conf.ccache_id }}-ccache-${{ github.run_id }}
-          restore-keys: ${{ matrix.conf.ccache_id }}-ccache-
+          key: ${{ matrix.os.os }}-${{ matrix.xcode.id }}-ccache-${{ github.run_id }}
+          restore-keys: ${{ matrix.os.os }}-${{ matrix.xcode.id }}-ccache-
 
       - name: Generate build system
         run: |
@@ -535,7 +540,7 @@ jobs:
         if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
         with:
           path: ${{ env.CCACHE_DIR }}
-          key: ${{ matrix.conf.ccache_id }}-ccache-${{ github.run_id }}
+          key: ${{ matrix.os.os }}-${{ matrix.xcode.id }}-ccache-${{ github.run_id }}
 
       - name: Test
         run: |
