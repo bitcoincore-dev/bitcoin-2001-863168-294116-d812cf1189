@@ -117,5 +117,9 @@ int main(int argc, char* argv[])
     } else {
         qDebug("\nAll tests passed.\n");
     }
+
+    QSettings settings;
+    settings.clear();
+
     return num_test_failures;
 }
