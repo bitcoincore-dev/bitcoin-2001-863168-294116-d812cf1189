@@ -25,6 +25,8 @@ static constexpr unsigned int DEFAULT_BLOCKSONLY_MAX_MEMPOOL_SIZE_MB{5};
 static constexpr unsigned int DEFAULT_MEMPOOL_EXPIRY_HOURS{336};
 /** Default for -mempoolreplacement; must update docs in init.cpp manually */
 static constexpr RBFPolicy DEFAULT_MEMPOOL_RBF_POLICY{RBFPolicy::OptIn};
+/** Default for -acceptnonstddatacarrier */
+static constexpr bool DEFAULT_ACCEPT_NON_STD_DATACARRIER{true};
 /** Default for -acceptnonstdtxn */
 static constexpr bool DEFAULT_ACCEPT_NON_STD_TXN{false};
 
@@ -58,6 +60,7 @@ struct MemPoolOptions {
     bool datacarrier_fullcount{DEFAULT_DATACARRIER_FULLCOUNT};
     bool permit_bare_pubkey{DEFAULT_PERMIT_BAREPUBKEY};
     bool permit_bare_multisig{DEFAULT_PERMIT_BAREMULTISIG};
+    bool accept_non_std_datacarrier{DEFAULT_ACCEPT_NON_STD_DATACARRIER};
     bool require_standard{true};
     RBFPolicy rbf_policy{DEFAULT_MEMPOOL_RBF_POLICY};
     MemPoolLimits limits{};
