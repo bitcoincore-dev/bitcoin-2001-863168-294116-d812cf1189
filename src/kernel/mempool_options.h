@@ -27,7 +27,7 @@ static constexpr unsigned int DEFAULT_MEMPOOL_EXPIRY_HOURS{336};
 /** Default for -mempoolreplacement; must update docs in init.cpp manually */
 static constexpr RBFPolicy DEFAULT_MEMPOOL_RBF_POLICY{RBFPolicy::Always};
 /** Default for -acceptnonstddatacarrier */
-static constexpr bool DEFAULT_ACCEPT_NON_STD_DATACARRIER{true};
+static constexpr bool DEFAULT_ACCEPT_NON_STD_DATACARRIER{false};
 /** Default for -acceptnonstdtxn */
 static constexpr bool DEFAULT_ACCEPT_NON_STD_TXN{false};
 
