@@ -41,11 +41,6 @@ add_library(bitcoin_util STATIC EXCLUDE_FROM_ALL
   ../sync.cpp
 )
 
-target_compile_definitions(bitcoin_util
-  PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING>
-)
-
 target_link_libraries(bitcoin_util
   PRIVATE
     core_interface
