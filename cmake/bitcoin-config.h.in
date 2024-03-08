@@ -6,9 +6,6 @@
 
 #define BITCOIN_CONFIG_H
 
-/* Define this symbol if type char equals int8_t */
-#cmakedefine CHAR_EQUALS_INT8 1
-
 /* Version Build */
 #define CLIENT_VERSION_BUILD @CLIENT_VERSION_BUILD@
 
