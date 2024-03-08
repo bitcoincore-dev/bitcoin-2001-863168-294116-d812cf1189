@@ -53,6 +53,8 @@ set(configure_warnings)
 # It is intended to be a usage requirement for all other targets.
 add_library(core_interface INTERFACE)
 
+add_subdirectory(src)
+
 message("\n")
 message("Configure summary")
 message("=================")
