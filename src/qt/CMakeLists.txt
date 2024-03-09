@@ -3,7 +3,7 @@
 # file COPYING or https://opensource.org/license/mit/.
 
 function(import_plugins target)
-  if(CMAKE_CROSSCOMPILING OR VCPKG_TARGET_TRIPLET MATCHES "-static")
+  if(QT_IS_STATIC)
     set(plugins Qt5::QMinimalIntegrationPlugin)
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       list(APPEND plugins Qt5::QXcbIntegrationPlugin)
@@ -50,6 +50,21 @@ find_package(Qt5 ${qt_minimum_required_version} REQUIRED
 unset(qt_components)
 message(STATUS "Found Qt: ${Qt5_DIR} (found suitable version \"${Qt5_VERSION}\", minimum required is \"${qt_minimum_required_version}\")")
 unset(qt_minimum_required_version)
+
+include(CMakePushCheckState)
+cmake_push_check_state(RESET)
+set(CMAKE_REQUIRED_LIBRARIES Qt5::Core)
+include(CheckCXXSourceCompiles)
+check_cxx_source_compiles("
+  #include <QtGlobal>
+
+  #if !defined(QT_STATIC)
+  #error Qt is not static
+  #endif
+  int main() {}
+  " QT_IS_STATIC
+)
+cmake_pop_check_state()
 
 # TODO: The file(GLOB ...) command should be replaced with an explicit
 # file list. Such a change must be synced with the corresponding change
@@ -157,7 +172,7 @@ if(ENABLE_WALLET)
   )
 endif()
 
-if(CMAKE_CROSSCOMPILING OR VCPKG_TARGET_TRIPLET MATCHES "-static")
+if(QT_IS_STATIC)
   # We want to define static plugins to link ourselves, thus preventing
   # automatic linking against a "sane" set of default static plugins.
   qt5_import_plugins(bitcoinqt
