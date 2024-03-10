@@ -15,6 +15,7 @@
 #include <walletinitinterface.h>
 
 #include <algorithm>
+#include <fstream>
 #include <iterator>
 #include <map>
 #include <memory>
@@ -91,7 +92,7 @@ static void JSONErrorReply(HTTPRequest* req, const UniValue& objError, const Uni
 
 //This function checks username and password against -rpcauth
 //entries from config file.
-static bool multiUserAuthorized(std::string strUserPass)
+static bool multiUserAuthorized(std::string strUserPass, std::string& out_wallet_restriction)
 {
     if (strUserPass.find(':') == std::string::npos) {
         return false;
@@ -116,13 +117,14 @@ static bool multiUserAuthorized(std::string strUserPass)
         std::string strHashFromPass = HexStr(hexvec);
 
         if (TimingResistantEqual(strHashFromPass, strHash)) {
+            out_wallet_restriction = (vFields.size() > 3) ? vFields[3] : "";
             return true;
         }
     }
     return false;
 }
 
-static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut)
+static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUsernameOut, std::string& out_wallet_restriction)
 {
     if (strRPCUserColonPass.empty()) // Belt-and-suspenders measure if InitRPCAuthentication was not called
         return false;
@@ -139,9 +141,10 @@ static bool RPCAuthorized(const std::string& strAuth, std::string& strAuthUserna
 
     //Check if authorized under single-user field
     if (TimingResistantEqual(strUserPass, strRPCUserColonPass)) {
+        out_wallet_restriction = "";
         return true;
     }
-    return multiUserAuthorized(strUserPass);
+    return multiUserAuthorized(strUserPass, out_wallet_restriction);
 }
 
 static bool HTTPReq_JSONRPC(const std::any& context, HTTPRequest* req)
@@ -162,7 +165,7 @@ static bool HTTPReq_JSONRPC(const std::any& context, HTTPRequest* req)
     JSONRPCRequest jreq;
     jreq.context = context;
     jreq.peerAddr = req->GetPeer().ToStringAddrPort();
-    if (!RPCAuthorized(authHeader.second, jreq.authUser)) {
+    if (!RPCAuthorized(authHeader.second, jreq.authUser, jreq.m_wallet_restriction)) {
         LogPrintf("ThreadRPCServer incorrect password attempt from %s\n", jreq.peerAddr);
 
         /* Deter brute-forcing
@@ -251,18 +254,41 @@ static bool InitRPCAuthentication()
         LogPrintf("Config options rpcuser and rpcpassword will soon be deprecated. Locally-run instances may remove rpcuser to use cookie-based auth, or may be replaced with rpcauth. Please see share/rpcauth for rpcauth auth generation.\n");
         strRPCUserColonPass = gArgs.GetArg("-rpcuser", "") + ":" + gArgs.GetArg("-rpcpassword", "");
     }
-    if (gArgs.GetArg("-rpcauth", "") != "") {
+    constexpr auto AddRPCAuth = [](const std::string& rpcauth) {
+        std::vector<std::string> fields{SplitString(rpcauth, ':')};
+        if (fields.size() < 2 || fields.size() > 3) {
+            return false;
+        }
+        const std::vector<std::string> salt_hmac{SplitString(fields[1], '$')};
+        if (salt_hmac.size() == 2) {
+            fields.erase(fields.begin() + 1);
+            fields.insert(fields.begin() + 1, salt_hmac.begin(), salt_hmac.end());
+            g_rpcauth.push_back(fields);
+        } else {
+            return false;
+        }
+        return true;
+    };
+    if (!(gArgs.IsArgNegated("-rpcauth") || (gArgs.GetArgs("-rpcauth").empty() && gArgs.GetArgs("-rpcauthfile").empty()))) {
         LogPrintf("Using rpcauth authentication.\n");
         for (const std::string& rpcauth : gArgs.GetArgs("-rpcauth")) {
-            std::vector<std::string> fields{SplitString(rpcauth, ':')};
-            const std::vector<std::string> salt_hmac{SplitString(fields.back(), '$')};
-            if (fields.size() == 2 && salt_hmac.size() == 2) {
-                fields.pop_back();
-                fields.insert(fields.end(), salt_hmac.begin(), salt_hmac.end());
-                g_rpcauth.push_back(fields);
-            } else {
+            if (rpcauth.empty()) continue;
+            if (!AddRPCAuth(rpcauth)) {
                 LogPrintf("Invalid -rpcauth argument.\n");
                 return false;
+            }
+        }
+        for (const std::string& path : gArgs.GetArgs("-rpcauthfile")) {
+            std::ifstream file;
+            file.open(path);
+            if (!file.is_open()) continue;
+            std::string rpcauth;
+            size_t lineno = 0;
+            while (std::getline(file, rpcauth)) {
+                ++lineno;
+                if (!AddRPCAuth(rpcauth)) {
+                    LogPrintf("WARNING: Invalid line %s in -rpcauthfile=%s; ignoring\n", lineno, path);
+                }
             }
         }
     }
