@@ -74,6 +74,13 @@ CAmount AmountFromValue(const UniValue& value, int decimals)
     return amount;
 }
 
+CFeeRate ParseFeeRate(const UniValue& json)
+{
+    CAmount val{AmountFromValue(json)};
+    if (val >= COIN) throw JSONRPCError(RPC_INVALID_PARAMETER, "Fee rates larger than or equal to 1BTC/kvB are not accepted");
+    return CFeeRate{val};
+}
+
 uint256 ParseHashV(const UniValue& v, std::string strName)
 {
     const std::string& strHex(v.get_str());
@@ -677,11 +684,13 @@ static void CheckRequiredOrDefault(const RPCArg& param)
     void force_semicolon(ret_type)
 
 // Optional arg (without default). Can also be called on required args, if needed.
+TMPL_INST(nullptr, const UniValue*, maybe_arg;);
 TMPL_INST(nullptr, std::optional<double>, maybe_arg ? std::optional{maybe_arg->get_real()} : std::nullopt;);
 TMPL_INST(nullptr, std::optional<bool>, maybe_arg ? std::optional{maybe_arg->get_bool()} : std::nullopt;);
 TMPL_INST(nullptr, const std::string*, maybe_arg ? &maybe_arg->get_str() : nullptr;);
 
 // Required arg or optional arg with default value.
+TMPL_INST(CheckRequiredOrDefault, const UniValue&, *CHECK_NONFATAL(maybe_arg););
 TMPL_INST(CheckRequiredOrDefault, bool, CHECK_NONFATAL(maybe_arg)->get_bool(););
 TMPL_INST(CheckRequiredOrDefault, int, CHECK_NONFATAL(maybe_arg)->getInt<int>(););
 TMPL_INST(CheckRequiredOrDefault, uint64_t, CHECK_NONFATAL(maybe_arg)->getInt<uint64_t>(););
@@ -793,9 +802,15 @@ UniValue RPCHelpMan::GetArgMap() const
     for (int i{0}; i < int(m_args.size()); ++i) {
         const auto& arg = m_args.at(i);
         std::vector<std::string> arg_names = SplitString(arg.m_names, '|');
+        RPCArg::Type argtype = arg.m_type;
+        size_t arg_num = 0;
         for (const auto& arg_name : arg_names) {
-            push_back_arg_info(m_name, i, arg_name, arg.m_type);
-            if (arg.m_type == RPCArg::Type::OBJ_NAMED_PARAMS) {
+            if (!arg.m_type_per_name.empty()) {
+                argtype = arg.m_type_per_name.at(arg_num++);
+            }
+
+            push_back_arg_info(m_name, i, arg_name, argtype);
+            if (argtype == RPCArg::Type::OBJ_NAMED_PARAMS) {
                 for (const auto& inner : arg.m_inner) {
                     std::vector<std::string> inner_names = SplitString(inner.m_names, '|');
                     for (const std::string& inner_name : inner_names) {
@@ -846,13 +861,15 @@ UniValue RPCArg::MatchesType(const UniValue& request) const
 {
     if (m_opts.skip_type_check) return true;
     if (IsOptional() && request.isNull()) return true;
-    const auto exp_type{ExpectedType(m_type)};
-    if (!exp_type) return true; // nothing to check
+    for (auto type : m_type_per_name.empty() ? std::vector<RPCArg::Type>{m_type} : m_type_per_name) {
+        const auto exp_type{ExpectedType(type)};
+        if (!exp_type) return true; // nothing to check
 
-    if (*exp_type != request.getType()) {
-        return strprintf("JSON value of type %s is not of expected type %s", uvTypeName(request.getType()), uvTypeName(*exp_type));
+        if (*exp_type == request.getType()) {
+            return true;
+        }
     }
-    return true;
+    return strprintf("JSON value of type %s is not of expected type %s", uvTypeName(request.getType()), uvTypeName(*ExpectedType(m_type)));
 }
 
 std::string RPCArg::GetFirstName() const
