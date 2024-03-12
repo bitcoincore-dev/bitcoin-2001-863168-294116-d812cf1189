@@ -520,6 +520,13 @@ jobs:
           sudo xcode-select --switch ${{ matrix.xcode.path }}
           clang --version
 
+      - name: Workaround for Homebrew python link
+        if: matrix.os.os == 'macos-13'
+        env:
+          HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
+        run: |
+          brew install python@3 || brew link --overwrite python@3
+
       - name: Install Homebrew packages
         env:
           HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
