@@ -552,6 +552,8 @@ jobs:
           ${{ matrix.xcode.configure_env }} cmake -B build -DWERROR=ON
 
       - name: Build
+        env:
+          CCACHE_COMPILERCHECK: '%compiler% -v'
         run: |
           ccache --zero-stats
           cmake --build build -j $(sysctl -n hw.logicalcpu)
