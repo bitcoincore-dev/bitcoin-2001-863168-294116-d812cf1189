@@ -13,6 +13,7 @@
 #include <chain.h>
 #include <checkqueue.h>
 #include <clientversion.h>
+#include <common/system.h>
 #include <consensus/amount.h>
 #include <consensus/consensus.h>
 #include <consensus/merkle.h>
@@ -260,7 +261,39 @@ bool CheckSequenceLocksAtTip(CBlockIndex* tip,
 // Returns the script flags which should be checked for a given block
 static unsigned int GetBlockScriptFlags(const CBlockIndex& block_index, const ChainstateManager& chainman);
 
-static void LimitMempoolSize(CTxMemPool& pool, CCoinsViewCache& coins_cache)
+/** Compute accurate total signature operation cost of a transaction.
+ *  Not consensus-critical, since legacy sigops counting is always used in the protocol.
+ */
+int64_t GetAccurateTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& inputs, int flags)
+{
+    if (tx.IsCoinBase()) {
+        return 0;
+    }
+
+    unsigned int nSigOps = 0;
+    for (const auto& txin : tx.vin) {
+        nSigOps += txin.scriptSig.GetSigOpCount(false);
+    }
+
+    if (flags & SCRIPT_VERIFY_P2SH) {
+        nSigOps += GetP2SHSigOpCount(tx, inputs);
+    }
+
+    nSigOps *= WITNESS_SCALE_FACTOR;
+
+    if (flags & SCRIPT_VERIFY_WITNESS) {
+        for (const auto& txin : tx.vin) {
+            const Coin& coin = inputs.AccessCoin(txin.prevout);
+            assert(!coin.IsSpent());
+            const CTxOut &prevout = coin.out;
+            nSigOps += CountWitnessSigOps(txin.scriptSig, prevout.scriptPubKey, &txin.scriptWitness, flags);
+        }
+    }
+
+    return nSigOps;
+}
+
+void LimitMempoolSize(CTxMemPool& pool, CCoinsViewCache& coins_cache)
     EXCLUSIVE_LOCKS_REQUIRED(::cs_main, pool.cs)
 {
     AssertLockHeld(::cs_main);
@@ -736,7 +769,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
 
     // Rather not work on nonstandard transactions (unless -testnet/-regtest)
     std::string reason;
-    if (m_pool.m_require_standard && !IsStandardTx(tx, m_pool.m_max_datacarrier_bytes, m_pool.m_permit_bare_multisig, m_pool.m_dust_relay_feerate, reason, ignore_rejects)) {
+    if (m_pool.m_require_standard && !IsStandardTx(tx, m_pool.m_max_datacarrier_bytes, m_pool.m_permit_bare_pubkey, m_pool.m_permit_bare_multisig, m_pool.m_dust_relay_feerate, reason, ignore_rejects)) {
         return state.Invalid(TxValidationResult::TX_NOT_STANDARD, reason);
     }
 
@@ -781,7 +814,15 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                 //
                 // If replaceability signaling is ignored due to node setting,
                 // replacement is always allowed.
-                if (!(m_pool.m_full_rbf || ignore_rejects.count("txn-mempool-conflict")) && !SignalsOptInRBF(*ptxConflicting)) {
+                bool allow_replacement;
+                if (m_pool.m_rbf_policy == RBFPolicy::Always || ignore_rejects.count("txn-mempool-conflict")) {
+                    allow_replacement = true;
+                } else if (m_pool.m_rbf_policy == RBFPolicy::Never) {
+                    allow_replacement = false;
+                } else {
+                    allow_replacement = SignalsOptInRBF(*ptxConflicting);
+                }
+                if (!allow_replacement) {
                     return state.Invalid(TxValidationResult::TX_MEMPOOL_POLICY, "txn-mempool-conflict");
                 }
 
@@ -882,9 +923,12 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
                                     fSpendsCoinbase, nSigOpsCost, lock_points.value()));
     ws.m_vsize = entry->GetTxSize();
 
-    if (nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST)
+    // To avoid rejecting low-sigop bare-multisig transactions, the sigops
+    // are counted a second time more accurately.
+    if ((nSigOpsCost > MAX_STANDARD_TX_SIGOPS_COST) || (nBytesPerSigOpStrict && GetAccurateTransactionSigOpCost(tx, m_view, STANDARD_SCRIPT_VERIFY_FLAGS) > ws.m_vsize * WITNESS_SCALE_FACTOR / nBytesPerSigOpStrict)) {
         MaybeRejectDbg(TxValidationResult::TX_NOT_STANDARD, "bad-txns-too-many-sigops",
                 strprintf("%d", nSigOpsCost));
+    }
 
     // No individual transactions are allowed below the min relay feerate except from disconnected blocks.
     // This requirement, unlike CheckFeeRate, cannot be bypassed using m_package_feerates because,
@@ -2625,8 +2669,15 @@ bool Chainstate::FlushStateToDisk(
         }
         // The cache is large and we're within 10% and 10 MiB of the limit, but we have time now (not in the middle of a block processing).
         bool fCacheLarge = mode == FlushStateMode::PERIODIC && cache_state >= CoinsCacheSizeState::LARGE;
-        // The cache is over the limit, we have to write now.
-        bool fCacheCritical = mode == FlushStateMode::IF_NEEDED && cache_state >= CoinsCacheSizeState::CRITICAL;
+        bool fCacheCritical = false;
+        if (mode == FlushStateMode::IF_NEEDED) {
+            if (cache_state >= CoinsCacheSizeState::CRITICAL) {
+                // The cache is over the limit, we have to write now.
+                fCacheCritical = true;
+            } else if (SystemNeedsMemoryReleased()) {
+                fCacheCritical = true;
+            }
+        }
         // It's been a while since we wrote the block index to disk. Do this frequently, so we don't need to redownload after a crash.
         bool fPeriodicWrite = mode == FlushStateMode::PERIODIC && nNow > m_last_write + DATABASE_WRITE_INTERVAL;
         // It's been very long since we flushed the cache. Do this infrequently, to optimize cache usage.
