@@ -2894,7 +2894,7 @@ void RegisterBlockchainRPCCommands(CRPCTable& t)
         {"blockchain", &scanblocks},
         {"blockchain", &getblockfilter},
         {"blockchain", &dumptxoutset},
-        {"blockchain", &loadtxoutset},
+        {"hidden", &loadtxoutset},
         {"blockchain", &getchainstates},
         {"hidden", &invalidateblock},
         {"hidden", &reconsiderblock},
