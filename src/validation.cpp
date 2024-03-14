@@ -42,6 +42,7 @@
 #include <script/script.h>
 #include <script/sigcache.h>
 #include <signet.h>
+#include <stats/stats.h>
 #include <tinyformat.h>
 #include <txdb.h>
 #include <txmempool.h>
@@ -1224,6 +1225,8 @@ MempoolAcceptResult MemPoolAccept::AcceptSingleTransaction(const CTransactionRef
     AssertLockHeld(cs_main);
     LOCK(m_pool.cs); // mempool "read lock" (held through GetMainSignals().TransactionAddedToMempool())
 
+    const CFeeRate mempool_min_fee_rate = m_pool.GetMinFee();
+
     Workspace ws(ptx);
 
     if (!PreChecks(args, ws)) return MempoolAcceptResult::Failure(ws.m_state);
@@ -1247,6 +1250,9 @@ MempoolAcceptResult MemPoolAccept::AcceptSingleTransaction(const CTransactionRef
     if (!Finalize(args, ws)) return MempoolAcceptResult::Failure(ws.m_state);
 
     GetMainSignals().TransactionAddedToMempool(ptx, m_pool.GetAndIncrementSequence());
+
+    // update mempool stats cache
+    CStats::DefaultStats()->addMempoolSample(m_pool.size(), m_pool.DynamicMemoryUsage(), mempool_min_fee_rate.GetFeePerK());
 
     return MempoolAcceptResult::Success(std::move(ws.m_replaced_transactions), ws.m_vsize, ws.m_base_fees,
                                         effective_feerate, single_wtxid);
@@ -2824,6 +2830,12 @@ bool Chainstate::DisconnectTip(BlockValidationState& state, DisconnectedBlockTra
     // Let wallets know transactions went from 1-confirmed to
     // 0-confirmed or conflicted:
     GetMainSignals().BlockDisconnected(pblock, pindexDelete);
+
+    if (m_mempool) {
+        // add mempool stats sample
+        CStats::DefaultStats()->addMempoolSample(m_mempool->size(), m_mempool->DynamicMemoryUsage(), m_mempool->GetMinFee().GetFeePerK());
+    }
+
     return true;
 }
 
@@ -2948,6 +2960,11 @@ bool Chainstate::ConnectTip(BlockValidationState& state, CBlockIndex* pindexNew,
     // Update m_chain & related variables.
     m_chain.SetTip(*pindexNew);
     UpdateTip(pindexNew);
+
+    if (m_mempool) {
+        // add mempool stats sample
+        CStats::DefaultStats()->addMempoolSample(m_mempool->size(), m_mempool->DynamicMemoryUsage(), m_mempool->GetMinFee().GetFeePerK());
+    }
 
     const auto time_6{SteadyClock::now()};
     time_post_connect += time_6 - time_5;
@@ -3203,6 +3220,7 @@ bool Chainstate::ActivateBestChain(BlockValidationState& state, std::shared_ptr<
 
     CBlockIndex *pindexMostWork = nullptr;
     CBlockIndex *pindexNewTip = nullptr;
+    std::shared_ptr<const CBlock> new_tip_block{nullptr};
     bool exited_ibd{false};
     do {
         // Block until the validation queue drains. This should largely
@@ -3246,11 +3264,19 @@ bool Chainstate::ActivateBestChain(BlockValidationState& state, std::shared_ptr<
                     // Wipe cache, we may need another branch now.
                     pindexMostWork = nullptr;
                 }
-                pindexNewTip = m_chain.Tip();
+                auto new_tip = m_chain.Tip();
+                if (pindexNewTip != new_tip) {
+                    pindexNewTip = new_tip;
+                    new_tip_block = nullptr;
+                }
 
                 for (const PerBlockConnectTrace& trace : connectTrace.GetBlocksConnected()) {
                     assert(trace.pblock && trace.pindex);
                     GetMainSignals().BlockConnected(this->GetRole(), trace.pblock, trace.pindex);
+                    // Avoid keeping the CBlock around longer than we have to
+                    if (trace.pindex == pindexNewTip && CValidationInterface::any_use_tip_block_cache) {
+                        new_tip_block = trace.pblock;
+                    }
                 }
 
                 // This will have been toggled in
@@ -3276,7 +3302,7 @@ bool Chainstate::ActivateBestChain(BlockValidationState& state, std::shared_ptr<
             // Enqueue while holding cs_main to ensure that UpdatedBlockTip is called in the order in which blocks are connected
             if (this == &m_chainman.ActiveChainstate() && pindexFork != pindexNewTip) {
                 // Notify ValidationInterface subscribers
-                GetMainSignals().UpdatedBlockTip(pindexNewTip, pindexFork, still_in_ibd);
+                GetMainSignals().UpdatedBlockTip(pindexNewTip, pindexFork, still_in_ibd, new_tip_block);
 
                 // Always notify the UI if a new block tip was connected
                 if (kernel::IsInterrupted(m_chainman.GetNotifications().blockTip(GetSynchronizationState(still_in_ibd), *pindexNewTip))) {
