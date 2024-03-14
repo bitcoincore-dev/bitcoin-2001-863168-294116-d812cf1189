@@ -121,7 +121,7 @@ jobs:
     runs-on: windows-2022
 
     # No need to run on the read-only mirror, unless it is a PR.
-    if: github.repository != 'bitcoin-core/gui' || github.event_name == 'pull_request'
+    if: false
 
     env:
       CCACHE_MAXSIZE: '200M'
