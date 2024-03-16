@@ -107,42 +107,45 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT CMAKE_HOST_APPLE)
   set(CMAKE_FRAMEWORK_PATH "@OSX_SDK@/System/Library/Frameworks")
 endif()
 
+# Ensure that the docstrings in the following `set(... CACHE ...)`
+# commands match those in the root CMakeLists.txt file.
+
 if(NOT WITH_GUI AND "@no_qt@" STREQUAL "1")
-  set(WITH_GUI OFF CACHE STRING "")
+  set(WITH_GUI OFF CACHE STRING "Build GUI.")
 endif()
 
 if(NOT WITH_QRENCODE AND "@no_qr@" STREQUAL "1")
-  set(WITH_QRENCODE OFF CACHE STRING "")
+  set(WITH_QRENCODE OFF CACHE STRING "Enable QR code support.")
 endif()
 
 if(NOT WITH_ZMQ AND "@no_zmq@" STREQUAL "1")
-  set(WITH_ZMQ OFF CACHE STRING "")
+  set(WITH_ZMQ OFF CACHE STRING "Enable ZMQ notifications.")
 endif()
 
 if(NOT ENABLE_WALLET AND "@no_wallet@" STREQUAL "1")
-  set(ENABLE_WALLET OFF CACHE BOOL "")
+  set(ENABLE_WALLET OFF CACHE BOOL "Enable wallet.")
 endif()
 
 if(NOT WITH_BDB AND "@no_bdb@" STREQUAL "1")
-  set(WITH_BDB OFF CACHE STRING "")
+  set(WITH_BDB OFF CACHE STRING "Enable Berkeley DB (BDB) wallet support.")
 endif()
 
 if(NOT WITH_SQLITE AND "@no_sqlite@" STREQUAL "1")
-  set(WITH_SQLITE OFF CACHE STRING "")
+  set(WITH_SQLITE OFF CACHE STRING "Enable SQLite wallet support.")
 endif()
 
 if(NOT WITH_MINIUPNPC AND "@no_upnp@" STREQUAL "1")
-  set(WITH_MINIUPNPC OFF CACHE STRING "")
+  set(WITH_MINIUPNPC OFF CACHE STRING "Enable UPnP.")
 endif()
 
 if(NOT WITH_NATPMP AND "@no_natpmp@" STREQUAL "1")
-  set(WITH_NATPMP OFF CACHE STRING "")
+  set(WITH_NATPMP OFF CACHE STRING "Enable NAT-PMP.")
 endif()
 
 if(NOT WITH_USDT AND "@no_usdt@" STREQUAL "1")
-  set(WITH_USDT OFF CACHE STRING "")
+  set(WITH_USDT OFF CACHE STRING "Enable tracepoints for Userspace, Statically Defined Tracing.")
 endif()
 
 if(NOT HARDENING AND "@no_harden@" STREQUAL "1")
-  set(HARDENING OFF CACHE STRING "")
+  set(HARDENING OFF CACHE STRING "Attempt to harden the resulting executables.")
 endif()
