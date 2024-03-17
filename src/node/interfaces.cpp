@@ -333,7 +333,7 @@ public:
         LOCK(::cs_main);
         return chainman().ActiveChainstate().CoinsTip().GetCoin(output, coin);
     }
-    TransactionError broadcastTransaction(CTransactionRef tx, CAmount max_tx_fee, std::string& err_string) override
+    TransactionError broadcastTransaction(CTransactionRef tx, const std::variant<CAmount, CFeeRate>& max_tx_fee, std::string& err_string) override
     {
         return BroadcastTransaction(*m_context, std::move(tx), err_string, max_tx_fee, /*relay=*/ true, /*wait_callback=*/ false);
     }
@@ -701,7 +701,7 @@ public:
     {
         if (!m_node.mempool) return true;
         LockPoints lp;
-        CTxMemPoolEntry entry(tx, 0, 0, 0, 0, false, 0, lp);
+        CTxMemPoolEntry entry(tx, 0, 0, 0, 0, 0, 0, false, /*extra_weight=*/0, 0, lp);
         const CTxMemPool::Limits& limits{m_node.mempool->m_limits};
         LOCK(m_node.mempool->cs);
         return m_node.mempool->CalculateMemPoolAncestors(entry, limits).has_value();
