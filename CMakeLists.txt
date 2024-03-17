@@ -114,6 +114,12 @@ add_library(core_interface INTERFACE)
 # include the warn_interface as subtree's warnings are not fixable
 # in our tree.
 add_library(core_base_interface INTERFACE)
+add_library(core_depends_release_interface INTERFACE)
+add_library(core_depends_debug_interface INTERFACE)
+target_link_libraries(core_base_interface INTERFACE
+  $<$<CONFIG:RelWithDebInfo>:${core_depends_release_interface}>
+  $<$<CONFIG:Debug>:${core_depends_debug_interface}>
+)
 target_link_libraries(core_interface INTERFACE core_base_interface)
 
 if(FUZZ)
@@ -223,12 +229,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   try_append_linker_flag("-Wl,-headerpad_max_install_names" TARGET core_base_interface)
 endif()
 
-if(CMAKE_CROSSCOMPILING)
-  target_compile_definitions(core_base_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
-  target_compile_options(core_base_interface INTERFACE "$<$<COMPILE_LANGUAGE:C>:${DEPENDS_C_COMPILER_FLAGS}>")
-  target_compile_options(core_base_interface INTERFACE "$<$<COMPILE_LANGUAGE:CXX>:${DEPENDS_CXX_COMPILER_FLAGS}>")
-endif()
-
 include(AddThreadsIfNeeded)
 add_threads_if_needed()
 
@@ -280,10 +280,10 @@ include(cmake/leveldb.cmake)
 include(cmake/minisketch.cmake)
 include(cmake/secp256k1.cmake)
 
-string(STRIP "${CMAKE_CXX_FLAGS}" cxx_flags)
-string(STRIP "${CMAKE_CXX_FLAGS_INIT}" cxx_flags_init)
-if(cxx_flags STREQUAL cxx_flags_init)
-  # CMAKE_CXX_FLAGS are not overridden.
+include(ProcessConfigurations)
+are_flags_overridden(CMAKE_CXX_FLAGS cxx_flags_overridden)
+# TODO: Rework after https://github.com/bitcoin/bitcoin/pull/25972.
+if(NOT cxx_flags_overridden AND NOT CMAKE_CROSSCOMPILING)
   add_library(warn_interface INTERFACE)
   target_link_libraries(core_interface INTERFACE warn_interface)
   if(MSVC)
@@ -331,19 +331,17 @@ if(cxx_flags STREQUAL cxx_flags_init)
     )
   endif()
 endif()
-unset(cxx_flags)
-unset(cxx_flags_init)
+unset(cxx_flags_overridden)
 
-include(ProcessConfigurations)
 set_default_config(RelWithDebInfo)
 
-# Redefine configuration flags.
-target_compile_definitions(core_base_interface INTERFACE
-  $<$<CONFIG:Debug>:DEBUG>
-  $<$<CONFIG:Debug>:DEBUG_LOCKORDER>
-  $<$<CONFIG:Debug>:DEBUG_LOCKCONTENTION>
-  $<$<CONFIG:Debug>:RPC_DOC_CHECK>
-  $<$<CONFIG:Debug>:ABORT_ON_FAILED_ASSUME>
+# Redefine/adjust per-configuration flags.
+target_compile_definitions(core_depends_debug_interface INTERFACE
+  DEBUG
+  DEBUG_LOCKORDER
+  DEBUG_LOCKCONTENTION
+  RPC_DOC_CHECK
+  ABORT_ON_FAILED_ASSUME
 )
 # We leave assertions on.
 if(MSVC)
@@ -353,20 +351,52 @@ else()
   remove_c_flag_from_all_configs(-DNDEBUG)
   remove_cxx_flag_from_all_configs(-DNDEBUG)
 
+  # Adjust flags used by the C/CXX compiler during RELEASE builds.
   # Prefer -O2 optimization level. (-O3 is CMake's default for Release for many compilers.)
   replace_c_flag_in_config(Release -O3 -O2)
   replace_cxx_flag_in_config(Release -O3 -O2)
 
-  set(debug_flags)
-  try_append_cxx_flags("-O0" VAR debug_flags)
-  try_append_cxx_flags("-g3" VAR debug_flags RESULT_VAR compiler_supports_g3)
-  if(NOT compiler_supports_g3)
-    try_append_cxx_flags("-g" VAR debug_flags)
+  are_flags_overridden(CMAKE_CXX_FLAGS_DEBUG cxx_flags_debug_overridden)
+  if(NOT cxx_flags_debug_overridden)
+    # Redefine flags used by the CXX compiler during DEBUG builds.
+    try_append_cxx_flags("-g3" RESULT_VAR compiler_supports_g3)
+    if(compiler_supports_g3)
+      replace_cxx_flag_in_config(Debug -g -g3)
+    endif()
+
+    try_append_cxx_flags("-ftrapv" RESULT_VAR compiler_supports_ftrapv)
+    if(compiler_supports_ftrapv)
+      string(PREPEND CMAKE_CXX_FLAGS_DEBUG "-ftrapv ")
+    endif()
+    unset(compiler_supports_ftrapv)
+
+    string(PREPEND CMAKE_CXX_FLAGS_DEBUG "-O0 ")
+
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}"
+      CACHE STRING
+      "Flags used by the CXX compiler during DEBUG builds."
+      FORCE
+    )
   endif()
-  set(CMAKE_C_FLAGS_DEBUG "${debug_flags}")
-  try_append_cxx_flags("-ftrapv" VAR debug_flags)
-  set(CMAKE_CXX_FLAGS_DEBUG "${debug_flags}")
-  unset(debug_flags)
+  unset(cxx_flags_debug_overridden)
+
+  are_flags_overridden(CMAKE_C_FLAGS_DEBUG c_flags_debug_overridden)
+  if(NOT c_flags_debug_overridden)
+    # Redefine flags used by the C compiler during DEBUG builds.
+    if(compiler_supports_g3)
+      replace_c_flag_in_config(Debug -g -g3)
+    endif()
+
+    string(PREPEND CMAKE_C_FLAGS_DEBUG "-O0 ")
+
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}"
+      CACHE STRING
+      "Flags used by the C compiler during DEBUG builds."
+      FORCE
+    )
+  endif()
+  unset(compiler_supports_g3)
+  unset(c_flags_debug_overridden)
 endif()
 
 include(cmake/optional_qt.cmake)
@@ -462,9 +492,27 @@ setup_split_debug_script()
 add_maintenance_targets()
 add_windows_deploy_target()
 
+
+if(CMAKE_CROSSCOMPILING)
+  target_compile_definitions(core_base_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
+  target_compile_definitions(core_depends_release_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_RELWITHDEBINFO})
+  target_compile_definitions(core_depends_debug_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_DEBUG})
+
+  # If {C,CXX}FLAGS variables are defined during building depends and
+  # configuring this build system, their content might be duplicated.
+  if(DEFINED ENV{CFLAGS})
+    deduplicate_flags(CMAKE_C_FLAGS)
+  endif()
+  if(DEFINED ENV{CXXFLAGS})
+    deduplicate_flags(CMAKE_CXX_FLAGS)
+  endif()
+endif()
+
+
 include(GetTargetInterface)
 get_target_interface(definitions core_interface COMPILE_DEFINITIONS)
-separate_by_configs(definitions)
+get_target_interface(definitions_RELWITHDEBINFO core_depends_release_interface COMPILE_DEFINITIONS)
+get_target_interface(definitions_DEBUG core_depends_debug_interface COMPILE_DEFINITIONS)
 
 message("\n")
 message("Configure summary")
@@ -500,15 +548,11 @@ else()
   set(cross_status "FALSE")
 endif()
 message("Cross compiling ....................... ${cross_status}")
-message("Preprocessor defined macros ........... ${definitions_ALL}")
+message("Preprocessor defined macros ........... ${definitions}")
 message("C compiler ............................ ${CMAKE_C_COMPILER}")
-list(JOIN DEPENDS_C_COMPILER_FLAGS " " depends_c_flags)
-string(STRIP "${CMAKE_C_FLAGS} ${depends_c_flags}" combined_c_flags)
-message("CFLAGS ................................ ${combined_c_flags}")
+message("CFLAGS ................................ ${CMAKE_C_FLAGS}")
 message("C++ compiler .......................... ${CMAKE_CXX_COMPILER}")
-list(JOIN DEPENDS_CXX_COMPILER_FLAGS " " depends_cxx_flags)
-string(STRIP "${CMAKE_CXX_FLAGS} ${depends_cxx_flags}" combined_cxx_flags)
-message("CXXFLAGS .............................. ${combined_cxx_flags}")
+message("CXXFLAGS .............................. ${CMAKE_CXX_FLAGS}")
 get_target_interface(common_compile_options core_interface COMPILE_OPTIONS)
 message("Common compile options ................ ${common_compile_options}")
 get_target_interface(common_link_options core_interface LINK_OPTIONS)
