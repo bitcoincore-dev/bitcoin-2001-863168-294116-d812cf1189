@@ -170,17 +170,17 @@ jobs:
       - name: Generate build system. Expected to FAIL
         if: ${{ matrix.conf.expected == 'fail' }}
         run: |
-          ! cmake -B build -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/share/toolchain.cmake ${{ matrix.conf.build_options }}
+          ! cmake -B build --toolchain depends/x86_64-pc-linux-gnu/share/toolchain.cmake ${{ matrix.conf.build_options }}
 
       - name: Generate build system. Expected to PASS
         if: ${{ matrix.conf.expected == 'pass' }}
         run: |
-          cmake -B build -DCMAKE_TOOLCHAIN_FILE=depends/x86_64-pc-linux-gnu/share/toolchain.cmake
+          cmake -B build --toolchain depends/x86_64-pc-linux-gnu/share/toolchain.cmake
 
 
-  ubuntu-focal-native:
-    name: 'Ubuntu 20.04, CMake 3.16, Boost ${{ matrix.conf.boost_version }}'
-    runs-on: ubuntu-20.04
+  ubuntu-jammy-native:
+    name: 'Ubuntu 22.04, CMake 3.22, Boost ${{ matrix.conf.boost_version }}'
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
@@ -204,7 +204,7 @@ jobs:
       - name: Install packages
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends curl g++10 cmake ccache libevent-dev libsqlite3-dev libdb-dev libdb++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev systemtap-sdt-dev
+          sudo apt-get install --no-install-recommends curl cmake ccache libevent-dev libsqlite3-dev libdb-dev libdb++-dev libminiupnpc-dev libnatpmp-dev libzmq3-dev systemtap-sdt-dev
           echo "CCACHE_DIR=${{ runner.temp }}/ccache" >> "$GITHUB_ENV"
 
       - name: CMake version
