@@ -246,7 +246,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
 
     incrementalrelayfee = new BitcoinAmountField(tabMempool);
     connect(incrementalrelayfee, SIGNAL(valueChanged()), this, SLOT(incrementalrelayfee_changed()));
-    CreateOptionUI(verticalLayout_Mempool, incrementalrelayfee, tr("Require transaction fees to be at least %s per kB higher than transactions they are replacing."));
+    CreateOptionUI(verticalLayout_Mempool, incrementalrelayfee, tr("Require transaction fees to be at least %s per kvB higher than transactions they are replacing."));
 
     mempoolexpiry = new QSpinBox(tabMempool);
     mempoolexpiry->setMinimum(1);
