@@ -413,7 +413,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     verticalLayout_Mining->addWidget(new QLabel(tr("<strong>Note that mining is heavily influenced by the settings on the Mempool tab.</strong>")));
 
     blockmintxfee = new BitcoinAmountField(tabMining);
-    CreateOptionUI(verticalLayout_Mining, blockmintxfee, tr("Only mine transactions paying a fee of at least %s per kB."));
+    CreateOptionUI(verticalLayout_Mining, blockmintxfee, tr("Only mine transactions paying a fee of at least %s per kvB."));
 
     blockmaxsize = new QSpinBox(tabMining);
     blockmaxsize->setMinimum(1);
