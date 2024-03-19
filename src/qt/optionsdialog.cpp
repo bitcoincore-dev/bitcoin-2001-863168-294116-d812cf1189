@@ -270,7 +270,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     FixTabOrder(rejectspkreuse);
 
     minrelaytxfee = new BitcoinAmountField(groupBox_Spamfiltering);
-    CreateOptionUI(verticalLayout_Spamfiltering, minrelaytxfee, tr("Consider transaction fees less than %s per kB relayed to be worthless."));
+    CreateOptionUI(verticalLayout_Spamfiltering, minrelaytxfee, tr("Ignore transactions offering miners less than %s per kvB in transaction fees."));
 
     bytespersigop = new QSpinBox(groupBox_Spamfiltering);
     bytespersigop->setMinimum(1);
