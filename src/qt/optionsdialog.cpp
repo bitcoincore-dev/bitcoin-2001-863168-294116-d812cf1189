@@ -347,7 +347,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     FixTabOrder(rejectnonstddatacarrier);
 
     dustrelayfee = new BitcoinAmountField(groupBox_Spamfiltering);
-    CreateOptionUI(verticalLayout_Spamfiltering, dustrelayfee, tr("Ignore transactions with values that would cost more to spend at a fee rate of %s per kB (\"dust\")."));
+    CreateOptionUI(verticalLayout_Spamfiltering, dustrelayfee, tr("Ignore transactions with values that would cost more to spend at a fee rate of %s per kvB (\"dust\")."));
 
 
     dustdynamic_enable = new QCheckBox(groupBox_Spamfiltering);
