@@ -82,14 +82,11 @@ if(WITH_ZMQ)
   else()
     # The ZeroMQ project has provided config files since v4.2.2.
     # TODO: Switch to find_package(ZeroMQ) at some point in the future.
-    include(CrossPkgConfig)
-    cross_pkg_check_modules(libzmq IMPORTED_TARGET libzmq>=4)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(libzmq IMPORTED_TARGET libzmq>=4)
     if(libzmq_FOUND AND TARGET PkgConfig::libzmq)
       target_compile_definitions(PkgConfig::libzmq INTERFACE
         $<$<PLATFORM_ID:Windows>:ZMQ_STATIC>
-      )
-      target_link_libraries(PkgConfig::libzmq INTERFACE
-        $<$<PLATFORM_ID:Windows>:iphlpapi;ws2_32>
       )
     endif()
   endif()
@@ -194,7 +191,8 @@ if(WITH_GUI AND WITH_QRENCODE)
     #       the build error in its libiconv dependency.
     #       See: https://github.com/microsoft/vcpkg/issues/36924.
   else()
-    cross_pkg_check_modules(libqrencode libqrencode IMPORTED_TARGET)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(libqrencode IMPORTED_TARGET libqrencode)
   endif()
   if(TARGET PkgConfig::libqrencode)
     set_target_properties(PkgConfig::libqrencode PROPERTIES
