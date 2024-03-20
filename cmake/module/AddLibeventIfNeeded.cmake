@@ -46,12 +46,17 @@ function(add_libevent_if_needed)
     REQUIRED IMPORTED_TARGET GLOBAL
     libevent>=${libevent_minimum_version}
   )
-  if(MINGW)
-    target_link_libraries(PkgConfig::libevent INTERFACE
-      iphlpapi
-      ws2_32
-    )
-  endif()
+  target_link_libraries(PkgConfig::libevent INTERFACE
+    # Due to a bug in the libevent build system, the required
+    # iphlpapi library is not listed in the libevent.pc file.
+    # See upstream:
+    #  - https://github.com/libevent/libevent/issues/1110
+    #  - https://github.com/libevent/libevent/pull/1111
+    # It is not clear which approach is preferable for the upstream
+    # maintainers: (1) remove iphlpapi dependency or (2) fix
+    # the libevent.pc file generation.
+    $<$<PLATFORM_ID:Windows>:iphlpapi>
+  )
 
   check_evhttp_connection_get_peer(PkgConfig::libevent)
   add_library(libevent::libevent ALIAS PkgConfig::libevent)
