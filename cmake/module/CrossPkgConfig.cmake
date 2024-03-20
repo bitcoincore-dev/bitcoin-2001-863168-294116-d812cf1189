@@ -4,7 +4,7 @@
 
 find_package(PkgConfig REQUIRED)
 
-macro(cross_pkg_check_modules prefix)
+function(cross_pkg_check_modules prefix)
   if(CMAKE_CROSSCOMPILING)
     set(pkg_config_path_saved "$ENV{PKG_CONFIG_PATH}")
     set(pkg_config_libdir_saved "$ENV{PKG_CONFIG_LIBDIR}")
@@ -13,9 +13,14 @@ macro(cross_pkg_check_modules prefix)
     pkg_check_modules(${prefix} ${ARGN})
     set(ENV{PKG_CONFIG_PATH} ${pkg_config_path_saved})
     set(ENV{PKG_CONFIG_LIBDIR} ${pkg_config_libdir_saved})
-    unset(pkg_config_path_saved)
-    unset(pkg_config_libdir_saved)
+
+    if(TARGET PkgConfig::${prefix})
+      list(REMOVE_ITEM ${prefix}_STATIC_LIBRARIES ${${prefix}_LIBRARIES})
+      target_link_libraries(PkgConfig::${prefix} INTERFACE
+        ${${prefix}_STATIC_LIBRARIES}
+      )
+    endif()
   else()
     pkg_check_modules(${prefix} ${ARGN})
   endif()
-endmacro()
+endfunction()
