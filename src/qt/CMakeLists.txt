@@ -35,7 +35,7 @@ if(BUILD_GUI_TESTS)
   list(APPEND qt_components Test)
 endif()
 
-if(CMAKE_CROSSCOMPILING)
+if(BITCOIN_BUILD_WITH_DEPENDS)
   # The find_package(Qt ...) function internally uses find_library()
   # calls for all dependencies to ensure their availability.
   # In turn, the find_library() inspects the well-known locations

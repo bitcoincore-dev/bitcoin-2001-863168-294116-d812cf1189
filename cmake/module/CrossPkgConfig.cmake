@@ -31,7 +31,7 @@ function(remove_isystem_from_include_directories_internal target)
 endfunction()
 
 macro(cross_pkg_check_modules prefix)
-  if(CMAKE_CROSSCOMPILING)
+  if(BITCOIN_BUILD_WITH_DEPENDS)
     set(pkg_config_path_saved "$ENV{PKG_CONFIG_PATH}")
     set(pkg_config_libdir_saved "$ENV{PKG_CONFIG_LIBDIR}")
     set(ENV{PKG_CONFIG_PATH} ${PKG_CONFIG_PATH})

@@ -223,7 +223,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   try_append_linker_flag("-Wl,-headerpad_max_install_names" TARGET core_base_interface)
 endif()
 
-if(CMAKE_CROSSCOMPILING)
+if(BITCOIN_BUILD_WITH_DEPENDS)
   target_compile_definitions(core_base_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
   target_compile_options(core_base_interface INTERFACE "$<$<COMPILE_LANGUAGE:C>:${DEPENDS_C_COMPILER_FLAGS}>")
   target_compile_options(core_base_interface INTERFACE "$<$<COMPILE_LANGUAGE:CXX>:${DEPENDS_CXX_COMPILER_FLAGS}>")
