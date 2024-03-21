@@ -485,7 +485,7 @@ else()
   )
 endif()
 
-if(CMAKE_CROSSCOMPILING)
+if(BITCOIN_BUILD_WITH_DEPENDS)
   target_compile_definitions(core_base_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
   target_compile_definitions(core_depends_release_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_RELWITHDEBINFO})
   target_compile_definitions(core_depends_debug_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_DEBUG})
