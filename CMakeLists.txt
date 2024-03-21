@@ -509,22 +509,20 @@ else()
   )
 endif()
 
-if(CMAKE_CROSSCOMPILING)
-  target_compile_definitions(core_base_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
-  target_compile_definitions(core_depends_release_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_RELWITHDEBINFO})
-  target_compile_definitions(core_depends_debug_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_DEBUG})
+target_compile_definitions(core_base_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
+target_compile_definitions(core_depends_release_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_RELWITHDEBINFO})
+target_compile_definitions(core_depends_debug_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_DEBUG})
 
-  # If {C,CXX}FLAGS variables are defined during building depends and
-  # configuring this build system, their content might be duplicated.
-  if(DEFINED ENV{CFLAGS})
-    deduplicate_flags(CMAKE_C_FLAGS)
-  endif()
-  if(DEFINED ENV{CXXFLAGS})
-    deduplicate_flags(CMAKE_CXX_FLAGS)
-  endif()
-  if(DEFINED ENV{LDFLAGS})
-    deduplicate_flags(CMAKE_EXE_LINKER_FLAGS)
-  endif()
+# If {C,CXX,LD}FLAGS variables are defined during building depends and
+# configuring this build system, their content might be duplicated.
+if(DEFINED ENV{CFLAGS})
+  deduplicate_flags(CMAKE_C_FLAGS)
+endif()
+if(DEFINED ENV{CXXFLAGS})
+  deduplicate_flags(CMAKE_CXX_FLAGS)
+endif()
+if(DEFINED ENV{LDFLAGS})
+  deduplicate_flags(CMAKE_EXE_LINKER_FLAGS)
 endif()
 
 add_subdirectory(src)
