@@ -30,11 +30,9 @@ function(add_maintenance_targets)
   else()
     set(exe_format ELF)
   endif()
-  if(CMAKE_CROSSCOMPILING)
-    list(JOIN DEPENDS_C_COMPILER_WITH_LAUNCHER " " c_compiler_command)
-  else()
-    set(c_compiler_command ${CMAKE_C_COMPILER})
-  endif()
+  list(JOIN CMAKE_C_COMPILER_LAUNCHER " " c_compiler_command)
+  string(STRIP "${c_compiler_command} ${CMAKE_C_COMPILER}" c_compiler_command)
+  string(STRIP "${c_compiler_command} ${CMAKE_C_COMPILER_ARG1}" c_compiler_command)
   add_custom_target(test-security-check
     COMMAND ${CMAKE_COMMAND} -E env CC=${c_compiler_command} CFLAGS=${CMAKE_C_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-security-check.py TestSecurityChecks.test_${exe_format}
     COMMAND ${CMAKE_COMMAND} -E env CC=${c_compiler_command} CFLAGS=${CMAKE_C_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-symbol-check.py TestSymbolChecks.test_${exe_format}
@@ -111,7 +109,20 @@ function(add_macos_deploy_target)
     )
 
     string(REPLACE " " "-" osx_volname ${PACKAGE_NAME})
-    if(CMAKE_CROSSCOMPILING)
+    if(CMAKE_HOST_APPLE)
+      add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/${osx_volname}.zip
+        COMMAND ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR} -zip
+        DEPENDS ${CMAKE_BINARY_DIR}/${macos_app}/Contents/MacOS/Bitcoin-Qt
+        VERBATIM
+      )
+      add_custom_target(deploydir
+        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
+      )
+      add_custom_target(deploy
+        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
+      )
+    else()
       add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/dist/${macos_app}/Contents/MacOS/Bitcoin-Qt
         COMMAND INSTALL_NAME_TOOL=${CMAKE_INSTALL_NAME_TOOL} OTOOL=${OTOOL} STRIP=${CMAKE_STRIP} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR}
@@ -133,19 +144,6 @@ function(add_macos_deploy_target)
         DEPENDS ${CMAKE_BINARY_DIR}/dist/${osx_volname}.zip
       )
       add_dependencies(deploy deploydir)
-    else()
-      add_custom_command(
-        OUTPUT ${CMAKE_BINARY_DIR}/${osx_volname}.zip
-        COMMAND ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR} -zip
-        DEPENDS ${CMAKE_BINARY_DIR}/${macos_app}/Contents/MacOS/Bitcoin-Qt
-        VERBATIM
-      )
-      add_custom_target(deploydir
-        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
-      )
-      add_custom_target(deploy
-        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
-      )
     endif()
   endif()
 endfunction()
