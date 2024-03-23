@@ -88,16 +88,17 @@ set(OTOOL "@OTOOL@")
 
 # Using our own built dependencies should not be
 # affected by a potentially random environment.
-set(CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH OFF)
+set(CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH NO)
+set(CMAKE_FIND_USE_CMAKE_SYSTEM_PATH NO)
 
-set(CMAKE_FIND_ROOT_PATH "@depends_prefix@")
+cmake_path(GET CMAKE_CURRENT_LIST_DIR PARENT_PATH CMAKE_FIND_ROOT_PATH)
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
-set(PKG_CONFIG_PATH "@depends_prefix@/lib/pkgconfig")
+cmake_path(APPEND CMAKE_FIND_ROOT_PATH lib pkgconfig OUTPUT_VARIABLE PKG_CONFIG_PATH)
 set(PKG_CONFIG_LIBDIR "${PKG_CONFIG_PATH}")
-set(QT_TRANSLATIONS_DIR "@depends_prefix@/translations")
+cmake_path(APPEND CMAKE_FIND_ROOT_PATH translations OUTPUT_VARIABLE QT_TRANSLATIONS_DIR)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT CMAKE_HOST_APPLE)
   # The find_package(Qt ...) function internally uses find_library()
