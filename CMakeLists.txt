@@ -1,21 +1,21 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 # IMPORTANT: Changes which affect binary results may not be quietly gated
 #            by CMake version.
 #
-# Ubuntu 20.04 LTS Focal Fossa, https://wiki.ubuntu.com/Releases, EOSS in April 2025:
-#  - CMake 3.16.3, https://packages.ubuntu.com/focal/cmake
+# Ubuntu 22.04 LTS Jammy Jellyfish, https://wiki.ubuntu.com/Releases, EOSS in June 2027:
+#  - CMake 3.22.1, https://packages.ubuntu.com/jammy/cmake
 #
-# Centos Stream 8, EOL in May 2024:
-#  - CMake 3.20.2, http://mirror.centos.org/centos/8-stream/AppStream/x86_64/os/Packages/
+# Centos Stream 9, EOL in May 2027:
+#  - CMake 3.26.5, https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/
 #
 # All policies known to the running version of CMake and introduced
-# in the 3.28 version or earlier will be set to use NEW behavior.
+# in the 3.29 version or earlier will be set to use NEW behavior.
 # All policies introduced in later versions will be unset.
 # See: https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html
-cmake_minimum_required(VERSION 3.16...3.28)
+cmake_minimum_required(VERSION 3.22...3.29)
 
 set(PACKAGE_NAME "Bitcoin Core")
 set(CLIENT_VERSION_MAJOR 27)

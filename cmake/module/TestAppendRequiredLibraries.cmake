@@ -9,7 +9,7 @@ include_guard(GLOBAL)
 # See: https://github.com/bitcoin/bitcoin/pull/21486
 function(test_append_socket_library target)
   if (NOT TARGET ${target})
-    message(FATAL_ERROR "test_append_socket_library() called with non-existent target \"${target}\".")
+    message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}() called with non-existent target \"${target}\".")
   endif()
 
   set(check_socket_source "
@@ -45,7 +45,7 @@ endfunction()
 # Sourced from http://bugs.debian.org/797228
 function(test_append_atomic_library target)
   if (NOT TARGET ${target})
-    message(FATAL_ERROR "test_append_atomic_library() called with non-existent target \"${target}\".")
+    message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}() called with non-existent target \"${target}\".")
   endif()
 
   set(check_atomic_source "

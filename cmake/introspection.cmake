@@ -5,9 +5,6 @@
 include(CheckCXXSourceCompiles)
 include(CheckCXXSymbolExists)
 include(CheckIncludeFileCXX)
-include(TestBigEndian)
-
-test_big_endian(WORDS_BIGENDIAN)
 
 # The following HAVE_{HEADER}_H variables go to the bitcoin-config.h header.
 check_include_file_cxx(sys/prctl.h HAVE_SYS_PRCTL_H)

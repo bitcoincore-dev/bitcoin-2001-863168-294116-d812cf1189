@@ -130,10 +130,6 @@
 /* Define to 1 if strerror_r returns char *. */
 #cmakedefine STRERROR_R_CHAR_P 1
 
-/* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
-   significant byte first (like Motorola and SPARC, unlike Intel). */
-#cmakedefine WORDS_BIGENDIAN 1
-
 /* Define to 1 to enable wallet functions. */
 #cmakedefine ENABLE_WALLET 1
 
