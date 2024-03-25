@@ -625,6 +625,10 @@ public:
 
     int GetVersion() const { return m_src.GetVersion(); }
 
+    ~BufferedFile() { fclose(); }
+
+    int fclose() { return m_src.fclose(); }
+
     //! check whether we're at the end of the source file
     bool eof() const {
         return m_read_pos == nSrcPos && m_src.feof();
