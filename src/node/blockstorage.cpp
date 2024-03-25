@@ -1122,6 +1122,8 @@ bool BlockManager::ReadBlockFromDisk(CBlock& block, const FlatFilePos& pos, cons
         return error("ReadBlockFromDisk: OpenBlockFile failed for %s", pos.ToString());
     }
 
+    ioprio_set_file_idle(filein.Get());
+
     // Read block
     try {
         filein >> block;
