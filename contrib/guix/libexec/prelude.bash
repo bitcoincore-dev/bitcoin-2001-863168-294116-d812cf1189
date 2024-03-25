@@ -49,6 +49,9 @@ fi
 # Execute "$@" in a pinned, possibly older version of Guix, for reproducibility
 # across time.
 time-machine() {
+    if [ "$1" = "environment" ]; then
+        time-machine shell "${@:2}" && return 0
+    fi
     # shellcheck disable=SC2086
     guix time-machine --url=https://git.savannah.gnu.org/git/guix.git \
                       --commit=160f78a4d92205df986ed9efcce7d3aac188cb24 \
