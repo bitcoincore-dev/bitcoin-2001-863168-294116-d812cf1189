@@ -43,6 +43,7 @@
 #include <script/script.h>
 #include <script/sigcache.h>
 #include <signet.h>
+#include <stats/stats.h>
 #include <tinyformat.h>
 #include <txdb.h>
 #include <txmempool.h>
@@ -1220,6 +1221,8 @@ MempoolAcceptResult MemPoolAccept::AcceptSingleTransaction(const CTransactionRef
     AssertLockHeld(cs_main);
     LOCK(m_pool.cs); // mempool "read lock" (held through GetMainSignals().TransactionAddedToMempool())
 
+    const CFeeRate mempool_min_fee_rate = m_pool.GetMinFee();
+
     Workspace ws(ptx);
 
     if (!PreChecks(args, ws)) return MempoolAcceptResult::Failure(ws.m_state);
@@ -1243,6 +1246,9 @@ MempoolAcceptResult MemPoolAccept::AcceptSingleTransaction(const CTransactionRef
     if (!Finalize(args, ws)) return MempoolAcceptResult::Failure(ws.m_state);
 
     GetMainSignals().TransactionAddedToMempool(ptx, m_pool.GetAndIncrementSequence());
+
+    // update mempool stats cache
+    CStats::DefaultStats()->addMempoolSample(m_pool.size(), m_pool.DynamicMemoryUsage(), mempool_min_fee_rate.GetFeePerK());
 
     return MempoolAcceptResult::Success(std::move(ws.m_replaced_transactions), ws.m_vsize, ws.m_base_fees,
                                         effective_feerate, single_wtxid);
@@ -2813,6 +2819,12 @@ bool Chainstate::DisconnectTip(BlockValidationState& state, DisconnectedBlockTra
     // Let wallets know transactions went from 1-confirmed to
     // 0-confirmed or conflicted:
     GetMainSignals().BlockDisconnected(pblock, pindexDelete);
+
+    if (m_mempool) {
+        // add mempool stats sample
+        CStats::DefaultStats()->addMempoolSample(m_mempool->size(), m_mempool->DynamicMemoryUsage(), m_mempool->GetMinFee().GetFeePerK());
+    }
+
     return true;
 }
 
@@ -2937,6 +2949,11 @@ bool Chainstate::ConnectTip(BlockValidationState& state, CBlockIndex* pindexNew,
     // Update m_chain & related variables.
     m_chain.SetTip(*pindexNew);
     UpdateTip(pindexNew);
+
+    if (m_mempool) {
+        // add mempool stats sample
+        CStats::DefaultStats()->addMempoolSample(m_mempool->size(), m_mempool->DynamicMemoryUsage(), m_mempool->GetMinFee().GetFeePerK());
+    }
 
     const auto time_6{SteadyClock::now()};
     time_post_connect += time_6 - time_5;
