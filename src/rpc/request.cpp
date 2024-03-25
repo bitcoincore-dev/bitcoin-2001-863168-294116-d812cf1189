@@ -15,8 +15,10 @@
 #include <util/strencodings.h>
 
 #include <fstream>
+#include <optional>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 
 /**
@@ -82,16 +84,13 @@ static fs::path GetAuthCookieFile(bool temp=false)
 
 static std::optional<std::string> g_generated_cookie;
 
-bool GenerateAuthCookie(std::string *cookie_out)
+bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<fs::perms>, bool>& cookie_perms)
 {
     const size_t COOKIE_SIZE = 32;
     unsigned char rand_pwd[COOKIE_SIZE];
     GetRandBytes(rand_pwd);
     std::string cookie = COOKIEAUTH_USER + ":" + HexStr(rand_pwd);
 
-    /** the umask determines what permissions are used to create this file -
-     * these are set to 0077 in common/system.cpp.
-     */
     std::ofstream file;
     fs::path filepath_tmp = GetAuthCookieFile(true);
     file.open(filepath_tmp);
@@ -99,6 +98,21 @@ bool GenerateAuthCookie(std::string *cookie_out)
         LogPrintf("Unable to open cookie authentication file %s for writing\n", fs::PathToString(filepath_tmp));
         return false;
     }
+
+    if (cookie_perms.first) {
+        std::error_code code;
+        fs::permissions(filepath_tmp, *(cookie_perms.first), fs::perm_options::replace, code);
+        if (code) {
+            LogPrintf("Unable to set permissions on cookie authentication file %s\n", fs::PathToString(filepath_tmp));
+#ifdef WIN32
+            // Allow default permission assignment to fail on Windows
+            if (cookie_perms.second) return false;
+#else
+            return false;
+#endif
+        }
+    }
+
     file << cookie;
     file.close();
 
@@ -109,6 +123,9 @@ bool GenerateAuthCookie(std::string *cookie_out)
     }
     g_generated_cookie = cookie;
     LogPrintf("Generated RPC authentication cookie %s\n", fs::PathToString(filepath));
+    LogPrintf("Permissions used for cookie%s: %s\n",
+              cookie_perms.second ? " (set by -rpccookieperms)" : "",
+              PermsToString(fs::status(filepath).permissions()));
 
     if (cookie_out)
         *cookie_out = cookie;
