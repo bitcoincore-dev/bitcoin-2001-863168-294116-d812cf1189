@@ -57,7 +57,7 @@ HelpMessageDialog::HelpMessageDialog(QWidget *parent, bool about) :
         ui->aboutMessage->setWordWrap(true);
         ui->helpMessage->setVisible(false);
     } else {
-        setWindowTitle(tr("options"));
+        setWindowTitle(tr("Command-line options"));
         QString header = "The bitcoin-qt application provides a graphical interface for interacting with " PACKAGE_NAME ".\n\n"
                          "It combines the core functionalities of bitcoind with a user-friendly interface for wallet management, transaction history, and network statistics.\n\n"
                          "It is suitable for desktop users preferring a graphical over a command-line interface.\n\n"

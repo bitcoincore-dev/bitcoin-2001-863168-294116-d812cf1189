@@ -151,7 +151,7 @@ static int AppInitRPC(int argc, char* argv[])
             strUsage += FormatParagraph(LicenseInfo());
         } else {
             strUsage += "\n"
-                "The bitcoin-cli utility provides a command line interface to interact with a " PACKAGE_NAME " RPC server.\n"
+                "The bitcoin-cli utility provides a command line interface to interact with a bitcoind/bitcoin-qt RPC server.\n"
                 "\nIt can be used to query network information, manage wallets, create or broadcast transactions, and control the bitcoind server.\n"
                 "\nUse the \"help\" command to list all commands. Use \"help <command>\" to show help for that command.\n"
                 "Using the -named option allows specifying params using key=value style, and therefore doesn't require passing unused params.\n"
