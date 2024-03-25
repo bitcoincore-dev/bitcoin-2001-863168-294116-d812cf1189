@@ -23,6 +23,10 @@
 #include <utility>
 #include <vector>
 
+#ifdef ENABLE_WALLET
+#include <wallet/wallet.h>
+#endif
+
 CZMQNotificationInterface::CZMQNotificationInterface()
 {
 }
@@ -46,10 +50,12 @@ std::unique_ptr<CZMQNotificationInterface> CZMQNotificationInterface::Create(std
     std::map<std::string, CZMQNotifierFactory> factories;
     factories["pubhashblock"] = CZMQAbstractNotifier::Create<CZMQPublishHashBlockNotifier>;
     factories["pubhashtx"] = CZMQAbstractNotifier::Create<CZMQPublishHashTransactionNotifier>;
+    factories["pubhashwallettx"] = CZMQAbstractNotifier::Create<CZMQPublishHashWalletTransactionNotifier>;
     factories["pubrawblock"] = [&get_block_by_index]() -> std::unique_ptr<CZMQAbstractNotifier> {
         return std::make_unique<CZMQPublishRawBlockNotifier>(get_block_by_index);
     };
     factories["pubrawtx"] = CZMQAbstractNotifier::Create<CZMQPublishRawTransactionNotifier>;
+    factories["pubrawwallettx"] = CZMQAbstractNotifier::Create<CZMQPublishRawWalletTransactionNotifier>;
     factories["pubsequence"] = CZMQAbstractNotifier::Create<CZMQPublishSequenceNotifier>;
 
     std::list<std::unique_ptr<CZMQAbstractNotifier>> notifiers;
@@ -90,6 +96,10 @@ bool CZMQNotificationInterface::Initialize()
     LogPrint(BCLog::ZMQ, "Initialize notification interface\n");
     assert(!pcontext);
 
+#ifdef ENABLE_WALLET
+    m_wtx_added_connection = wallet::CWallet::TransactionAddedToWallet.connect(std::bind(&CZMQNotificationInterface::TransactionAddedToWallet, this, std::placeholders::_1, std::placeholders::_2));
+#endif
+
     pcontext = zmq_ctx_new();
 
     if (!pcontext)
@@ -114,6 +124,11 @@ bool CZMQNotificationInterface::Initialize()
 void CZMQNotificationInterface::Shutdown()
 {
     LogPrint(BCLog::ZMQ, "Shutdown notification interface\n");
+
+#ifdef ENABLE_WALLET
+    m_wtx_added_connection.disconnect();
+#endif
+
     if (pcontext)
     {
         for (auto& notifier : notifiers) {
@@ -211,6 +226,14 @@ void CZMQNotificationInterface::BlockDisconnected(const std::shared_ptr<const CB
     // Next we notify BlockDisconnect listeners for *all* blocks
     TryForEachAndRemoveFailed(notifiers, [pindexDisconnected](CZMQAbstractNotifier* notifier) {
         return notifier->NotifyBlockDisconnect(pindexDisconnected);
+    });
+}
+
+void CZMQNotificationInterface::TransactionAddedToWallet(const CTransactionRef& ptx, const uint256 &hashBlock) {
+    const CTransaction& tx = *ptx;
+
+    TryForEachAndRemoveFailed(notifiers, [&tx, &hashBlock](CZMQAbstractNotifier* notifier) {
+        return notifier->NotifyWalletTransaction(tx, hashBlock);
     });
 }
 
