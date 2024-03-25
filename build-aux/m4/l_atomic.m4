@@ -22,6 +22,8 @@ m4_define([_CHECK_ATOMIC_testbody], [[
 
     std::atomic<std::chrono::seconds> t{0s};
     t.store(2s);
+    auto t1 = t.load();
+    t.compare_exchange_strong(t1, 3s);
 
     std::atomic<int64_t> a{};
 
