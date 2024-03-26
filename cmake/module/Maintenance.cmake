@@ -88,3 +88,57 @@ function(add_windows_deploy_target)
     add_custom_target(deploy DEPENDS ${CMAKE_BINARY_DIR}/bitcoin-win64-setup.exe)
   endif()
 endfunction()
+
+function(add_macos_deploy_target)
+  if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND TARGET bitcoin-qt)
+    set(macos_app "Bitcoin-Qt.app")
+    # Populate Contents subdirectory.
+    configure_file(${PROJECT_SOURCE_DIR}/share/qt/Info.plist.in ${macos_app}/Contents/Info.plist)
+    file(CONFIGURE OUTPUT ${macos_app}/Contents/PkgInfo CONTENT "APPL????")
+    # Populate Contents/Resources subdirectory.
+    file(CONFIGURE OUTPUT ${macos_app}/Contents/Resources/empty.lproj CONTENT "")
+    configure_file(${PROJECT_SOURCE_DIR}/src/qt/res/icons/bitcoin.icns ${macos_app}/Contents/Resources/bitcoin.icns COPYONLY)
+    file(CONFIGURE OUTPUT ${macos_app}/Contents/Resources/Base.lproj/InfoPlist.strings
+      CONTENT "{ CFBundleDisplayName = \"@PACKAGE_NAME@\"; CFBundleName = \"@PACKAGE_NAME@\"; }"
+    )
+
+    string(REPLACE " " "-" osx_volname ${PACKAGE_NAME})
+    if(CMAKE_CROSSCOMPILING)
+      add_custom_command(
+        OUTPUT dist/${macos_app}/Contents/MacOS/Bitcoin-Qt
+        COMMAND ${CMAKE_COMMAND} --install ${CMAKE_BINARY_DIR} --config $<CONFIG> --component GUI --prefix ${macos_app}/Contents/MacOS --strip
+        COMMAND ${CMAKE_COMMAND} -E rename ${macos_app}/Contents/MacOS/bin/$<TARGET_FILE_NAME:bitcoin-qt> ${macos_app}/Contents/MacOS/Bitcoin-Qt
+        COMMAND ${CMAKE_COMMAND} -E rm -rf ${macos_app}/Contents/MacOS/bin
+        COMMAND INSTALL_NAME_TOOL=${CMAKE_INSTALL_NAME_TOOL} OTOOL=${OTOOL} STRIP=${CMAKE_STRIP} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR}
+        VERBATIM
+      )
+      add_custom_target(deploydir
+        DEPENDS dist/${macos_app}/Contents/MacOS/Bitcoin-Qt
+      )
+
+      find_program(ZIP_COMMAND zip REQUIRED)
+      add_custom_command(
+        OUTPUT dist/${osx_volname}.zip
+        WORKING_DIRECTORY dist
+        COMMAND ${PROJECT_SOURCE_DIR}/cmake/script/macos_zip.sh ${ZIP_COMMAND} ${osx_volname}.zip
+        VERBATIM
+      )
+      add_custom_target(deploy
+        DEPENDS dist/${osx_volname}.zip
+      )
+      add_dependencies(deploy deploydir)
+    else()
+      add_custom_command(
+        OUTPUT dist/${osx_volname}.zip
+        COMMAND ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR} -zip
+        VERBATIM
+      )
+      add_custom_target(deploydir
+        DEPENDS dist/${osx_volname}.zip
+      )
+      add_custom_target(deploy
+        DEPENDS dist/${osx_volname}.zip
+      )
+    endif()
+  endif()
+endfunction()
