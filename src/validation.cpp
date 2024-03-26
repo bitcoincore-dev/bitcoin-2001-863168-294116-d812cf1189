@@ -2759,26 +2759,25 @@ void Chainstate::UpdateTip(const CBlockIndex* pindexNew)
         for (int i = 0; i < 100 && pindex != nullptr; i++)
         {
             int32_t nExpectedVersion = m_chainman.m_versionbitscache.ComputeBlockVersion(pindex->pprev, params.GetConsensus());
-            if (pindex->nVersion > VERSIONBITS_LAST_OLD_BLOCK_VERSION && (pindex->nVersion & ~nExpectedVersion) != 0)
-            {
-                if ((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) {
-                    for (int bit = 0; bit < VERSIONBITS_NUM_BITS; ++bit) {
-                        const int32_t mask = 1 << bit;
-                        if ((pindex->nVersion & mask) && !(nExpectedVersion & mask)) {
-                            const int warning_threshold = (bit > 12 ? 75 : 50);
-                            if (++unexpected_bit_count[bit] > warning_threshold) {
-                                warning_threshold_hit_bits.insert(bit);
-                            }
-                        }
+            if (pindex->nVersion <= VERSIONBITS_LAST_OLD_BLOCK_VERSION) {
+                // We don't care
+            } else if ((pindex->nVersion & VERSIONBITS_TOP_MASK) != VERSIONBITS_TOP_BITS) {
+                // Non-versionbits upgrade
+                static constexpr int WARNING_THRESHOLD = 100/2;
+                if (++nonversionbit_count > WARNING_THRESHOLD) {
+                    if (warning_threshold_hit_int == -1) {
+                        warning_threshold_hit_int = pindex->nVersion;
+                    } else if (warning_threshold_hit_int != pindex->nVersion) {
+                        warning_threshold_hit_int = -2;
                     }
-                } else {
-                    // Non-versionbits upgrade
-                    static constexpr int WARNING_THRESHOLD = 100/2;
-                    if (++nonversionbit_count > WARNING_THRESHOLD) {
-                        if (warning_threshold_hit_int == -1) {
-                            warning_threshold_hit_int = pindex->nVersion;
-                        } else if (warning_threshold_hit_int != pindex->nVersion) {
-                            warning_threshold_hit_int = -2;
+                }
+            } else if ((pindex->nVersion & ~nExpectedVersion) != 0) {
+                for (int bit = 0; bit < VERSIONBITS_NUM_BITS; ++bit) {
+                    const int32_t mask = 1 << bit;
+                    if ((pindex->nVersion & mask) && !(nExpectedVersion & mask)) {
+                        const int warning_threshold = (bit > 12 ? 75 : 50);
+                        if (++unexpected_bit_count[bit] > warning_threshold) {
+                            warning_threshold_hit_bits.insert(bit);
                         }
                     }
                 }
