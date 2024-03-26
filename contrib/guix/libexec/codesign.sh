@@ -24,6 +24,8 @@ if [ -n "$V" ]; then
     export VERBOSE="$V"
 fi
 
+SRCDIR="$(realpath "$(dirname "$0")")"
+
 # Check that required environment variables are set
 cat << EOF
 Required environment variables as seen inside the container:
@@ -94,9 +96,11 @@ mkdir -p "$DISTSRC"
 
             # Make a DMG from dist/
             xorrisofs -D -l -V "$(< ../osx_volname)" -no-pad -r -dir-mode 0755 \
+                      -hfsplus \
                       -o "${OUTDIR}/${DISTNAME}-${HOST}.dmg" \
                       . \
                       -- -volume_date all_file_dates ="$SOURCE_DATE_EPOCH"
+            python3 "${SRCDIR}"/../../macdeploy/make-dmg-open-finder "${OUTDIR}/${DISTNAME}-${HOST}.dmg"
             ;;
         *)
             exit 1
