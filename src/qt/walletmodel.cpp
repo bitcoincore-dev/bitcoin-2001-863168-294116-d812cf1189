@@ -527,12 +527,6 @@ bool WalletModel::bumpFee(uint256 hash, uint256& new_hash)
         return false;
     }
 
-    WalletModel::UnlockContext ctx(requestUnlock());
-    if(!ctx.isValid())
-    {
-        return false;
-    }
-
     // Short-circuit if we are returning a bumped transaction PSBT to clipboard
     if (retval == QMessageBox::Save) {
         // "Create Unsigned" clicked
@@ -547,8 +541,13 @@ bool WalletModel::bumpFee(uint256 hash, uint256& new_hash)
         CDataStream ssTx(SER_NETWORK, PROTOCOL_VERSION);
         ssTx << psbtx;
         GUIUtil::setClipboard(EncodeBase64(ssTx.str()).c_str());
-        Q_EMIT message(tr("PSBT copied"), tr("Copied to clipboard", "Fee-bump PSBT saved"), CClientUIInterface::MSG_INFORMATION);
+        Q_EMIT message(tr("PSBT copied"), tr("Fee-bump PSBT copied to clipboard"), CClientUIInterface::MSG_INFORMATION | CClientUIInterface::MODAL);
         return true;
+    }
+
+    WalletModel::UnlockContext ctx(requestUnlock());
+    if (!ctx.isValid()) {
+        return false;
     }
 
     assert(!m_wallet->privateKeysDisabled() || wallet().hasExternalSigner());
