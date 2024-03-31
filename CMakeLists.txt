@@ -496,6 +496,9 @@ if(CMAKE_CROSSCOMPILING)
   if(DEFINED ENV{CXXFLAGS})
     deduplicate_flags(CMAKE_CXX_FLAGS)
   endif()
+  if(DEFINED ENV{LDFLAGS})
+    deduplicate_flags(CMAKE_EXE_LINKER_FLAGS)
+  endif()
 endif()
 
 add_subdirectory(src)
@@ -507,6 +510,7 @@ include(Maintenance)
 setup_split_debug_script()
 add_maintenance_targets()
 add_windows_deploy_target()
+add_macos_deploy_target()
 
 
 include(GetTargetInterface)
