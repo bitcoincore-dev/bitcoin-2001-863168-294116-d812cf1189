@@ -142,22 +142,42 @@ check_cxx_source_compiles("
   " HAVE_STRONG_GETAUXVAL
 )
 
-# Check for different ways of gathering OS randomness:
-# - Linux getrandom()
+# Check for UNIX sockets.
 check_cxx_source_compiles("
-  #include <unistd.h>
-  #include <sys/syscall.h>
-  #include <linux/random.h>
+  #include <sys/socket.h>
+  #include <sys/un.h>
 
   int main()
   {
-    syscall(SYS_getrandom, nullptr, 32, 0);
+    struct sockaddr_un addr;
+    addr.sun_family = AF_UNIX;
   }
-  " HAVE_SYS_GETRANDOM
+  " HAVE_SOCKADDR_UN
+)
+
+# Check for different ways of gathering OS randomness:
+# - Linux getrandom()
+check_cxx_source_compiles("
+  #include <sys/random.h>
+
+  int main()
+  {
+    getrandom(nullptr, 32, 0);
+  }
+  " HAVE_GETRANDOM
 )
 
 # - BSD getentropy()
-check_cxx_symbol_exists(getentropy "unistd.h;sys/random.h" HAVE_GETENTROPY_RAND)
+check_cxx_source_compiles("
+  #include <sys/random.h>
+
+  int main()
+  {
+    getentropy(nullptr, 32);
+  }
+  " HAVE_GETENTROPY_RAND
+)
+
 
 # - BSD sysctl()
 check_cxx_source_compiles("
