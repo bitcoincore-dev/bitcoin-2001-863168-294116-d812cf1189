@@ -158,19 +158,26 @@ check_cxx_source_compiles("
 # Check for different ways of gathering OS randomness:
 # - Linux getrandom()
 check_cxx_source_compiles("
-  #include <unistd.h>
-  #include <sys/syscall.h>
-  #include <linux/random.h>
+  #include <sys/random.h>
 
   int main()
   {
-    syscall(SYS_getrandom, nullptr, 32, 0);
+    getrandom(nullptr, 32, 0);
   }
-  " HAVE_SYS_GETRANDOM
+  " HAVE_GETRANDOM
 )
 
 # - BSD getentropy()
-check_cxx_symbol_exists(getentropy "unistd.h;sys/random.h" HAVE_GETENTROPY_RAND)
+check_cxx_source_compiles("
+  #include <sys/random.h>
+
+  int main()
+  {
+    getentropy(nullptr, 32);
+  }
+  " HAVE_GETENTROPY_RAND
+)
+
 
 # - BSD sysctl()
 check_cxx_source_compiles("

@@ -73,6 +73,9 @@
    sys/random.h */
 #cmakedefine HAVE_GETENTROPY_RAND 1
 
+/* Define this symbol if the Linux getrandom function call is available */
+#cmakedefine HAVE_GETRANDOM 1
+
 /* Define this symbol if gmtime_r is available */
 #cmakedefine HAVE_GMTIME_R 1
 
@@ -102,9 +105,6 @@
 
 /* Define to 1 if std::system or ::wsystem is available. */
 #cmakedefine HAVE_SYSTEM 1
-
-/* Define this symbol if the Linux getrandom system call is available */
-#cmakedefine HAVE_SYS_GETRANDOM 1
 
 /* Define to 1 if you have the <sys/prctl.h> header file. */
 #cmakedefine HAVE_SYS_PRCTL_H 1
