@@ -88,7 +88,10 @@
 /* Define this symbol if you have posix_fallocate */
 #cmakedefine HAVE_POSIX_FALLOCATE 1
 
-/* Define this symbol to build code that uses getauxval) */
+/* Define this symbol if platform supports unix domain sockets */
+#cmakedefine HAVE_SOCKADDR_UN 1
+
+/* Define this symbol to build code that uses getauxval */
 #cmakedefine HAVE_STRONG_GETAUXVAL 1
 
 /* Define this symbol if the BSD sysctl() is available */

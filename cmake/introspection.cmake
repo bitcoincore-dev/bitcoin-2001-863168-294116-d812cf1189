@@ -142,6 +142,19 @@ check_cxx_source_compiles("
   " HAVE_STRONG_GETAUXVAL
 )
 
+# Check for UNIX sockets.
+check_cxx_source_compiles("
+  #include <sys/socket.h>
+  #include <sys/un.h>
+
+  int main()
+  {
+    struct sockaddr_un addr;
+    addr.sun_family = AF_UNIX;
+  }
+  " HAVE_SOCKADDR_UN
+)
+
 # Check for different ways of gathering OS randomness:
 # - Linux getrandom()
 check_cxx_source_compiles("
