@@ -10,7 +10,7 @@ macro(fatal_error)
     "  cmake -D BUILD_INFO_HEADER_PATH=<path> [-D SOURCE_DIR=<path>] -P ${CMAKE_CURRENT_LIST_FILE}\n"
     "All specified paths must be absolute ones.\n"
   )
-endmacro()  
+endmacro()
 
 if(DEFINED BUILD_INFO_HEADER_PATH AND IS_ABSOLUTE "${BUILD_INFO_HEADER_PATH}")
   if(EXISTS "${BUILD_INFO_HEADER_PATH}")
