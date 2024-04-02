@@ -166,7 +166,7 @@ if [ "${RUN_TIDY}" = "true" ]; then
   cmake --build /tidy-build --target bitcoin-tidy-tests "$MAKEJOBS"
 
   set -eo pipefail
-  cd "${BASE_BUILD_DIR}/bitcoin-$HOST/src/"
+  cd "${BASE_BUILD_DIR}/src/"
   if ! ( run-clang-tidy-"${TIDY_LLVM_V}" -quiet -load="/tidy-build/libbitcoin-tidy.so" "${MAKEJOBS}" | tee tmp.tidy-out.txt ); then
     grep -C5 "error: " tmp.tidy-out.txt
     echo "^^^ ⚠️ Failure generated from clang-tidy"
@@ -176,12 +176,12 @@ if [ "${RUN_TIDY}" = "true" ]; then
   # accepted in src/.bear-tidy-config
   # Filter out:
   # * qt qrc and moc generated files
-  jq 'map(select(.file | test("src/qt/qrc_.*\\.cpp$|/moc_.*\\.cpp$") | not))' ../compile_commands.json > tmp.json
-  mv tmp.json ../compile_commands.json
-  cd "${BASE_BUILD_DIR}/bitcoin-$HOST/"
+  jq 'map(select(.file | test("src/qt/qrc_.*\\.cpp$|/moc_.*\\.cpp$") | not))' "${BASE_BUILD_DIR}/compile_commands.json" > tmp.json
+  mv tmp.json "${BASE_BUILD_DIR}/compile_commands.json"
+  cd "${BASE_ROOT_DIR}"
   python3 "/include-what-you-use/iwyu_tool.py" \
-           -p . "${MAKEJOBS}" \
-           -- -Xiwyu --cxx17ns -Xiwyu --mapping_file="${BASE_BUILD_DIR}/bitcoin-$HOST/contrib/devtools/iwyu/bitcoin.core.imp" \
+           -p "${BASE_BUILD_DIR}" "${MAKEJOBS}" \
+           -- -Xiwyu --cxx17ns -Xiwyu --mapping_file="${BASE_BUILD_DIR}/contrib/devtools/iwyu/bitcoin.core.imp" \
            -Xiwyu --max_line_length=160 \
            2>&1 | tee /tmp/iwyu_ci.out
   cd "${BASE_ROOT_DIR}/src"
