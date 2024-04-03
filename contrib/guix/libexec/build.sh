@@ -323,9 +323,6 @@ mkdir -p "$DISTSRC"
         find . -name "lib*.la" -delete
         find . -name "lib*.a" -delete
 
-        # Prune pkg-config files
-        rm -rf "${DISTNAME}/lib/pkgconfig"
-
         case "$HOST" in
             *darwin*) ;;
             *)
