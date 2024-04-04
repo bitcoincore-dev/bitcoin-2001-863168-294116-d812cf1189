@@ -32,15 +32,15 @@ endfunction()
 
 create_test_config()
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fuzz)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/util)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/test/functional)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/test/fuzz)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/test/util)
 
 function(create_test_script script)
   if(MSVC)
-    file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/${script} ${CMAKE_CURRENT_BINARY_DIR}/${script} COPY_ON_ERROR)
+    file(CREATE_LINK ${PROJECT_SOURCE_DIR}/test/${script} ${CMAKE_CURRENT_BINARY_DIR}/test-${script} COPY_ON_ERROR)
   else()
-    file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/${script} ${CMAKE_CURRENT_BINARY_DIR}/${script} COPY_ON_ERROR SYMBOLIC)
+    file(CREATE_LINK ${PROJECT_SOURCE_DIR}/test/${script} ${CMAKE_CURRENT_BINARY_DIR}/test-${script} COPY_ON_ERROR SYMBOLIC)
   endif()
 endfunction()
 
