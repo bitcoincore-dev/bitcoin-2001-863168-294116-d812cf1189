@@ -32,15 +32,22 @@ endfunction()
 
 create_test_config()
 
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/functional)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/fuzz)
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/util)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/test/functional)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/test/fuzz)
+file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/test/util)
 
 function(create_test_script script)
+
+execute_process(COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    OUTPUT_VARIABLE COMMIT_ID
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
   if(MSVC)
-    file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/${script} ${CMAKE_CURRENT_BINARY_DIR}/${script} COPY_ON_ERROR)
+    file(CREATE_LINK ${PROJECT_SOURCE_DIR}/test/${script} test/${COMMIT_ID}-${script} COPY_ON_ERROR)
   else()
-    file(CREATE_LINK ${CMAKE_CURRENT_SOURCE_DIR}/${script} ${CMAKE_CURRENT_BINARY_DIR}/${script} COPY_ON_ERROR SYMBOLIC)
+    file(CREATE_LINK ${PROJECT_SOURCE_DIR}/test/${script} test/${COMMIT_ID}-${script} COPY_ON_ERROR SYMBOLIC)
   endif()
 endfunction()
 
