@@ -252,7 +252,7 @@ mkdir -p "$DISTSRC"
     # shellcheck disable=SC2086
     env CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}" \
     cmake -S . -B build \
-          --toolchain "${BASEPREFIX}/${HOST}/share/toolchain.cmake" \
+          --toolchain "${BASEPREFIX}/${HOST}/toolchain.cmake" \
           -DCCACHE=OFF \
           ${CONFIGFLAGS}
 
