@@ -170,12 +170,12 @@ jobs:
       - name: Generate build system. Expected to FAIL
         if: ${{ matrix.conf.expected == 'fail' }}
         run: |
-          ! cmake -B build --toolchain depends/x86_64-pc-linux-gnu/share/toolchain.cmake ${{ matrix.conf.build_options }}
+          ! cmake -B build --toolchain depends/x86_64-pc-linux-gnu/toolchain.cmake ${{ matrix.conf.build_options }}
 
       - name: Generate build system. Expected to PASS
         if: ${{ matrix.conf.expected == 'pass' }}
         run: |
-          cmake -B build --toolchain depends/x86_64-pc-linux-gnu/share/toolchain.cmake
+          cmake -B build --toolchain depends/x86_64-pc-linux-gnu/toolchain.cmake
 
 
   ubuntu-jammy-native:
@@ -365,7 +365,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          ${{ matrix.host.configure_env }} cmake -B build --toolchain depends/${{ matrix.host.triplet }}/share/toolchain.cmake ${{ matrix.host.configure_options }}
+          ${{ matrix.host.configure_env }} cmake -B build --toolchain depends/${{ matrix.host.triplet }}/toolchain.cmake ${{ matrix.host.configure_options }}
 
       - name: Build
         run: |
