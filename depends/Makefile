@@ -259,7 +259,7 @@ $(host_prefix)/share/config.site : config.site.in $(host_prefix)/.stamp_$(final_
             $< > $@
 	touch $@
 
-$(host_prefix)/share/toolchain.cmake : toolchain.cmake.in $(host_prefix)/.stamp_$(final_build_id)
+$(host_prefix)/toolchain.cmake : toolchain.cmake.in $(host_prefix)/.stamp_$(final_build_id)
 	@mkdir -p $(@D)
 	sed -e 's|@host_system@|$($(host_os)_cmake_system)|' \
             -e 's|@host_arch@|$(host_arch)|' \
@@ -318,7 +318,7 @@ check-sources:
 	@$(foreach package,$(all_packages),$(call check_or_remove_sources,$(package));)
 
 $(host_prefix)/share/config.site: check-packages
-$(host_prefix)/share/toolchain.cmake: check-packages
+$(host_prefix)/toolchain.cmake: check-packages
 
 check-packages: check-sources
 
@@ -328,7 +328,7 @@ clean-all: clean
 clean:
 	@rm -rf $(WORK_PATH) $(BASE_CACHE) $(BUILD) *.log
 
-install: check-packages $(host_prefix)/share/config.site $(host_prefix)/share/toolchain.cmake
+install: check-packages $(host_prefix)/share/config.site $(host_prefix)/toolchain.cmake
 
 
 download-one: check-sources $(all_sources)
