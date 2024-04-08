@@ -83,3 +83,7 @@ target_link_libraries(minisketch
     minisketch_common
     $<TARGET_NAME_IF_EXISTS:minisketch_clmul>
 )
+
+set_target_properties(minisketch PROPERTIES
+  EXPORT_COMPILE_COMMANDS OFF
+)
