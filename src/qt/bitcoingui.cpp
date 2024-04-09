@@ -765,6 +765,7 @@ void BitcoinGUI::setCurrentWallet(WalletModel* wallet_model)
             break;
         }
     }
+    enableHistoryAction(isPrivacyModeActivated());
     updateWindowTitle();
 }
 
