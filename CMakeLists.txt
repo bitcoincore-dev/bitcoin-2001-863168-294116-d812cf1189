@@ -120,8 +120,8 @@ add_library(core_base_interface INTERFACE)
 add_library(core_depends_release_interface INTERFACE)
 add_library(core_depends_debug_interface INTERFACE)
 target_link_libraries(core_base_interface INTERFACE
-  $<$<CONFIG:RelWithDebInfo>:${core_depends_release_interface}>
-  $<$<CONFIG:Debug>:${core_depends_debug_interface}>
+  $<$<CONFIG:RelWithDebInfo>:core_depends_release_interface>
+  $<$<CONFIG:Debug>:core_depends_debug_interface>
 )
 target_link_libraries(core_interface INTERFACE core_base_interface)
 
