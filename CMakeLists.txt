@@ -9,7 +9,7 @@
 #  - CMake 3.26.5, https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/
 if(POLICY CMP0141)
   # MSVC debug information format flags are selected by an abstraction.
-  # We want to use the CMAKE_MSVC_DEBUG_INFORMATION_FORMAT variable 
+  # We want to use the CMAKE_MSVC_DEBUG_INFORMATION_FORMAT variable
   # to select the MSVC debug information format.
   cmake_policy(SET CMP0141 NEW)
 endif()
@@ -79,6 +79,7 @@ tristate_option(WITH_USDT
   AUTO
 )
 cmake_dependent_option(WITH_EXTERNAL_SIGNER "Enable external signer support." ON "NOT WIN32" OFF)
+set(ENABLE_EXTERNAL_SIGNER ${WITH_EXTERNAL_SIGNER})
 tristate_option(WITH_QRENCODE "Enable QR code support." "if libqrencode is found." AUTO)
 tristate_option(MULTIPROCESS "Build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables. Requires libmultiprocess library. Experimental." "if libmultiprocess is found." OFF)
 
