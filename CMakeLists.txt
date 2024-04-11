@@ -2,20 +2,18 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-# IMPORTANT: Changes which affect binary results may not be quietly gated
-#            by CMake version.
-#
 # Ubuntu 22.04 LTS Jammy Jellyfish, https://wiki.ubuntu.com/Releases, EOSS in June 2027:
 #  - CMake 3.22.1, https://packages.ubuntu.com/jammy/cmake
 #
 # Centos Stream 9, EOL in May 2027:
 #  - CMake 3.26.5, https://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/
-#
-# All policies known to the running version of CMake and introduced
-# in the 3.29 version or earlier will be set to use NEW behavior.
-# All policies introduced in later versions will be unset.
-# See: https://cmake.org/cmake/help/latest/manual/cmake-policies.7.html
-cmake_minimum_required(VERSION 3.22...3.29)
+if(POLICY CMP0141)
+  # MSVC debug information format flags are selected by an abstraction.
+  # We want to use the CMAKE_MSVC_DEBUG_INFORMATION_FORMAT variable 
+  # to select the MSVC debug information format.
+  cmake_policy(SET CMP0141 NEW)
+endif()
+cmake_minimum_required(VERSION 3.22)
 
 set(PACKAGE_NAME "Bitcoin Core")
 set(CLIENT_VERSION_MAJOR 27)
