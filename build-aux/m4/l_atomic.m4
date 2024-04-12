@@ -23,8 +23,11 @@ m4_define([_CHECK_ATOMIC_testbody], [[
     std::atomic<std::chrono::seconds> t{0s};
     t.store(2s);
 
-    std::atomic<int64_t> a{};
+    std::atomic<double> d{};
+    d.store(3.14);
+    auto d1 = d.load();
 
+    std::atomic<int64_t> a{};
     int64_t v = 5;
     int64_t r = a.fetch_add(v);
     return static_cast<int>(r);
