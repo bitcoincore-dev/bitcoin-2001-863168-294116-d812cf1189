@@ -63,7 +63,7 @@ Documentation for C++ subprocessing library.
 
 extern "C" {
 #ifdef __USING_WINDOWS__
-  #include <Windows.h>
+  #include <windows.h>
   #include <io.h>
   #include <cwchar>
 
@@ -157,7 +157,7 @@ public:
 //--------------------------------------------------------------------
 
 //Environment Variable types
-#ifndef _MSC_VER
+#ifndef __USING_WINDOWS__
 	using env_string_t = std::string;
 	using env_char_t = char;
 #else
@@ -186,7 +186,7 @@ namespace util
     //
 
     if (force == false && argument.empty() == false &&
-        argument.find_first_of(L" \t\n\v\"") == argument.npos) {
+        argument.find_first_of(L" \t\n\v") == argument.npos) {
       command_line.append(argument);
     }
     else {
