@@ -11,8 +11,6 @@
 #include <thread>
 #include <vector>
 
-#include <config/bitcoin-config.h> // IWYU pragma: keep
-
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(util_threadnames_tests)
