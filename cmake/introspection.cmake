@@ -52,32 +52,6 @@ endif()
 include(TestAppendRequiredLibraries)
 test_append_atomic_library(core_interface)
 
-# Check for gmtime_r(), fallback to gmtime_s() if that is unavailable.
-# Fail if neither are available.
-check_cxx_source_compiles("
-  #include <ctime>
-
-  int main()
-  {
-    gmtime_r((const time_t*)nullptr, (struct tm*)nullptr);
-  }
-  " HAVE_GMTIME_R
-)
-if(NOT HAVE_GMTIME_R)
-  check_cxx_source_compiles("
-    #include <ctime>
-
-    int main()
-    {
-      gmtime_s((struct tm*)nullptr, (const time_t*)nullptr);
-    }
-    " HAVE_GMTIME_S
-  )
-  if(NOT HAVE_GMTIME_S)
-    message(FATAL_ERROR "Both gmtime_r and gmtime_s are unavailable.")
-  endif()
-endif()
-
 check_cxx_symbol_exists(std::system "cstdlib" HAVE_STD_SYSTEM)
 check_cxx_symbol_exists(::_wsystem "stdlib.h" HAVE__WSYSTEM)
 if(HAVE_STD_SYSTEM OR HAVE__WSYSTEM)

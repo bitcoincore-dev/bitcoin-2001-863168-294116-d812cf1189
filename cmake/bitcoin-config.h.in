@@ -76,9 +76,6 @@
 /* Define this symbol if the Linux getrandom function call is available */
 #cmakedefine HAVE_GETRANDOM 1
 
-/* Define this symbol if gmtime_r is available */
-#cmakedefine HAVE_GMTIME_R 1
-
 /* Define this symbol if you have malloc_info */
 #cmakedefine HAVE_MALLOC_INFO 1
 
