@@ -28,7 +28,6 @@ add_library(minisketch_common INTERFACE)
 target_compile_definitions(minisketch_common INTERFACE
   DISABLE_DEFAULT_FIELDS
   ENABLE_FIELD_32
-  $<$<AND:$<BOOL:${HAVE_BUILTIN_CLZL}>,$<BOOL:${HAVE_BUILTIN_CLZLL}>>:HAVE_CLZ>
 )
 if(MSVC)
   target_compile_options(minisketch_common INTERFACE
