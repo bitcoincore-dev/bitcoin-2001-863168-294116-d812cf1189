@@ -12,22 +12,6 @@ check_include_file_cxx(sys/resources.h HAVE_SYS_RESOURCES_H)
 check_include_file_cxx(sys/vmmeter.h HAVE_SYS_VMMETER_H)
 check_include_file_cxx(vm/vm_param.h HAVE_VM_VM_PARAM_H)
 
-check_cxx_source_compiles("
-  int main()
-  {
-    (void) __builtin_clzl(0);
-  }
-  " HAVE_BUILTIN_CLZL
-)
-
-check_cxx_source_compiles("
-  int main()
-  {
-    (void) __builtin_clzll(0);
-  }
-  " HAVE_BUILTIN_CLZLL
-)
-
 check_cxx_symbol_exists(O_CLOEXEC "fcntl.h" HAVE_O_CLOEXEC)
 
 check_include_file_cxx(unistd.h HAVE_UNISTD_H)
