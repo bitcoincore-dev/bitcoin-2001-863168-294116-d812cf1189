@@ -63,9 +63,6 @@ if(NOT MSVC)
   )
 endif()
 
-include(CheckCXXSymbolExists)
-check_cxx_symbol_exists(timingsafe_bcmp "string.h" HAVE_TIMINGSAFE_BCMP)
-
 add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL
   aes.cpp
   chacha20.cpp
@@ -84,10 +81,6 @@ add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL
   siphash.cpp
 )
 
-target_compile_definitions(bitcoin_crypto
-  PRIVATE
-    $<$<BOOL:${HAVE_TIMINGSAFE_BCMP}>:HAVE_TIMINGSAFE_BCMP>
-)
 target_link_libraries(bitcoin_crypto
   PRIVATE
     core_interface
