@@ -89,7 +89,6 @@ target_link_libraries(bitcoinkernel
     bitcoin_crypto
     leveldb
     secp256k1
-    $<$<PLATFORM_ID:Windows>:ws2_32>
   PUBLIC
     Boost::headers
 )
