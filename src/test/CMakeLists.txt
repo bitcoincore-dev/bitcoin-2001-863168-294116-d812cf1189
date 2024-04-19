@@ -146,6 +146,7 @@ target_link_libraries(test_bitcoin
   bitcoin_node
   minisketch
   Boost::headers
+  libevent::libevent
 )
 
 if(ENABLE_WALLET)
