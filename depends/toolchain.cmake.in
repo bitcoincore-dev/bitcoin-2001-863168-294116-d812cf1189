@@ -150,8 +150,10 @@ if(NOT WITH_USDT AND "@no_usdt@" STREQUAL "1")
   set(WITH_USDT OFF CACHE STRING "Enable tracepoints for Userspace, Statically Defined Tracing.")
 endif()
 
-if(NOT HARDENING AND "@no_harden@" STREQUAL "1")
-  set(HARDENING OFF CACHE STRING "Attempt to harden the resulting executables.")
+if("@no_harden@")
+  set(HARDENING OFF CACHE BOOL "")
+else()
+  set(HARDENING ON CACHE BOOL "")
 endif()
 
 if("@multiprocess@" STREQUAL "1")
