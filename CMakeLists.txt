@@ -119,6 +119,11 @@ cmake_dependent_option(FUZZ "Build for fuzzing. Enabling this will disable all o
 
 option(INSTALL_MAN "Install man pages." ON)
 
+set(EXTRA_CPPFLAGS "" CACHE STRING "Extra (Objective) C/C++ preprocessor flags.")
+set(EXTRA_CFLAGS "" CACHE STRING "Extra C compiler flags.")
+set(EXTRA_CXXFLAGS "" CACHE STRING "Extra (Objective) C++ compiler flags.")
+set(EXTRA_LDFLAGS "" CACHE STRING "Extra linker flags.")
+
 set(configure_warnings)
 
 include(CheckPIESupported)
@@ -147,6 +152,23 @@ target_link_libraries(core_base_interface INTERFACE
   $<$<CONFIG:Debug>:core_depends_debug_interface>
 )
 target_link_libraries(core_interface INTERFACE core_base_interface)
+
+# The extra_flags_interface library encapsulates user-provided build
+# flags that are appended to the command line after all other flags
+# added by the build system.
+add_library(extra_flags_interface INTERFACE)
+separate_arguments(EXTRA_CPPFLAGS)
+separate_arguments(EXTRA_CFLAGS)
+separate_arguments(EXTRA_CXXFLAGS)
+separate_arguments(EXTRA_LDFLAGS)
+target_compile_options(extra_flags_interface INTERFACE
+  ${EXTRA_CPPFLAGS}
+  $<$<COMPILE_LANGUAGE:C>:${EXTRA_CFLAGS}>
+  $<$<COMPILE_LANGUAGE:CXX>:${EXTRA_CXXFLAGS}>
+)
+target_link_options(extra_flags_interface INTERFACE
+  ${EXTRA_LDFLAGS}
+)
 
 if(FUZZ)
   message(WARNING "FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
