@@ -187,7 +187,7 @@ if(QT_IS_STATIC)
   )
 endif()
 
-add_executable(bitcoin-qt
+bitcoincore_add_executable(bitcoin-qt WIN32
   main.cpp
   ../init/bitcoin-qt.cpp
 )
@@ -195,33 +195,27 @@ add_executable(bitcoin-qt
 add_windows_resources(bitcoin-qt res/bitcoin-qt-res.rc)
 
 target_link_libraries(bitcoin-qt
-  core_interface
-  bitcoinqt
-  bitcoin_node
+  PRIVATE
+    bitcoinqt
+    bitcoin_node
 )
 
 import_plugins(bitcoin-qt)
 set(installable_targets bitcoin-qt)
-if(WIN32)
-  set_target_properties(bitcoin-qt PROPERTIES WIN32_EXECUTABLE TRUE)
-endif()
 
 if(MULTIPROCESS)
-  add_executable(bitcoin-gui
+  bitcoincore_add_executable(bitcoin-gui WIN32
     main.cpp
     ../init/bitcoin-gui.cpp
   )
   target_link_libraries(bitcoin-gui
-    core_interface
-    bitcoinqt
-    bitcoin_node
-    bitcoin_ipc
+    PRIVATE
+      bitcoinqt
+      bitcoin_node
+      bitcoin_ipc
   )
   import_plugins(bitcoin-gui)
   list(APPEND installable_targets bitcoin-gui)
-  if(WIN32)
-    set_target_properties(bitcoin-gui PROPERTIES WIN32_EXECUTABLE TRUE)
-  endif()
 endif()
 
 install(TARGETS ${installable_targets}

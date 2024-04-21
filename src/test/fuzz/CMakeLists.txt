@@ -4,7 +4,7 @@
 
 add_subdirectory(util)
 
-add_executable(fuzz
+bitcoincore_add_executable(fuzz
   addition_overflow.cpp
   addrman.cpp
   asmap.cpp
@@ -121,16 +121,16 @@ add_executable(fuzz
   versionbits.cpp
 )
 target_link_libraries(fuzz
-  core_interface
-  test_fuzz
-  bitcoin_cli
-  bitcoin_common
-  minisketch
-  leveldb
-  univalue
-  secp256k1
-  Boost::headers
-  libevent::libevent
+  PRIVATE
+    test_fuzz
+    bitcoin_cli
+    bitcoin_common
+    minisketch
+    leveldb
+    univalue
+    secp256k1
+    Boost::headers
+    libevent::libevent
 )
 
 if(ENABLE_WALLET)
@@ -143,5 +143,5 @@ if(ENABLE_WALLET)
       $<$<BOOL:${USE_SQLITE}>:${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/notifications.cpp>
       $<$<BOOL:${USE_SQLITE}>:${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/scriptpubkeyman.cpp>
   )
-  target_link_libraries(fuzz bitcoin_wallet)
+  target_link_libraries(fuzz PRIVATE bitcoin_wallet)
 endif()
