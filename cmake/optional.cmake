@@ -189,12 +189,13 @@ else()
 endif()
 
 if(WITH_GUI AND WITH_QRENCODE)
-  if(MSVC)
+  if(VCPKG_TARGET_TRIPLET)
     # TODO: vcpkg fails to build libqrencode package due to
     #       the build error in its libiconv dependency.
     #       See: https://github.com/microsoft/vcpkg/issues/36924.
   else()
-    cross_pkg_check_modules(libqrencode libqrencode IMPORTED_TARGET)
+    include(CrossPkgConfig)
+    cross_pkg_check_modules(libqrencode IMPORTED_TARGET libqrencode)
   endif()
   if(TARGET PkgConfig::libqrencode)
     set_target_properties(PkgConfig::libqrencode PROPERTIES
