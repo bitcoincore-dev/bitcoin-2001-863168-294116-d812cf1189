@@ -40,8 +40,8 @@ if(MULTIPROCESS)
 endif()
 
 
-add_library(bitcoin_consensus_sources INTERFACE)
-target_sources(bitcoin_consensus_sources INTERFACE
+# Stable, backwards-compatible consensus functionality.
+add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL
   arith_uint256.cpp
   consensus/merkle.cpp
   consensus/tx_check.cpp
@@ -55,14 +55,9 @@ target_sources(bitcoin_consensus_sources INTERFACE
   uint256.cpp
   util/strencodings.cpp
 )
-
-# Stable, backwards-compatible consensus functionality
-# also exposed as a shared library or a static one.
-add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL)
 target_link_libraries(bitcoin_consensus
   PRIVATE
     core_interface
-    bitcoin_consensus_sources
     bitcoin_crypto
     secp256k1
 )
