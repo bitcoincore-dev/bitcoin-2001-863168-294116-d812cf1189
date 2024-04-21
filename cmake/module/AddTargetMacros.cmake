@@ -15,3 +15,15 @@ function(bitcoincore_add_library name)
     )
   ")
 endfunction()
+
+function(bitcoincore_add_executable name)
+  cmake_parse_arguments(PARSE_ARGV 1 FWD "" "" "")
+  add_executable("${name}" ${FWD_UNPARSED_ARGUMENTS})
+  target_link_libraries("${name}" PRIVATE core_interface)
+  cmake_language(EVAL CODE "
+    cmake_language(DEFER
+      DIRECTORY ${PROJECT_SOURCE_DIR}
+      CALL target_link_libraries ${name} PRIVATE extra_flags_interface
+    )
+  ")
+endfunction()

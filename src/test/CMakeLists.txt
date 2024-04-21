@@ -14,7 +14,7 @@ generate_header_from_json(data/tx_invalid.json)
 generate_header_from_json(data/tx_valid.json)
 generate_header_from_raw(data/asmap.raw)
 
-add_executable(test_bitcoin
+bitcoincore_add_executable(test_bitcoin
   main.cpp
   $<TARGET_OBJECTS:bitcoin_consensus>
   ${CMAKE_CURRENT_BINARY_DIR}/data/asmap.raw.h
@@ -140,13 +140,13 @@ add_executable(test_bitcoin
 )
 
 target_link_libraries(test_bitcoin
-  core_interface
-  test_util
-  bitcoin_cli
-  bitcoin_node
-  minisketch
-  Boost::headers
-  libevent::libevent
+  PRIVATE
+    test_util
+    bitcoin_cli
+    bitcoin_node
+    minisketch
+    Boost::headers
+    libevent::libevent
 )
 
 if(ENABLE_WALLET)
@@ -170,10 +170,10 @@ if(ENABLE_WALLET)
       ../wallet/test/walletdb_tests.cpp
       ../wallet/test/walletload_tests.cpp
   )
-  target_link_libraries(test_bitcoin bitcoin_wallet)
   if(USE_BDB)
     target_sources(test_bitcoin PRIVATE ../wallet/test/db_tests.cpp)
   endif()
+  target_link_libraries(test_bitcoin PRIVATE bitcoin_wallet)
 endif()
 
 if(MULTIPROCESS)
@@ -191,7 +191,7 @@ if(MULTIPROCESS)
     PRIVATE
       ipc_tests.cpp
   )
-  target_link_libraries(test_bitcoin bitcoin_ipc_test)
+  target_link_libraries(test_bitcoin PRIVATE bitcoin_ipc_test)
 endif()
 
 install(TARGETS test_bitcoin
