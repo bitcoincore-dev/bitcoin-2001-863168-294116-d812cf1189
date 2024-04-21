@@ -78,7 +78,7 @@ qt5_add_translation(qm_files ${ts_files})
 
 configure_file(bitcoin_locale.qrc bitcoin_locale.qrc COPYONLY)
 
-add_library(bitcoinqt STATIC EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoinqt STATIC EXCLUDE_FROM_ALL
   bantablemodel.cpp
   bitcoin.cpp
   bitcoinaddressvalidator.cpp
@@ -128,7 +128,6 @@ target_link_libraries(bitcoinqt
   PUBLIC
     Qt5::Widgets
   PRIVATE
-    core_interface
     bitcoin_cli
     leveldb
     Boost::headers

@@ -3,7 +3,7 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 # Wallet functionality used by bitcoind and bitcoin-wallet executables.
-add_library(bitcoin_wallet STATIC EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoin_wallet STATIC EXCLUDE_FROM_ALL
   coincontrol.cpp
   coinselection.cpp
   context.cpp
@@ -34,7 +34,6 @@ add_library(bitcoin_wallet STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_wallet
   PRIVATE
-    core_interface
     bitcoin_common
     univalue
     Boost::headers

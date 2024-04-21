@@ -19,16 +19,12 @@ add_custom_target(generate_build_info
   COMMENT "Generating obj/build.h"
   VERBATIM
 )
-add_library(bitcoin_clientversion OBJECT EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoin_clientversion OBJECT EXCLUDE_FROM_ALL
   clientversion.cpp
 )
 target_compile_definitions(bitcoin_clientversion
   PRIVATE
     HAVE_BUILD_INFO
-)
-target_link_libraries(bitcoin_clientversion
-  PRIVATE
-    core_interface
 )
 add_dependencies(bitcoin_clientversion generate_build_info)
 
@@ -41,7 +37,7 @@ endif()
 
 
 # Stable, backwards-compatible consensus functionality.
-add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL
   arith_uint256.cpp
   consensus/merkle.cpp
   consensus/tx_check.cpp
@@ -57,18 +53,17 @@ add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_consensus
   PRIVATE
-    core_interface
     bitcoin_crypto
     secp256k1
 )
 
 if(WITH_ZMQ)
-  add_subdirectory(zmq EXCLUDE_FROM_ALL)
+  add_subdirectory(zmq)
 endif()
 
 # Home for common functionality shared by different executables and libraries.
 # Similar to `bitcoin_util` library, but higher-level.
-add_library(bitcoin_common STATIC EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoin_common STATIC EXCLUDE_FROM_ALL
   addresstype.cpp
   base58.cpp
   bech32.cpp
@@ -116,7 +111,6 @@ add_library(bitcoin_common STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_common
   PRIVATE
-    core_interface
     bitcoin_consensus
     bitcoin_util
     univalue
@@ -150,7 +144,7 @@ endif()
 
 
 # P2P and RPC server functionality used by `bitcoind` and `bitcoin-qt` executables.
-add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
   addrdb.cpp
   addrman.cpp
   banman.cpp
@@ -246,7 +240,6 @@ add_library(bitcoin_node STATIC EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoin_node
   PRIVATE
-    core_interface
     bitcoin_common
     bitcoin_util
     leveldb
@@ -290,13 +283,12 @@ if(MULTIPROCESS)
 endif()
 
 
-add_library(bitcoin_cli STATIC EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoin_cli STATIC EXCLUDE_FROM_ALL
   compat/stdin.cpp
   rpc/client.cpp
 )
 target_link_libraries(bitcoin_cli
   PUBLIC
-    core_interface
     univalue
 )
 
