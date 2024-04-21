@@ -22,7 +22,7 @@ check_c_source_compiles("
   " HAVE_64BIT_ASM
 )
 
-add_library(secp256k1 STATIC EXCLUDE_FROM_ALL
+subtree_add_library(secp256k1 STATIC EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/secp256k1.c
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/precomputed_ecmult.c
   ${PROJECT_SOURCE_DIR}/src/secp256k1/src/precomputed_ecmult_gen.c
@@ -54,5 +54,3 @@ if(MSVC)
       /wd4267
   )
 endif()
-
-target_link_libraries(secp256k1 PRIVATE core_base_interface)
