@@ -78,7 +78,7 @@ check_cxx_source_compiles_with_flags("${ARM_CRC_CXXFLAGS}" "
   " HAVE_ARM64_CRC32C
 )
 
-add_library(crc32c STATIC EXCLUDE_FROM_ALL
+subtree_add_library(crc32c STATIC EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c.cc
   ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_portable.cc
 )
@@ -111,5 +111,3 @@ if(HAVE_ARM64_CRC32C)
     APPEND PROPERTY COMPILE_OPTIONS ${ARM_CRC_CXXFLAGS}
   )
 endif()
-
-target_link_libraries(crc32c PRIVATE core_base_interface)
