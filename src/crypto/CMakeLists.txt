@@ -63,7 +63,7 @@ if(NOT MSVC)
   )
 endif()
 
-add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL
+bitcoincore_add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL
   aes.cpp
   chacha20.cpp
   chacha20poly1305.cpp
@@ -79,11 +79,6 @@ add_library(bitcoin_crypto STATIC EXCLUDE_FROM_ALL
   sha3.cpp
   sha512.cpp
   siphash.cpp
-)
-
-target_link_libraries(bitcoin_crypto
-  PRIVATE
-    core_interface
 )
 
 if(HAVE_SSE41)
