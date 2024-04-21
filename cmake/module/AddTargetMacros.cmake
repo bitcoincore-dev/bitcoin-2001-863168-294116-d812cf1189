@@ -4,6 +4,18 @@
 
 include_guard(GLOBAL)
 
+function(subtree_add_library name)
+  cmake_parse_arguments(PARSE_ARGV 1 FWD "" "" "")
+  add_library("${name}" ${FWD_UNPARSED_ARGUMENTS})
+  target_link_libraries("${name}" PRIVATE core_base_interface)
+  cmake_language(EVAL CODE "
+    cmake_language(DEFER
+      DIRECTORY ${PROJECT_SOURCE_DIR}
+      CALL target_link_libraries ${name} PRIVATE extra_flags_interface
+    )
+  ")
+endfunction()
+
 function(bitcoincore_add_library name)
   cmake_parse_arguments(PARSE_ARGV 1 FWD "" "" "")
   add_library("${name}" ${FWD_UNPARSED_ARGUMENTS})
