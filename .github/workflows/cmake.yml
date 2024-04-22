@@ -227,7 +227,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build -DCMAKE_C_COMPILER=gcc-11 -DCMAKE_CXX_COMPILER=g++-11 -DBoost_INCLUDE_DIR="${PWD}/${{ matrix.conf.boost_archive }}" -DENABLE_WALLET=ON -DWITH_EXTERNAL_SIGNER=ON -DWITH_MINIUPNPC=ON -DWITH_NATPMP=ON -DWITH_ZMQ=ON -DWITH_USDT=ON -DWERROR=ON
+          cmake -B build --preset ci-linux -DCMAKE_C_COMPILER=gcc-11 -DCMAKE_CXX_COMPILER=g++-11 -DBoost_INCLUDE_DIR="${PWD}/${{ matrix.conf.boost_archive }}"
 
       - name: Build
         working-directory: build
@@ -576,7 +576,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          ${{ matrix.xcode.configure_env }} cmake -B build -DWERROR=ON
+          ${{ matrix.xcode.configure_env }} cmake -B build --preset ci-darwin
 
       - name: Build
         env:

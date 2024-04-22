@@ -50,60 +50,6 @@ if(CCACHE)
   mark_as_advanced(CCACHE_COMMAND)
 endif()
 
-if(WITH_NATPMP)
-  find_package(NATPMP MODULE)
-  if(NATPMP_FOUND)
-    set(WITH_NATPMP ON)
-  elseif(WITH_NATPMP STREQUAL "AUTO")
-    message(WARNING "libnatpmp not found, disabling.\n"
-                    "To skip libnatpmp check, use \"-DWITH_NATPMP=OFF\".\n")
-    set(WITH_NATPMP OFF)
-  else()
-    message(FATAL_ERROR "libnatpmp requested, but not found.")
-  endif()
-endif()
-
-if(WITH_MINIUPNPC)
-  find_package(MiniUPnPc MODULE)
-  if(MiniUPnPc_FOUND)
-    set(WITH_MINIUPNPC ON)
-  elseif(WITH_MINIUPNPC STREQUAL "AUTO")
-    message(WARNING "libminiupnpc not found, disabling.\n"
-                    "To skip libminiupnpc check, use \"-DWITH_MINIUPNPC=OFF\".\n")
-    set(WITH_MINIUPNPC OFF)
-  else()
-    message(FATAL_ERROR "libminiupnpc requested, but not found.")
-  endif()
-endif()
-
-if(WITH_ZMQ)
-  if(MSVC)
-    find_package(ZeroMQ CONFIG)
-  else()
-    # The ZeroMQ project has provided config files since v4.2.2.
-    # TODO: Switch to find_package(ZeroMQ) at some point in the future.
-    include(CrossPkgConfig)
-    cross_pkg_check_modules(libzmq IMPORTED_TARGET libzmq>=4)
-    if(libzmq_FOUND AND TARGET PkgConfig::libzmq)
-      target_compile_definitions(PkgConfig::libzmq INTERFACE
-        $<$<PLATFORM_ID:Windows>:ZMQ_STATIC>
-      )
-      target_link_libraries(PkgConfig::libzmq INTERFACE
-        $<$<PLATFORM_ID:Windows>:iphlpapi;ws2_32>
-      )
-    endif()
-  endif()
-  if(TARGET libzmq OR TARGET PkgConfig::libzmq)
-    set(WITH_ZMQ ON)
-  elseif(WITH_ZMQ STREQUAL "AUTO")
-    message(WARNING "libzmq not found, disabling.\n"
-                    "To skip libzmq check, use \"-DWITH_ZMQ=OFF\".\n")
-    set(WITH_ZMQ OFF)
-  else()
-    message(FATAL_ERROR "libzmq requested, but not found.")
-  endif()
-endif()
-
 if(WITH_USDT)
   find_path(SystemTap_INCLUDE_DIR
     NAMES sys/sdt.h
@@ -206,17 +152,5 @@ if(WITH_GUI AND WITH_QRENCODE)
     set(WITH_QRENCODE OFF)
   else()
     message(FATAL_ERROR "libqrencode requested, but not found.")
-  endif()
-endif()
-
-if(MULTIPROCESS)
-  find_package(Libmultiprocess CONFIG)
-  find_package(LibmultiprocessGen CONFIG)
-  if(TARGET Libmultiprocess::multiprocess AND TARGET Libmultiprocess::mpgen)
-    set(MULTIPROCESS ON)
-  elseif(MULTIPROCESS STREQUAL "AUTO")
-    set(MULTIPROCESS OFF)
-  else()
-    message(FATAL_ERROR "\"-DMULTIPROCESS=ON\" specified, but libmultiprocess library was not found.")
   endif()
 endif()

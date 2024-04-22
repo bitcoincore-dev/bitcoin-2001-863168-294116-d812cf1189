@@ -70,9 +70,32 @@ option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting execu
 option(WERROR "Treat compiler warnings as errors." OFF)
 
 tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
-tristate_option(WITH_NATPMP "Enable NAT-PMP." "if libnatpmp is found." AUTO)
-tristate_option(WITH_MINIUPNPC "Enable UPnP." "if libminiupnpc is found." AUTO)
-tristate_option(WITH_ZMQ "Enable ZMQ notifications." "if libzmq is found." AUTO)
+
+option(WITH_NATPMP "Enable NAT-PMP." OFF)
+if(WITH_NATPMP)
+  find_package(NATPMP MODULE REQUIRED)
+endif()
+
+option(WITH_MINIUPNPC "Enable UPnP." OFF)
+if(WITH_MINIUPNPC)
+  find_package(MiniUPnPc MODULE REQUIRED)
+endif()
+
+option(WITH_ZMQ "Enable ZMQ notifications." OFF)
+if(WITH_ZMQ)
+  if(VCPKG_TARGET_TRIPLET)
+    find_package(ZeroMQ CONFIG REQUIRED)
+  else()
+    # The ZeroMQ project has provided config files since v4.2.2.
+    # TODO: Switch to find_package(ZeroMQ) at some point in the future.
+    include(CrossPkgConfig)
+    cross_pkg_check_modules(libzmq REQUIRED IMPORTED_TARGET libzmq>=4)
+    target_link_libraries(PkgConfig::libzmq INTERFACE
+      $<$<PLATFORM_ID:Windows>:iphlpapi;ws2_32>
+    )
+  endif()
+endif()
+
 tristate_option(WITH_USDT
   "Enable tracepoints for Userspace, Statically Defined Tracing."
   "if sys/sdt.h is found."
@@ -84,7 +107,12 @@ tristate_option(WITH_EXTERNAL_SIGNER
   AUTO
 )
 tristate_option(WITH_QRENCODE "Enable QR code support." "if libqrencode is found." AUTO)
-tristate_option(MULTIPROCESS "Build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables. Requires libmultiprocess library. Experimental." "if libmultiprocess is found." OFF)
+
+option(MULTIPROCESS "Build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables. Requires libmultiprocess library. Experimental." OFF)
+if(MULTIPROCESS)
+  find_package(Libmultiprocess CONFIG REQUIRED)
+  find_package(LibmultiprocessGen CONFIG REQUIRED)
+endif()
 
 option(BUILD_TESTS "Build test_bitcoin executable." ON)
 cmake_dependent_option(BUILD_GUI_TESTS "Build test_bitcoin-qt executable." ON "BUILD_TESTS" OFF)
