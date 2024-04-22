@@ -137,7 +137,7 @@ function(add_macos_deploy_target)
       add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/${osx_volname}.zip
         COMMAND ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR} -zip
-        DEPENDS ${macos_app}/Contents/MacOS/Bitcoin-Qt
+        DEPENDS ${CMAKE_BINARY_DIR}/${macos_app}/Contents/MacOS/Bitcoin-Qt
         VERBATIM
       )
       add_custom_target(deploydir
