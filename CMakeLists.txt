@@ -73,11 +73,12 @@ tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
 tristate_option(WITH_NATPMP "Enable NAT-PMP." "if libnatpmp is found." AUTO)
 tristate_option(WITH_MINIUPNPC "Enable UPnP." "if libminiupnpc is found." AUTO)
 tristate_option(WITH_ZMQ "Enable ZMQ notifications." "if libzmq is found." AUTO)
-tristate_option(WITH_USDT
-  "Enable tracepoints for Userspace, Statically Defined Tracing."
-  "if sys/sdt.h is found."
-  AUTO
-)
+
+option(WITH_USDT "Enable tracepoints for Userspace, Statically Defined Tracing." OFF)
+if(WITH_USDT)
+  find_package(USDT MODULE REQUIRED)
+endif()
+
 tristate_option(WITH_EXTERNAL_SIGNER
   "Enable external signer support."
   "if Boost.Process is found."
