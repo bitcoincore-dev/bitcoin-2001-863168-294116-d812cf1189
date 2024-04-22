@@ -92,6 +92,11 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
 
     std::ofstream file;
     fs::path filepath_tmp = GetAuthCookieFile(true);
+    try {
+        fs::remove(filepath_tmp);
+    } catch (const fs::filesystem_error& e) {
+        // ignore
+    }
     file.open(filepath_tmp);
     if (!file.is_open()) {
         LogInfo("Unable to open cookie authentication file %s for writing\n", fs::PathToString(filepath_tmp));
