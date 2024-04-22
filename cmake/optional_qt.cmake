@@ -12,9 +12,11 @@ if(WITH_GUI)
   set(QT_NO_CREATE_VERSIONLESS_FUNCTIONS ON)
   set(QT_NO_CREATE_VERSIONLESS_TARGETS ON)
 
-  if(BREW_COMMAND)
+  set(qt5_brew_prefix)
+  if(CMAKE_HOST_APPLE)
+    find_program(HOMEBREW_EXECUTABLE brew REQUIRED)
     execute_process(
-      COMMAND ${BREW_COMMAND} --prefix qt@5
+      COMMAND ${HOMEBREW_EXECUTABLE} --prefix qt@5
       OUTPUT_VARIABLE qt5_brew_prefix
       ERROR_QUIET
       OUTPUT_STRIP_TRAILING_WHITESPACE
