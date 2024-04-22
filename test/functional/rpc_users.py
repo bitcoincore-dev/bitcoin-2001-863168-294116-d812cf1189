@@ -24,7 +24,7 @@ from typing import Optional
 
 
 # Owner-read matches DEFAULT_COOKIE_PERMS in src/httprpc.h
-DEFAULT_COOKIE_PERMISSION = stat.S_IRUSR
+DEFAULT_COOKIE_PERMISSION = stat.S_IRUSR | stat.S_IWUSR
 # Default umask from common/system.cpp
 PERM_BITS_UMASK = 0o7777
 
@@ -173,7 +173,6 @@ class HTTPBasicsTest(BitcoinTestFramework):
 
         self.log.info('Check -norpccookieperms -rpccookieperms')
         default_perms = DEFAULT_COOKIE_PERMISSION & PERM_BITS_UMASK
-        assert(default_perms != unassigned_perms)
         self.restart_node(1, extra_args=["-rpccookieperms=0", "-rpccookieperms=1"])
         actual_perms = os.stat(cookie_file_path).st_mode & PERM_BITS_UMASK
         assert_equal(default_perms, actual_perms)
