@@ -250,6 +250,7 @@ class HTTPBasicsTest(BitcoinTestFramework):
 
         self.log.info('Check that failure to write cookie file will abort the node gracefully')
         (self.nodes[0].chain_path / ".cookie.tmp").mkdir()
+        (self.nodes[0].chain_path / ".cookie.tmp/subdir").mkdir()
         self.nodes[0].assert_start_raises_init_error(expected_msg=init_error)
 
         self.test_rpccookieperms()
