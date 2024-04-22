@@ -12,13 +12,17 @@ if(WITH_GUI)
   set(QT_NO_CREATE_VERSIONLESS_FUNCTIONS ON)
   set(QT_NO_CREATE_VERSIONLESS_TARGETS ON)
 
-  if(BREW_COMMAND)
-    execute_process(
-      COMMAND ${BREW_COMMAND} --prefix qt@5
-      OUTPUT_VARIABLE qt5_brew_prefix
-      ERROR_QUIET
-      OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
+  set(qt5_brew_prefix)
+  if(CMAKE_HOST_APPLE)
+    find_program(HOMEBREW_EXECUTABLE brew)
+    if(HOMEBREW_EXECUTABLE)
+      execute_process(
+        COMMAND ${HOMEBREW_EXECUTABLE} --prefix qt@5
+        OUTPUT_VARIABLE qt5_brew_prefix
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+    endif()
   endif()
 
   if(WITH_GUI STREQUAL "AUTO")
