@@ -124,6 +124,7 @@ private:
     QCheckBox *rejectnonstddatacarrier;
     BitcoinAmountField *dustrelayfee;
     QCheckBox *dustdynamic_enable;
+    QDoubleSpinBox *dustdynamic_multiplier;
     QRadioButton *dustdynamic_target;
     QSpinBox *dustdynamic_target_blocks;
     QRadioButton *dustdynamic_mempool;

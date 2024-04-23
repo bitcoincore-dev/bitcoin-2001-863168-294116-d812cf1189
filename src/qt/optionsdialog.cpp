@@ -30,6 +30,7 @@
 #include <validation.h>
 
 #include <chrono>
+#include <utility>
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -71,13 +72,15 @@ void OptionsDialog::CreateOptionUI(QBoxLayout * const layout, QWidget * const o,
 
     if (!horizontalLayout) horizontalLayout = new QHBoxLayout();
 
-    QLabel * const labelBefore = new QLabel(parent);
-    labelBefore->setText(text_parts[0]);
-    labelBefore->setTextFormat(Qt::PlainText);
-    labelBefore->setBuddy(o);
-    labelBefore->setToolTip(o->toolTip());
+    if (!text_parts[0].isEmpty()) {
+        QLabel * const labelBefore = new QLabel(parent);
+        labelBefore->setText(text_parts[0]);
+        labelBefore->setTextFormat(Qt::PlainText);
+        labelBefore->setBuddy(o);
+        labelBefore->setToolTip(o->toolTip());
+        horizontalLayout->addWidget(labelBefore);
+    }
 
-    horizontalLayout->addWidget(labelBefore);
     horizontalLayout->addWidget(o);
 
     QLabel * const labelAfter = new QLabel(parent);
@@ -351,15 +354,23 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     CreateOptionUI(verticalLayout_Spamfiltering, dustrelayfee, tr("Ignore transactions with values that would cost more to spend at a fee rate of %s per kvB (\"dust\")."));
 
 
+    auto hlayout = new QHBoxLayout();
     dustdynamic_enable = new QCheckBox(groupBox_Spamfiltering);
-    dustdynamic_enable->setText(tr("Automatically adjust the dust limit upward to:"));
-    verticalLayout_Spamfiltering->addWidget(dustdynamic_enable);
-    FixTabOrder(dustdynamic_enable);
+    dustdynamic_enable->setText(tr("Automatically adjust the dust limit upward to"));
+    hlayout->addWidget(dustdynamic_enable);
+    dustdynamic_multiplier = new QDoubleSpinBox(groupBox_Spamfiltering);
+    dustdynamic_multiplier->setDecimals(3);
+    dustdynamic_multiplier->setStepType(QAbstractSpinBox::DefaultStepType);
+    dustdynamic_multiplier->setSingleStep(1);
+    dustdynamic_multiplier->setMinimum(0.001);
+    dustdynamic_multiplier->setMaximum(65);
+    dustdynamic_multiplier->setValue(DEFAULT_DUST_RELAY_MULTIPLIER / 1000.0);
+    CreateOptionUI(verticalLayout_Spamfiltering, dustdynamic_multiplier, tr("%s times:"), hlayout);
 
     QStyleOptionButton styleoptbtn;
     const auto checkbox_indent = dustdynamic_enable->style()->subElementRect(QStyle::SE_CheckBoxIndicator, &styleoptbtn, dustdynamic_enable).width();
 
-    auto hlayout = new QHBoxLayout();
+    hlayout = new QHBoxLayout();
     hlayout->addSpacing(checkbox_indent);
     dustdynamic_target = new QRadioButton(groupBox_Spamfiltering);
     hlayout->addWidget(dustdynamic_target);
@@ -381,6 +392,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet)
     CreateOptionUI(verticalLayout_Spamfiltering, dustdynamic_mempool_kvB, tr("the lowest fee of the best known %s kvB of unconfirmed transactions."), hlayout);
 
     connect(dustdynamic_enable, &QAbstractButton::toggled, [this](const bool state){
+        dustdynamic_multiplier->setEnabled(state);
         dustdynamic_target->setEnabled(state);
         dustdynamic_mempool->setEnabled(state);
         if (state) {
@@ -699,17 +711,18 @@ void OptionsDialog::setMapper()
     mapper->addMapping(dustrelayfee, OptionsModel::dustrelayfee);
 
     QVariant current_dustdynamic = model->data(model->index(OptionsModel::dustdynamic, 0), Qt::EditRole);
-    const util::Result<int32_t> parsed_dustdynamic = ParseDustDynamicOpt(current_dustdynamic.toString().toStdString(), std::numeric_limits<unsigned int>::max());
+    const util::Result<std::pair<int32_t, unsigned int>> parsed_dustdynamic = ParseDustDynamicOpt(current_dustdynamic.toString().toStdString(), std::numeric_limits<unsigned int>::max());
     if (parsed_dustdynamic) {
-        if (*parsed_dustdynamic == 0) {
+        if (parsed_dustdynamic->first == 0) {
             dustdynamic_enable->setChecked(false);
         } else {
-            if (*parsed_dustdynamic < 0) {
+            dustdynamic_multiplier->setValue(parsed_dustdynamic->second / 1000.0);
+            if (parsed_dustdynamic->first < 0) {
                 dustdynamic_target->setChecked(true);
-                dustdynamic_target_blocks->setValue(-*parsed_dustdynamic);
+                dustdynamic_target_blocks->setValue(-parsed_dustdynamic->first);
             } else {
                 dustdynamic_mempool->setChecked(true);
-                dustdynamic_mempool_kvB->setValue(*parsed_dustdynamic);
+                dustdynamic_mempool_kvB->setValue(parsed_dustdynamic->first);
             }
             dustdynamic_enable->setChecked(true);
         }
@@ -889,9 +902,9 @@ void OptionsDialog::on_okButton_clicked()
 
     if (dustdynamic_enable->isChecked()) {
         if (dustdynamic_target->isChecked()) {
-            model->setData(model->index(OptionsModel::dustdynamic, 0), QStringLiteral("target:%1").arg(dustdynamic_target_blocks->value()));
+            model->setData(model->index(OptionsModel::dustdynamic, 0), QStringLiteral("%2*target:%1").arg(dustdynamic_target_blocks->value()).arg(dustdynamic_multiplier->value()));
         } else if (dustdynamic_mempool->isChecked()) {
-            model->setData(model->index(OptionsModel::dustdynamic, 0), QStringLiteral("mempool:%1").arg(dustdynamic_mempool_kvB->value()));
+            model->setData(model->index(OptionsModel::dustdynamic, 0), QStringLiteral("%2*mempool:%1").arg(dustdynamic_mempool_kvB->value()).arg(dustdynamic_multiplier->value()));
         }
     } else {
         model->setData(model->index(OptionsModel::dustdynamic, 0), "off");

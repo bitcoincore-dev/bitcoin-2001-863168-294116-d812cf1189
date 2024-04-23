@@ -38,6 +38,7 @@
 #endif
 
 #include <chrono>
+#include <utility>
 
 #include <QDebug>
 #include <QLatin1Char>
@@ -1222,11 +1223,12 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
     case dustdynamic:
         if (changed()) {
             const std::string newvalue_str = value.toString().toStdString();
-            const util::Result<int32_t> parsed = ParseDustDynamicOpt(newvalue_str, 1008 /* FIXME: get from estimator */);
+            const util::Result<std::pair<int32_t, unsigned int>> parsed = ParseDustDynamicOpt(newvalue_str, 1008 /* FIXME: get from estimator */);
             assert(parsed);  // FIXME: what to do if it fails to parse?
             // FIXME: save -prev-<type> for each type
             update(newvalue_str);
-            node().mempool().m_dust_relay_target = *parsed;
+            node().mempool().m_dust_relay_target = parsed->first;
+            node().mempool().m_dust_relay_multiplier = parsed->second;
         }
         break;
     case blockmintxfee:
