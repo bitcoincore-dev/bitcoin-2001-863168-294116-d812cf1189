@@ -63,7 +63,7 @@ export BDB_PREFIX="/path/to/bitcoin/depends/x86_64-unknown-openbsd"
 Bitcoin Core includes a GUI built with the cross-platform Qt Framework. To compile the GUI, Qt 5 is required.
 
 ```bash
-pkg_add qt5
+pkg_add qtbase qttools
 ```
 
 ## Building Bitcoin Core
