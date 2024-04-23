@@ -18,10 +18,12 @@
 #include <tinyformat.h>
 #include <util/error.h>
 #include <util/moneystr.h>
+#include <util/result.h>
 #include <util/strencodings.h>
 #include <util/translation.h>
 
 #include <chrono>
+#include <cstdint>
 #include <memory>
 
 using kernel::MemPoolLimits;
