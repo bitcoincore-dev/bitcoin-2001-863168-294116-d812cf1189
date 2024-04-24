@@ -101,11 +101,8 @@ tristate_option(WITH_USDT
   "if sys/sdt.h is found."
   AUTO
 )
-tristate_option(WITH_EXTERNAL_SIGNER
-  "Enable external signer support."
-  "if Boost.Process is found."
-  AUTO
-)
+cmake_dependent_option(WITH_EXTERNAL_SIGNER "Enable external signer support." ON "NOT WIN32" OFF)
+set(ENABLE_EXTERNAL_SIGNER ${WITH_EXTERNAL_SIGNER})
 tristate_option(WITH_QRENCODE "Enable QR code support." "if libqrencode is found." AUTO)
 
 option(MULTIPROCESS "Build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables. Requires libmultiprocess library. Experimental." OFF)
