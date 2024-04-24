@@ -103,7 +103,22 @@ tristate_option(WITH_USDT
 )
 cmake_dependent_option(WITH_EXTERNAL_SIGNER "Enable external signer support." ON "NOT WIN32" OFF)
 set(ENABLE_EXTERNAL_SIGNER ${WITH_EXTERNAL_SIGNER})
-tristate_option(WITH_QRENCODE "Enable QR code support." "if libqrencode is found." AUTO)
+
+include(cmake/optional_qt.cmake)
+cmake_dependent_option(WITH_QRENCODE "Enable QR code support." ON "WITH_GUI" OFF)
+if(WITH_QRENCODE)
+  if(VCPKG_TARGET_TRIPLET)
+    # TODO: vcpkg fails to build libqrencode package due to
+    #       the build error in its libiconv dependency.
+    #       See: https://github.com/microsoft/vcpkg/issues/36924.
+  else()
+    include(CrossPkgConfig)
+    cross_pkg_check_modules(libqrencode REQUIRED IMPORTED_TARGET libqrencode)
+    target_compile_definitions(PkgConfig::libqrencode INTERFACE
+      USE_QRCODE
+    )
+  endif()
+endif()
 
 option(MULTIPROCESS "Build multiprocess bitcoin-node, bitcoin-wallet, and bitcoin-gui executables in addition to monolithic bitcoind and bitcoin-qt executables. Requires libmultiprocess library. Experimental." OFF)
 if(MULTIPROCESS)
@@ -425,8 +440,6 @@ else()
   unset(compiler_supports_g3)
   unset(c_flags_debug_overridden)
 endif()
-
-include(cmake/optional_qt.cmake)
 
 include(cmake/optional.cmake)
 
