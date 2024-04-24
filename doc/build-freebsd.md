@@ -42,6 +42,7 @@ It is required to use Berkeley DB 4.8. You **cannot** use the BerkeleyDB library
 from ports. However, you can build DB 4.8 yourself [using depends](/depends).
 
 ```
+pkg install bash
 gmake -C depends NO_BOOST=1 NO_LIBEVENT=1 NO_QT=1 NO_SQLITE=1 NO_NATPMP=1 NO_UPNP=1 NO_ZMQ=1 NO_USDT=1
 ```
 
