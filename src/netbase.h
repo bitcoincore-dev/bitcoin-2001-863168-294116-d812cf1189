@@ -13,7 +13,6 @@
 #include <netaddress.h>
 #include <serialize.h>
 #include <util/sock.h>
-#include <util/threadinterrupt.h>
 
 #include <functional>
 #include <memory>
@@ -277,10 +276,7 @@ bool ConnectSocketDirectly(const CService &addrConnect, const Sock& sock, int nT
  */
 bool ConnectThroughProxy(const Proxy& proxy, const std::string& strDest, uint16_t port, const Sock& sock, int nTimeout, bool& outProxyConnectionFailed);
 
-/**
- * Interrupt SOCKS5 reads or writes.
- */
-extern CThreadInterrupt g_socks5_interrupt;
+void InterruptSocks5(bool interrupt);
 
 /**
  * Connect to a specified destination service through an already connected
