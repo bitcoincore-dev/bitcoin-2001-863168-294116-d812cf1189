@@ -458,6 +458,7 @@ public:
     CFeeRate m_dust_relay_feerate;
     CFeeRate m_dust_relay_feerate_floor;
     int32_t m_dust_relay_target;
+    unsigned int m_dust_relay_multiplier;
     bool m_permit_bare_pubkey;
     bool m_permit_bare_multisig;
     std::optional<unsigned> m_max_datacarrier_bytes;

@@ -1,4 +1,3 @@
-
 // Copyright (c) 2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -8,7 +7,9 @@
 
 #include <util/result.h>
 
-#include <string>
+#include <cstdint>
+#include <string_view>
+#include <utility>
 
 class ArgsManager;
 class CChainParams;
@@ -17,7 +18,7 @@ namespace kernel {
 struct MemPoolOptions;
 };
 
-[[nodiscard]] util::Result<int32_t> ParseDustDynamicOpt(const std::string& optstr, unsigned int max_fee_estimate_blocks);
+[[nodiscard]] util::Result<std::pair<int32_t, unsigned int>> ParseDustDynamicOpt(std::string_view optstr, unsigned int max_fee_estimate_blocks);
 
 /**
  * Overlay the options set in \p argsman on top of corresponding members in \p mempool_opts.

@@ -422,6 +422,7 @@ CTxMemPool::CTxMemPool(const Options& opts)
       m_dust_relay_feerate{opts.dust_relay_feerate},
       m_dust_relay_feerate_floor{opts.dust_relay_feerate},
       m_dust_relay_target{opts.dust_relay_target},
+      m_dust_relay_multiplier{opts.dust_relay_multiplier},
       m_permit_bare_pubkey{opts.permit_bare_pubkey},
       m_permit_bare_multisig{opts.permit_bare_multisig},
       m_max_datacarrier_bytes{opts.max_datacarrier_bytes},
@@ -732,6 +733,8 @@ void CTxMemPool::UpdateDynamicDustFeerate()
             }
         }
     }
+
+    est_feerate = (est_feerate * m_dust_relay_multiplier) / 1'000;
 
     if (est_feerate < m_dust_relay_feerate_floor) {
         est_feerate = m_dust_relay_feerate_floor;
