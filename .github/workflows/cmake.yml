@@ -358,11 +358,8 @@ jobs:
 
       - name: Build depends
         working-directory: depends
-        env:
-          CC: ${{ matrix.host.c_compiler }}
-          CXX: ${{ matrix.host.cxx_compiler }}
         run: |
-          make -j$(nproc) HOST=${{ matrix.host.triplet }} ${{ matrix.host.depends_options }} LOG=1
+          make -j$(nproc) HOST=${{ matrix.host.triplet }} CC="${{ matrix.host.c_compiler }}" CXX="${{ matrix.host.cxx_compiler }}" ${{ matrix.host.depends_options }} LOG=1
 
       - name: Restore Ccache cache
         uses: actions/cache/restore@v4
