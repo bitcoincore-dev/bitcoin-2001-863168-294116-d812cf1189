@@ -85,9 +85,8 @@ target_compile_definitions(crc32c_common INTERFACE
   HAVE_STRONG_GETAUXVAL=$<BOOL:${HAVE_STRONG_GETAUXVAL}>
   BYTE_ORDER_BIG_ENDIAN=$<STREQUAL:${CMAKE_CXX_BYTE_ORDER},BIG_ENDIAN>
 )
-target_link_libraries(crc32c_common INTERFACE core_base_interface)
 
-add_library(crc32c STATIC EXCLUDE_FROM_ALL
+add_library_append_flags(crc32c STATIC EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c.cc
   ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_portable.cc
 )
@@ -98,7 +97,7 @@ target_include_directories(crc32c
 target_link_libraries(crc32c PRIVATE crc32c_common)
 
 if(HAVE_SSE42)
-  add_library(crc32c_sse42 STATIC EXCLUDE_FROM_ALL
+  add_library_append_flags(crc32c_sse42 STATIC EXCLUDE_FROM_ALL
     ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_sse42.cc
   )
   target_compile_definitions(crc32c_sse42 PUBLIC HAVE_SSE42=1)
@@ -108,7 +107,7 @@ if(HAVE_SSE42)
 endif()
 
 if(HAVE_ARM64_CRC32C)
-  add_library(crc32c_arm64 STATIC EXCLUDE_FROM_ALL
+  add_library_append_flags(crc32c_arm64 STATIC EXCLUDE_FROM_ALL
     ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_arm64.cc
   )
   target_compile_definitions(crc32c_arm64 PUBLIC HAVE_ARM64_CRC32C=1)
