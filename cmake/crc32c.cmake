@@ -61,8 +61,8 @@ check_cxx_source_compiles_with_flags("${SSE42_CXXFLAGS}" "
 )
 
 # Check for ARMv8 w/ CRC and CRYPTO extensions support in the compiler.
-set(ARM_CRC_CXXFLAGS -march=armv8-a+crc+crypto)
-check_cxx_source_compiles_with_flags("${ARM_CRC_CXXFLAGS}" "
+set(ARM64_CRC_CXXFLAGS -march=armv8-a+crc+crypto)
+check_cxx_source_compiles_with_flags("${ARM64_CRC_CXXFLAGS}" "
   #include <arm_acle.h>
   #include <arm_neon.h>
 
@@ -78,38 +78,41 @@ check_cxx_source_compiles_with_flags("${ARM_CRC_CXXFLAGS}" "
   " HAVE_ARM64_CRC32C
 )
 
+add_library(crc32c_common INTERFACE)
+target_compile_definitions(crc32c_common INTERFACE
+  HAVE_BUILTIN_PREFETCH=$<BOOL:${HAVE_BUILTIN_PREFETCH}>
+  HAVE_MM_PREFETCH=$<BOOL:${HAVE_MM_PREFETCH}>
+  HAVE_STRONG_GETAUXVAL=$<BOOL:${HAVE_STRONG_GETAUXVAL}>
+  BYTE_ORDER_BIG_ENDIAN=$<STREQUAL:${CMAKE_CXX_BYTE_ORDER},BIG_ENDIAN>
+)
+target_link_libraries(crc32c_common INTERFACE core_base_interface)
+
 add_library(crc32c STATIC EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c.cc
   ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_portable.cc
 )
-
-target_compile_definitions(crc32c
-  PRIVATE
-    HAVE_BUILTIN_PREFETCH=$<BOOL:${HAVE_BUILTIN_PREFETCH}>
-    HAVE_MM_PREFETCH=$<BOOL:${HAVE_MM_PREFETCH}>
-    HAVE_STRONG_GETAUXVAL=$<BOOL:${HAVE_STRONG_GETAUXVAL}>
-    HAVE_SSE42=$<BOOL:${HAVE_SSE42}>
-    HAVE_ARM64_CRC32C=$<BOOL:${HAVE_ARM64_CRC32C}>
-    BYTE_ORDER_BIG_ENDIAN=$<STREQUAL:${CMAKE_CXX_BYTE_ORDER},BIG_ENDIAN>
-)
-
 target_include_directories(crc32c
   PUBLIC
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/crc32c/include>
 )
+target_link_libraries(crc32c PRIVATE crc32c_common)
 
 if(HAVE_SSE42)
-  target_sources(crc32c PRIVATE ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_sse42.cc)
-  set_property(SOURCE ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_sse42.cc
-    APPEND PROPERTY COMPILE_OPTIONS ${SSE42_CXXFLAGS}
+  add_library(crc32c_sse42 STATIC EXCLUDE_FROM_ALL
+    ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_sse42.cc
   )
+  target_compile_definitions(crc32c_sse42 PUBLIC HAVE_SSE42=1)
+  target_compile_options(crc32c_sse42 PRIVATE ${SSE42_CXXFLAGS})
+  target_link_libraries(crc32c_sse42 PRIVATE crc32c_common)
+  target_link_libraries(crc32c PRIVATE crc32c_sse42)
 endif()
 
 if(HAVE_ARM64_CRC32C)
-  target_sources(crc32c PRIVATE ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_arm64.cc)
-  set_property(SOURCE ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_arm64.cc
-    APPEND PROPERTY COMPILE_OPTIONS ${ARM_CRC_CXXFLAGS}
+  add_library(crc32c_arm64 STATIC EXCLUDE_FROM_ALL
+    ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_arm64.cc
   )
+  target_compile_definitions(crc32c_arm64 PUBLIC HAVE_ARM64_CRC32C=1)
+  target_compile_options(crc32c_arm64 PRIVATE ${ARM64_CRC_CXXFLAGS})
+  target_link_libraries(crc32c_arm64 PRIVATE crc32c_common)
+  target_link_libraries(crc32c PRIVATE crc32c_arm64)
 endif()
-
-target_link_libraries(crc32c PRIVATE core_base_interface)
