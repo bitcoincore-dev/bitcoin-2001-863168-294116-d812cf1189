@@ -5,7 +5,7 @@
 include(GenerateHeaders)
 generate_header_from_raw(data/block413567.raw)
 
-add_executable(bench_bitcoin
+add_executable_append_flags(bench_bitcoin
   bench_bitcoin.cpp
   bench.cpp
   data.cpp
@@ -53,10 +53,10 @@ add_executable(bench_bitcoin
 )
 
 target_link_libraries(bench_bitcoin
-  core_interface
-  test_util
-  bitcoin_node
-  Boost::headers
+  PRIVATE
+    test_util
+    bitcoin_node
+    Boost::headers
 )
 
 if(ENABLE_WALLET)
@@ -69,7 +69,7 @@ if(ENABLE_WALLET)
       wallet_loading.cpp
       wallet_ismine.cpp
   )
-  target_link_libraries(bench_bitcoin bitcoin_wallet)
+  target_link_libraries(bench_bitcoin PRIVATE bitcoin_wallet)
 endif()
 
 install(TARGETS bench_bitcoin
