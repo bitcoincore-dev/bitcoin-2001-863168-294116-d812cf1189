@@ -131,6 +131,11 @@ cmake_dependent_option(FUZZ "Build for fuzzing. Enabling this will disable all o
 
 option(INSTALL_MAN "Install man pages." ON)
 
+set(APPEND_CPPFLAGS "" CACHE STRING "Preprocessor flags that are appended to the flags added by the build system.")
+set(APPEND_CFLAGS "" CACHE STRING "C compiler flags that are appended to the flags added by the build system.")
+set(APPEND_CXXFLAGS "" CACHE STRING "(Objective) C++ compiler flags that are appended to the flags added by the build system.")
+set(APPEND_LDFLAGS "" CACHE STRING "Linker flags that are appended to the flags added by the build system.")
+
 set(configure_warnings)
 
 include(CheckPIESupported)
@@ -159,6 +164,23 @@ target_link_libraries(core_base_interface INTERFACE
   $<$<CONFIG:Debug>:core_depends_debug_interface>
 )
 target_link_libraries(core_interface INTERFACE core_base_interface)
+
+# The append_flags_interface library encapsulates user-provided build
+# flags that are appended to the command line after all other flags
+# added by the build system.
+add_library(append_flags_interface INTERFACE)
+separate_arguments(APPEND_CPPFLAGS)
+separate_arguments(APPEND_CFLAGS)
+separate_arguments(APPEND_CXXFLAGS)
+separate_arguments(APPEND_LDFLAGS)
+target_compile_options(append_flags_interface INTERFACE
+  ${APPEND_CPPFLAGS}
+  $<$<COMPILE_LANGUAGE:C>:${APPEND_CFLAGS}>
+  $<$<COMPILE_LANGUAGE:CXX>:${APPEND_CXXFLAGS}>
+)
+target_link_options(append_flags_interface INTERFACE
+  ${APPEND_LDFLAGS}
+)
 
 if(FUZZ)
   message(WARNING "FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
