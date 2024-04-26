@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-add_executable(test_bitcoin-qt
+add_executable_append_flags(test_bitcoin-qt
   apptests.cpp
   optiontests.cpp
   rpcnestedtests.cpp
@@ -13,12 +13,12 @@ add_executable(test_bitcoin-qt
 )
 
 target_link_libraries(test_bitcoin-qt
-  core_interface
-  bitcoinqt
-  test_util
-  bitcoin_node
-  Boost::headers
-  Qt5::Test
+  PRIVATE
+    bitcoinqt
+    test_util
+    bitcoin_node
+    Boost::headers
+    Qt5::Test
 )
 
 import_plugins(test_bitcoin-qt)

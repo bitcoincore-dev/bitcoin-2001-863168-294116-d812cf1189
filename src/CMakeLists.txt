@@ -125,18 +125,18 @@ if(ENABLE_WALLET)
   add_subdirectory(wallet)
 
   if(BUILD_WALLET_TOOL)
-    add_executable(bitcoin-wallet
+    add_executable_append_flags(bitcoin-wallet
       bitcoin-wallet.cpp
       init/bitcoin-wallet.cpp
       wallet/wallettool.cpp
     )
     add_windows_resources(bitcoin-wallet bitcoin-wallet-res.rc)
     target_link_libraries(bitcoin-wallet
-      core_interface
-      bitcoin_wallet
-      bitcoin_common
-      bitcoin_util
-      Boost::headers
+      PRIVATE
+        bitcoin_wallet
+        bitcoin_common
+        bitcoin_util
+        Boost::headers
     )
     list(APPEND installable_targets bitcoin-wallet)
   endif()
@@ -256,28 +256,28 @@ target_link_libraries(bitcoin_node
 
 # Bitcoin Core bitcoind.
 if(BUILD_DAEMON)
-  add_executable(bitcoind
+  add_executable_append_flags(bitcoind
     bitcoind.cpp
     init/bitcoind.cpp
   )
   add_windows_resources(bitcoind bitcoind-res.rc)
   target_link_libraries(bitcoind
-    core_interface
-    bitcoin_node
-    $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
+    PRIVATE
+      bitcoin_node
+      $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
   list(APPEND installable_targets bitcoind)
 endif()
 if(MULTIPROCESS)
-  add_executable(bitcoin-node
+  add_executable_append_flags(bitcoin-node
     bitcoind.cpp
     init/bitcoin-node.cpp
   )
   target_link_libraries(bitcoin-node
-    core_interface
-    bitcoin_node
-    bitcoin_ipc
-    $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
+    PRIVATE
+      bitcoin_node
+      bitcoin_ipc
+      $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
   list(APPEND installable_targets bitcoin-node)
 endif()
@@ -295,39 +295,39 @@ target_link_libraries(bitcoin_cli
 
 # Bitcoin Core RPC client
 if(BUILD_CLI)
-  add_executable(bitcoin-cli bitcoin-cli.cpp)
+  add_executable_append_flags(bitcoin-cli bitcoin-cli.cpp)
   add_windows_resources(bitcoin-cli bitcoin-cli-res.rc)
   target_link_libraries(bitcoin-cli
-    core_interface
-    bitcoin_cli
-    bitcoin_common
-    bitcoin_util
-    libevent::libevent
+    PRIVATE
+      bitcoin_cli
+      bitcoin_common
+      bitcoin_util
+      libevent::libevent
   )
   list(APPEND installable_targets bitcoin-cli)
 endif()
 
 
 if(BUILD_TX)
-  add_executable(bitcoin-tx bitcoin-tx.cpp)
+  add_executable_append_flags(bitcoin-tx bitcoin-tx.cpp)
   add_windows_resources(bitcoin-tx bitcoin-tx-res.rc)
   target_link_libraries(bitcoin-tx
-    core_interface
-    bitcoin_common
-    bitcoin_util
-    univalue
+    PRIVATE
+      bitcoin_common
+      bitcoin_util
+      univalue
   )
   list(APPEND installable_targets bitcoin-tx)
 endif()
 
 
 if(BUILD_UTIL)
-  add_executable(bitcoin-util bitcoin-util.cpp)
+  add_executable_append_flags(bitcoin-util bitcoin-util.cpp)
   add_windows_resources(bitcoin-util bitcoin-util-res.rc)
   target_link_libraries(bitcoin-util
-    core_interface
-    bitcoin_common
-    bitcoin_util
+    PRIVATE
+      bitcoin_common
+      bitcoin_util
   )
   list(APPEND installable_targets bitcoin-util)
 endif()
@@ -343,14 +343,8 @@ if(BUILD_KERNEL_LIB)
 endif()
 
 if(BUILD_UTIL_CHAINSTATE)
-  add_executable(bitcoin-chainstate
-    bitcoin-chainstate.cpp
-  )
-  target_link_libraries(bitcoin-chainstate
-    PRIVATE
-      core_interface
-      bitcoinkernel
-  )
+  add_executable_append_flags(bitcoin-chainstate bitcoin-chainstate.cpp)
+  target_link_libraries(bitcoin-chainstate PRIVATE bitcoinkernel)
 endif()
 
 
