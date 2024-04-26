@@ -40,7 +40,7 @@ if(MSVC)
 endif()
 
 if(HAVE_CLMUL)
-  add_library(minisketch_clmul OBJECT EXCLUDE_FROM_ALL
+  add_library_append_flags(minisketch_clmul OBJECT EXCLUDE_FROM_ALL
     ${PROJECT_SOURCE_DIR}/src/minisketch/src/fields/clmul_1byte.cpp
     ${PROJECT_SOURCE_DIR}/src/minisketch/src/fields/clmul_2bytes.cpp
     ${PROJECT_SOURCE_DIR}/src/minisketch/src/fields/clmul_3bytes.cpp
@@ -54,12 +54,11 @@ if(HAVE_CLMUL)
   target_compile_options(minisketch_clmul PRIVATE ${CLMUL_CXXFLAGS})
   target_link_libraries(minisketch_clmul
     PRIVATE
-      core_base_interface
       minisketch_common
   )
 endif()
 
-add_library(minisketch STATIC EXCLUDE_FROM_ALL
+add_library_append_flags(minisketch STATIC EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/minisketch/src/minisketch.cpp
   ${PROJECT_SOURCE_DIR}/src/minisketch/src/fields/generic_1byte.cpp
   ${PROJECT_SOURCE_DIR}/src/minisketch/src/fields/generic_2bytes.cpp
@@ -78,7 +77,6 @@ target_include_directories(minisketch
 
 target_link_libraries(minisketch
   PRIVATE
-    core_base_interface
     minisketch_common
     $<TARGET_NAME_IF_EXISTS:minisketch_clmul>
 )

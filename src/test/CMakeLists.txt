@@ -177,20 +177,16 @@ if(ENABLE_WALLET)
 endif()
 
 if(MULTIPROCESS)
-  add_library(bitcoin_ipc_test STATIC EXCLUDE_FROM_ALL
+  add_library_append_flags(bitcoin_ipc_test STATIC EXCLUDE_FROM_ALL
     ipc_test.cpp
   )
-
   target_capnp_sources(bitcoin_ipc_test ${CMAKE_SOURCE_DIR}
     ipc_test.capnp
   )
-
   target_link_libraries(bitcoin_ipc_test
     PRIVATE
-      core_interface
       univalue
   )
-
   target_sources(test_bitcoin
     PRIVATE
       ipc_tests.cpp

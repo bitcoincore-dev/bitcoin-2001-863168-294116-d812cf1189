@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-add_library(bitcoin_util STATIC EXCLUDE_FROM_ALL
+add_library_append_flags(bitcoin_util STATIC EXCLUDE_FROM_ALL
   asmap.cpp
   batchpriority.cpp
   bip32.cpp
@@ -44,7 +44,6 @@ add_library(bitcoin_util STATIC EXCLUDE_FROM_ALL
 
 target_link_libraries(bitcoin_util
   PRIVATE
-    core_interface
     bitcoin_clientversion
     bitcoin_crypto
     Threads::Threads

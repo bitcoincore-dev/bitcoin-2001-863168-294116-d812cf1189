@@ -170,6 +170,8 @@ target_link_options(append_flags_interface INTERFACE
   ${APPEND_LDFLAGS}
 )
 
+include(AddTargetMacros)
+
 if(FUZZ)
   message(WARNING "FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
   set(BUILD_DAEMON OFF)

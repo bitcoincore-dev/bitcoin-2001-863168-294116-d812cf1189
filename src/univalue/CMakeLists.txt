@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-add_library(univalue STATIC EXCLUDE_FROM_ALL
+add_library_append_flags(univalue STATIC EXCLUDE_FROM_ALL
   lib/univalue.cpp
   lib/univalue_get.cpp
   lib/univalue_read.cpp
@@ -12,7 +12,6 @@ target_include_directories(univalue
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
-target_link_libraries(univalue PRIVATE core_interface)
 
 if(BUILD_TESTS)
   add_executable(unitester test/unitester.cpp)
