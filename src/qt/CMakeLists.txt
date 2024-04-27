@@ -19,6 +19,14 @@ function(import_plugins target)
   endif()
 endfunction()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+  enable_language(OBJCXX)
+  set(CMAKE_OBJCXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
+  set(CMAKE_OBJCXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
+  set(CMAKE_OBJCXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
+  set(CMAKE_OBJCXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL}")
+endif()
+
 # See:
 #  - https://cmake.org/cmake/help/latest/manual/cmake-qt.7.html
 #  - https://doc.qt.io/qt-5/cmake-manual.html
@@ -27,32 +35,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS forms)
-
-set(qt_minimum_required_version 5.11.3)
-
-set(qt_components Core Gui Widgets Network LinguistTools)
-if(BUILD_GUI_TESTS)
-  list(APPEND qt_components Test)
-endif()
-
-if(CMAKE_CROSSCOMPILING)
-  # The find_package(Qt ...) function internally uses find_library()
-  # calls for all dependencies to ensure their availability.
-  # In turn, the find_library() inspects the well-known locations
-  # on the file system; therefore, it must be able to find
-  # platform-specific system libraries, for example:
-  # /usr/x86_64-w64-mingw32/lib/libm.a or /usr/arm-linux-gnueabihf/lib/libm.a.
-  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY BOTH)
-endif()
-
-find_package(Qt5 ${qt_minimum_required_version} REQUIRED
-  COMPONENTS ${qt_components}
-  HINTS ${qt5_brew_prefix}
-  PATH_SUFFIXES Qt5 # Required on OpenBSD systems.
-)
-unset(qt_components)
-message(STATUS "Found Qt: ${Qt5_DIR} (found suitable version \"${Qt5_VERSION}\", minimum required is \"${qt_minimum_required_version}\")")
-unset(qt_minimum_required_version)
 
 include(CMakePushCheckState)
 cmake_push_check_state(RESET)

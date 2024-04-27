@@ -40,7 +40,7 @@
         "rhs": "Darwin"
       },
       "cacheVariables": {
-        "WITH_GUI": "Qt5",
+        "BUILD_GUI": "ON",
         "WITH_EXTERNAL_SIGNER": "ON"
       }
     },
