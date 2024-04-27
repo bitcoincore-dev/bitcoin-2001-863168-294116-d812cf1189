@@ -79,19 +79,19 @@ pkg_add install python  # Select the newest version of the package.
 There are many ways to configure Bitcoin Core, here are a few common examples:
 
 ##### Descriptor Wallet and GUI:
-This enables the GUI and descriptor wallet support, assuming SQLite and Qt 5 are installed.
+This enables descriptor wallet support and the GUI, assuming SQLite and Qt 5 are installed.
 
 ```bash
-cmake -B build -DWITH_SQLITE=ON -DWITH_GUI=Qt5
+cmake -B build -DWITH_SQLITE=ON -DBUILD_GUI=ON
 ```
 
 Run `cmake -B build -LH` to see the full list of available options.
 
 ##### Descriptor & Legacy Wallet. No GUI:
-This enables support for both wallet types and disables the GUI:
+This enables support for both wallet types:
 
 ```bash
-cmake -B build -DWITH_GUI=OFF -DBerkeleyDB_INCLUDE_DIR:PATH="${BDB_PREFIX}/include"
+cmake -B build -DBerkeleyDB_INCLUDE_DIR:PATH="${BDB_PREFIX}/include"
 ```
 
 ### 2. Compile
