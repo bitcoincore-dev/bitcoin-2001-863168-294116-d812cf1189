@@ -134,7 +134,7 @@ else()
   set(WITH_BDB OFF)
 endif()
 
-if(WITH_GUI AND WITH_QRENCODE)
+if(BUILD_GUI AND WITH_QRENCODE)
   if(VCPKG_TARGET_TRIPLET)
     # TODO: vcpkg fails to build libqrencode package due to
     #       the build error in its libiconv dependency.
