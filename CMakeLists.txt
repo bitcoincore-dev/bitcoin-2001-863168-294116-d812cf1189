@@ -67,6 +67,7 @@ cmake_dependent_option(BUILD_WALLET_TOOL "Build bitcoin-wallet tool." ON "ENABLE
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
 option(HARDENING "Attempt to harden the resulting executables." ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables." OFF)
+option(GPROF "Use gprof profiling compiler flags." OFF)
 option(WERROR "Treat compiler warnings as errors." OFF)
 
 tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
@@ -121,16 +122,18 @@ option(INSTALL_MAN "Install man pages." ON)
 
 set(configure_warnings)
 
-include(CheckPIESupported)
-check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
-if(CMAKE_CXX_LINK_PIE_SUPPORTED)
-  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-elseif(NOT WIN32)
-  # The warning is superfluous for Windows.
-  message(WARNING "PIE is not supported at link time: ${check_pie_output}")
-  list(APPEND configure_warnings "Position independent code disabled.")
+if(NOT GPROF)  # -pg is incompatible with -pie.
+  include(CheckPIESupported)
+  check_pie_supported(OUTPUT_VARIABLE check_pie_output LANGUAGES CXX)
+  if(CMAKE_CXX_LINK_PIE_SUPPORTED)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  elseif(NOT WIN32)
+    # The warning is superfluous for Windows.
+    message(WARNING "PIE is not supported at link time: ${check_pie_output}")
+    list(APPEND configure_warnings "Position independent code disabled.")
+  endif()
+  unset(check_pie_output)
 endif()
-unset(check_pie_output)
 
 # The core_interface library aims to encapsulate common build flags.
 # It is intended to be a usage requirement for all other targets.
@@ -487,6 +490,19 @@ if(REDUCE_EXPORTS)
   try_append_linker_flag("-Wl,--exclude-libs,ALL" TARGET core_base_interface)
 endif()
 
+if(GPROF)
+  try_append_cxx_flags("-pg" TARGET core_base_interface RESULT_VAR compiler_supports_pg)
+  if(NOT compiler_supports_pg)
+    message(FATAL_ERROR "gprof profiling requested but not available.")
+  endif()
+
+  if(CMAKE_CXX_LINK_NO_PIE_SUPPORTED)
+    # Hardened toolchains may force -pie by default, in which
+    # case it needs to be turned off with -no-pie.
+    target_link_options(core_base_interface INTERFACE -no-pie)
+  endif()
+endif()
+
 if(WERROR)
   if(MSVC)
     set(werror_flag "/WX")
@@ -594,6 +610,7 @@ message("Linker flags for executables .......... ${CMAKE_EXE_LINKER_FLAGS}")
 message("Linker flags for shared libraries ..... ${CMAKE_SHARED_LINKER_FLAGS}")
 print_config_flags()
 message("Attempt to harden executables ......... ${HARDENING}")
+message("Use gprof profiling compiler flags .... ${GPROF}")
 message("Treat compiler warnings as errors ..... ${WERROR}")
 message("Use ccache for compiling .............. ${CCACHE}")
 message("\n")
