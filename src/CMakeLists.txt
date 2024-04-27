@@ -343,7 +343,7 @@ if(BUILD_UTIL)
 endif()
 
 
-if(WITH_GUI)
+if(BUILD_GUI)
   add_subdirectory(qt)
 endif()
 

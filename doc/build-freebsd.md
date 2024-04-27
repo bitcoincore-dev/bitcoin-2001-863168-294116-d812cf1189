@@ -101,23 +101,23 @@ pkg install python3 databases/py-sqlite3
 There are many ways to configure Bitcoin Core, here are a few common examples:
 
 ##### Descriptor Wallet and GUI:
-This explicitly enables the GUI and disables legacy wallet support, assuming `sqlite` and `qt` are installed.
+This disables legacy wallet support and enables the GUI, assuming `sqlite` and `qt` are installed.
 ```bash
-cmake -B build -DWITH_BDB=OFF -DWITH_GUI=Qt5
+cmake -B build -DWITH_BDB=OFF -DBUILD_GUI=ON
 ```
 
 Run `cmake -B build -LH` to see the full list of available options.
 
 ##### Descriptor & Legacy Wallet. No GUI:
-This enables support for both wallet types and disables the GUI, assuming
+This enables support for both wallet types, assuming
 `sqlite3` and `db4` are both installed.
 ```bash
-cmake -B build -DWITH_GUI=OFF -DBerkeleyDB_INCLUDE_DIR:PATH="${BDB_PREFIX}/include"
+cmake -B build -DBerkeleyDB_INCLUDE_DIR:PATH="${BDB_PREFIX}/include"
 ```
 
 ##### No Wallet or GUI
 ```bash
-cmake -B build -DENABLE_WALLET=OFF -DWITH_GUI=OFF
+cmake -B build -DENABLE_WALLET=OFF
 ```
 
 ### 2. Compile

@@ -464,7 +464,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build --preset ${{ matrix.conf.preset }} -DWERROR=ON
+          cmake -B build --preset ${{ matrix.conf.preset }} -DBUILD_GUI=ON -DWERROR=ON
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v4
