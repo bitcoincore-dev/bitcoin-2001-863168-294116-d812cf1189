@@ -150,30 +150,7 @@ target_link_libraries(test_bitcoin
 )
 
 if(ENABLE_WALLET)
-  target_sources(test_bitcoin
-    PRIVATE
-      ../wallet/test/init_test_fixture.cpp
-      ../wallet/test/wallet_test_fixture.cpp
-
-      ../wallet/test/coinselector_tests.cpp
-      ../wallet/test/feebumper_tests.cpp
-      ../wallet/test/group_outputs_tests.cpp
-      ../wallet/test/init_tests.cpp
-      ../wallet/test/ismine_tests.cpp
-      ../wallet/test/psbt_wallet_tests.cpp
-      ../wallet/test/rpc_util_tests.cpp
-      ../wallet/test/scriptpubkeyman_tests.cpp
-      ../wallet/test/spend_tests.cpp
-      ../wallet/test/wallet_crypto_tests.cpp
-      ../wallet/test/wallet_tests.cpp
-      ../wallet/test/wallet_transaction_tests.cpp
-      ../wallet/test/walletdb_tests.cpp
-      ../wallet/test/walletload_tests.cpp
-  )
-  target_link_libraries(test_bitcoin bitcoin_wallet)
-  if(USE_BDB)
-    target_sources(test_bitcoin PRIVATE ../wallet/test/db_tests.cpp)
-  endif()
+  add_subdirectory(${PROJECT_SOURCE_DIR}/src/wallet/test wallet)
 endif()
 
 if(MULTIPROCESS)
