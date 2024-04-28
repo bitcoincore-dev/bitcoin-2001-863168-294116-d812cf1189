@@ -11,10 +11,6 @@
 #include <thread>
 #include <vector>
 
-#if defined(HAVE_CONFIG_H)
-#include <config/bitcoin-config.h>
-#endif
-
 #include <boost/test/unit_test.hpp>
 
 BOOST_AUTO_TEST_SUITE(util_threadnames_tests)
