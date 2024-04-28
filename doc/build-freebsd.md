@@ -107,7 +107,7 @@ cd build
 cmake -S .. -DWITH_BDB=OFF -DWITH_GUI=Qt5
 ```
 
-Run `cmake .. -LH` to see the full list of available options. 
+Run `cmake .. -LH` to see the full list of available options.
 
 ##### Descriptor & Legacy Wallet. No GUI:
 This enables support for both wallet types and disables the GUI, assuming
