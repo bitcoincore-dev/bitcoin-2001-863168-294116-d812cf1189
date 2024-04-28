@@ -192,6 +192,8 @@ jobs:
             boost_archive: 'boost_1_73_0'
           - boost_version: '1.78.0'
             boost_archive: 'boost_1_78_0'
+          - boost_version: '1.81.0'
+            boost_archive: 'boost_1_81_0'
           - boost_version: '1.84.0'
             boost_archive: 'boost_1_84_0'
 
