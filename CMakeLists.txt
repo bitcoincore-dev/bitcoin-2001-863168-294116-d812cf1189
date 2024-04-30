@@ -15,6 +15,9 @@ if(POLICY CMP0141)
 endif()
 cmake_minimum_required(VERSION 3.22)
 
+#=============================
+# Project / Package metadata
+#=============================
 set(PACKAGE_NAME "Bitcoin Core")
 set(CLIENT_VERSION_MAJOR 27)
 set(CLIENT_VERSION_MINOR 99)
@@ -27,7 +30,7 @@ project(BitcoinCore
   VERSION ${CLIENT_VERSION_MAJOR}.${CLIENT_VERSION_MINOR}.${CLIENT_VERSION_BUILD}
   DESCRIPTION "Bitcoin client software"
   HOMEPAGE_URL "https://bitcoincore.org/"
-  LANGUAGES CXX
+  LANGUAGES NONE
 )
 
 set(PACKAGE_VERSION ${PROJECT_VERSION})
@@ -39,6 +42,15 @@ set(COPYRIGHT_HOLDERS "The %s developers")
 set(COPYRIGHT_HOLDERS_FINAL "The ${PACKAGE_NAME} developers")
 set(PACKAGE_BUGREPORT "https://github.com/bitcoin/bitcoin/issues")
 
+#=============================
+# Language setup
+#=============================
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT CMAKE_HOST_APPLE)
+  # We do not use the install_name_tool when cross-compiling for macOS.
+  # So disable this tool check in further enable_language() commands.
+  set(CMAKE_PLATFORM_HAS_INSTALLNAME FALSE)
+endif()
+enable_language(CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
