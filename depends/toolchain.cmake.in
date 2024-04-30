@@ -87,7 +87,6 @@ set(CMAKE_AR "@AR@")
 set(CMAKE_RANLIB "@RANLIB@")
 set(CMAKE_STRIP "@STRIP@")
 set(CMAKE_OBJCOPY "@OBJCOPY@")
-set(CMAKE_INSTALL_NAME_TOOL "@INSTALL_NAME_TOOL@")
 set(OTOOL "@OTOOL@")
 
 # Using our own built dependencies should not be

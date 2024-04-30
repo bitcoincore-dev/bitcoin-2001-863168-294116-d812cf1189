@@ -269,7 +269,6 @@ $(host_prefix)/toolchain.cmake : toolchain.cmake.in $(host_prefix)/.stamp_$(fina
             -e 's|@RANLIB@|$(host_RANLIB)|' \
             -e 's|@STRIP@|$(host_STRIP)|' \
             -e 's|@OBJCOPY@|$(host_OBJCOPY)|' \
-            -e 's|@INSTALL_NAME_TOOL@|$(host_INSTALL_NAME_TOOL)|' \
             -e 's|@OTOOL@|$(host_OTOOL)|' \
             -e 's|@depends_prefix@|$(host_prefix)|' \
             -e 's|@CFLAGS@|$(strip $(host_CFLAGS))|' \
