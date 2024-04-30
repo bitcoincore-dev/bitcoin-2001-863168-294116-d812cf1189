@@ -265,7 +265,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   # "ad_strip" as the symbol for the entry point.
   try_append_linker_flag("-Wl,-dead_strip" TARGET core_base_interface)
   try_append_linker_flag("-Wl,-dead_strip_dylibs" TARGET core_base_interface)
-  try_append_linker_flag("-Wl,-headerpad_max_install_names" TARGET core_base_interface)
+  if(CMAKE_HOST_APPLE)
+    try_append_linker_flag("-Wl,-headerpad_max_install_names" TARGET core_base_interface)
+  endif()
 endif()
 
 include(AddThreadsIfNeeded)
