@@ -114,7 +114,7 @@ function(add_macos_deploy_target)
     if(CMAKE_CROSSCOMPILING)
       add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/dist/${macos_app}/Contents/MacOS/Bitcoin-Qt
-        COMMAND INSTALL_NAME_TOOL=${CMAKE_INSTALL_NAME_TOOL} OTOOL=${OTOOL} STRIP=${CMAKE_STRIP} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR}
+        COMMAND OTOOL=${OTOOL} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR}
         DEPENDS ${CMAKE_BINARY_DIR}/${macos_app}/Contents/MacOS/Bitcoin-Qt
         VERBATIM
       )
