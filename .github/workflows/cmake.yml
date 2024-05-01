@@ -489,9 +489,6 @@ jobs:
         run: |
           ccache --zero-stats
           cmake --build . -j $env:NUMBER_OF_PROCESSORS --config Release
-          dumpbin /imports src\Release\bitcoind.exe | Select-String -Pattern "\.(?i:dll)" | Sort-Object
-          ""
-          (Get-Item src\Release\bitcoind.exe).Length
 
       - name: Ccache stats
         run: |
@@ -504,6 +501,13 @@ jobs:
         with:
           path: ~/AppData/Local/ccache
           key: ${{ matrix.conf.triplet }}-ccache-${{ github.run_id }}
+
+      - name: Inspect build artifacts
+        working-directory: build
+        run: |
+          dumpbin /imports src\Release\bitcoind.exe | Select-String -Pattern "\.(?i:dll)" | Sort-Object
+          ""
+          (Get-Item src\Release\bitcoind.exe).Length
 
       - name: Test Release configuration
         working-directory: build
