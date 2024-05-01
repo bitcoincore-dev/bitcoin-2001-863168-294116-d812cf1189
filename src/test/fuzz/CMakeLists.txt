@@ -56,7 +56,8 @@ add_executable(fuzz
   locale.cpp
   merkleblock.cpp
   message.cpp
-  miniscript.cpp
+  # TODO: Fix the code and enable miniscript.cpp for MSVC.
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:miniscript.cpp>
   minisketch.cpp
   mini_miner.cpp
   muhash.cpp
