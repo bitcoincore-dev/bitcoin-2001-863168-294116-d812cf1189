@@ -234,6 +234,7 @@ if(WIN32)
     )
     target_compile_options(core_interface INTERFACE
       /utf-8
+      /Zc:preprocessor
       /Zc:__cplusplus
     )
     # Improve parallelism in MSBuild.
