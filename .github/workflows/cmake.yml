@@ -555,7 +555,7 @@ jobs:
         env:
           HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
         run: |
-          brew install ccache cmake pkg-config boost libevent berkeley-db@4 qt@5 libnatpmp miniupnpc zeromq tree
+          brew install ccache cmake pkg-config boost libevent berkeley-db@4 qt@5 qrencode libnatpmp miniupnpc zeromq tree
           echo "CCACHE_DIR=${{ runner.temp }}/ccache" >> "$GITHUB_ENV"
 
       - name: CMake version
