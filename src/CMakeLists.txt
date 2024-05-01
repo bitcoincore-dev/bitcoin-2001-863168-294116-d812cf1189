@@ -82,7 +82,7 @@ add_library(bitcoin_common STATIC EXCLUDE_FROM_ALL
   common/run_command.cpp
   common/settings.cpp
   common/system.cpp
-  $<$<TARGET_EXISTS:libevent::libevent>:common/url.cpp>
+  common/url.cpp
   compressor.cpp
   core_read.cpp
   core_write.cpp
@@ -122,7 +122,6 @@ target_link_libraries(bitcoin_common
     univalue
     secp256k1
     Boost::headers
-    $<TARGET_NAME_IF_EXISTS:libevent::libevent>
 )
 
 
