@@ -23,13 +23,12 @@ if(TARGET bench_bitcoin)
 endif()
 
 if(TARGET test_bitcoin)
-  function(add_boost_test source_dir source_file)
-    set(source_file_path ${source_dir}/${source_file})
-    if(NOT EXISTS ${source_file_path})
+  function(add_boost_test source_file)
+    if(NOT EXISTS ${source_file})
       return()
     endif()
 
-    file(READ "${source_file_path}" source_file_content)
+    file(READ "${source_file}" source_file_content)
     string(REGEX
       MATCH "(BOOST_FIXTURE_TEST_SUITE|BOOST_AUTO_TEST_SUITE)\\(([A-Za-z0-9_]+)"
       test_suite_macro "${source_file_content}"
@@ -39,7 +38,7 @@ if(TARGET test_bitcoin)
       test_suite_name "${test_suite_macro}"
     )
     if(test_suite_name)
-      add_test(NAME ${test_suite_name}:${source_file}
+      add_test(NAME ${test_suite_name}
         COMMAND test_bitcoin --run_test=${test_suite_name} --catch_system_error=no
       )
     endif()
@@ -49,7 +48,11 @@ if(TARGET test_bitcoin)
     get_target_property(test_source_dir test_bitcoin SOURCE_DIR)
     get_target_property(test_sources test_bitcoin SOURCES)
     foreach(test_source ${test_sources})
-      add_boost_test(${test_source_dir} ${test_source})
+      cmake_path(IS_RELATIVE test_source result)
+      if(result)
+        cmake_path(APPEND test_source_dir ${test_source} OUTPUT_VARIABLE test_source)
+      endif()
+      add_boost_test(${test_source})
     endforeach()
   endfunction()
 
