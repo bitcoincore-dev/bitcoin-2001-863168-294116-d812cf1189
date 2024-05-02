@@ -2,7 +2,7 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-add_library(test_util STATIC EXCLUDE_FROM_ALL
+add_library_append_flags(test_util STATIC EXCLUDE_FROM_ALL
   blockfilter.cpp
   coins.cpp
   index.cpp
@@ -22,7 +22,6 @@ add_library(test_util STATIC EXCLUDE_FROM_ALL
 
 target_link_libraries(test_util
   PRIVATE
-    core_interface
     Boost::headers
   PUBLIC
     univalue

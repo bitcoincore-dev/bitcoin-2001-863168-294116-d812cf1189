@@ -9,7 +9,7 @@
 include(CheckCXXSymbolExists)
 check_cxx_symbol_exists(F_FULLFSYNC "fcntl.h" HAVE_FULLFSYNC)
 
-add_library(leveldb STATIC EXCLUDE_FROM_ALL
+add_library_append_flags(leveldb STATIC EXCLUDE_FROM_ALL
   ${PROJECT_SOURCE_DIR}/src/leveldb/db/builder.cc
   ${PROJECT_SOURCE_DIR}/src/leveldb/db/c.cc
   ${PROJECT_SOURCE_DIR}/src/leveldb/db/db_impl.cc
@@ -95,7 +95,6 @@ else()
 endif()
 
 target_link_libraries(leveldb PRIVATE
-  core_base_interface
   nowarn_leveldb_interface
   crc32c
 )

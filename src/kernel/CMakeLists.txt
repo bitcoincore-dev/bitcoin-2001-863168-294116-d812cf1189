@@ -6,7 +6,7 @@
 #       library, as more and more modules are decoupled from the
 #       consensus engine, this list will shrink to only those
 #       which are absolutely necessary.
-add_library(bitcoinkernel EXCLUDE_FROM_ALL
+add_library_append_flags(bitcoinkernel EXCLUDE_FROM_ALL
   bitcoinkernel.cpp
   chain.cpp
   checks.cpp
@@ -84,7 +84,6 @@ add_library(bitcoinkernel EXCLUDE_FROM_ALL
 )
 target_link_libraries(bitcoinkernel
   PRIVATE
-    core_interface
     bitcoin_clientversion
     bitcoin_crypto
     leveldb
