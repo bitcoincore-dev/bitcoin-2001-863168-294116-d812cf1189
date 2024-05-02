@@ -358,11 +358,8 @@ jobs:
 
       - name: Build depends
         working-directory: depends
-        env:
-          CC: ${{ matrix.host.c_compiler }}
-          CXX: ${{ matrix.host.cxx_compiler }}
         run: |
-          make -j$(nproc) HOST=${{ matrix.host.triplet }} ${{ matrix.host.depends_options }} LOG=1
+          make -j$(nproc) HOST=${{ matrix.host.triplet }} CC="${{ matrix.host.c_compiler }}" CXX="${{ matrix.host.cxx_compiler }}" ${{ matrix.host.depends_options }} LOG=1
 
       - name: Restore Ccache cache
         uses: actions/cache/restore@v4
@@ -489,9 +486,6 @@ jobs:
         run: |
           ccache --zero-stats
           cmake --build . -j $env:NUMBER_OF_PROCESSORS --config Release
-          dumpbin /imports src\Release\bitcoind.exe | Select-String -Pattern "\.(?i:dll)" | Sort-Object
-          ""
-          (Get-Item src\Release\bitcoind.exe).Length
 
       - name: Ccache stats
         run: |
@@ -504,6 +498,13 @@ jobs:
         with:
           path: ~/AppData/Local/ccache
           key: ${{ matrix.conf.triplet }}-ccache-${{ github.run_id }}
+
+      - name: Inspect build artifacts
+        working-directory: build
+        run: |
+          dumpbin /imports src\Release\bitcoind.exe | Select-String -Pattern "\.(?i:dll)" | Sort-Object
+          ""
+          (Get-Item src\Release\bitcoind.exe).Length
 
       - name: Test Release configuration
         working-directory: build
