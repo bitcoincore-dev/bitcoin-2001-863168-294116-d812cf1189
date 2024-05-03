@@ -529,20 +529,23 @@ struct SmartInfo
     {
         /* Construct a set of interesting type requirements to reason with (sections of BKVWzondu). */
         std::vector<Type> types;
+        static constexpr auto B_mst{"B"_mst}, K_mst{"K"_mst}, V_mst{"V"_mst}, W_mst{"W"_mst};
+        static constexpr auto d_mst{"d"_mst}, n_mst{"n"_mst}, o_mst{"o"_mst}, u_mst{"u"_mst}, z_mst{"z"_mst};
+        static constexpr auto NONE_mst{""_mst};
         for (int base = 0; base < 4; ++base) { /* select from B,K,V,W */
-            Type type_base = base == 0 ? "B"_mst : base == 1 ? "K"_mst : base == 2 ? "V"_mst : "W"_mst;
+            Type type_base = base == 0 ? B_mst : base == 1 ? K_mst : base == 2 ? V_mst : W_mst;
             for (int zo = 0; zo < 3; ++zo) { /* select from z,o,(none) */
-                Type type_zo = zo == 0 ? "z"_mst : zo == 1 ? "o"_mst : ""_mst;
+                Type type_zo = zo == 0 ? z_mst : zo == 1 ? o_mst : ""_mst;
                 for (int n = 0; n < 2; ++n) { /* select from (none),n */
                     if (zo == 0 && n == 1) continue; /* z conflicts with n */
                     if (base == 3 && n == 1) continue; /* W conflicts with n */
-                    Type type_n = n == 0 ? ""_mst : "n"_mst;
+                    Type type_n = n == 0 ? NONE_mst : n_mst;
                     for (int d = 0; d < 2; ++d) { /* select from (none),d */
                         if (base == 2 && d == 1) continue; /* V conflicts with d */
-                        Type type_d = d == 0 ? ""_mst : "d"_mst;
+                        Type type_d = d == 0 ? NONE_mst : d_mst;
                         for (int u = 0; u < 2; ++u) { /* select from (none),u */
                             if (base == 2 && u == 1) continue; /* V conflicts with u */
-                            Type type_u = u == 0 ? ""_mst : "u"_mst;
+                            Type type_u = u == 0 ? NONE_mst : u_mst;
                             Type type = type_base | type_zo | type_n | type_d | type_u;
                             types.push_back(type);
                         }
@@ -684,7 +687,7 @@ struct SmartInfo
         /* Find which types are useful. The fuzzer logic only cares about constructing
          * B,V,K,W nodes, so any type that isn't needed in any recipe (directly or
          * indirectly) for the construction of those is uninteresting. */
-        std::set<Type> useful_types{"B"_mst, "V"_mst, "K"_mst, "W"_mst};
+        std::set<Type> useful_types{B_mst, V_mst, K_mst, W_mst};
         // Find the transitive closure by adding types until the set of types does not change.
         while (true) {
             size_t set_size = useful_types.size();
