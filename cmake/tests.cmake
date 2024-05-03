@@ -12,7 +12,7 @@ endif()
 
 if(PYTHON_COMMAND)
   add_test(NAME util_rpcauth_test
-    COMMAND ${PYTHON_COMMAND} ${CMAKE_BINARY_DIR}/test/util/rpcauth-test.py
+    COMMAND ${PYTHON_COMMAND} -B ${CMAKE_BINARY_DIR}/test/util/rpcauth-test.py
   )
 endif()
 
