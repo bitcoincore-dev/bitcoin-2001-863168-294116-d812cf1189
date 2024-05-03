@@ -235,6 +235,7 @@ if(WIN32)
     target_compile_options(core_interface INTERFACE
       /utf-8
       /Zc:__cplusplus
+      /sdl
     )
     # Improve parallelism in MSBuild.
     # See: https://devblogs.microsoft.com/cppblog/improved-parallelism-in-msbuild/.
