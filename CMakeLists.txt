@@ -59,6 +59,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 
 # Configurable options.
 # When adding a new option, end the <help_text> with a full stop for consistency.
+option(BUILD_DAEMON "Build bitcoind executable." ON)
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
 
 set(configure_warnings)
@@ -157,6 +158,13 @@ endif()
 include(AddThreadsIfNeeded)
 add_threads_if_needed()
 
+include(AddBoostIfNeeded)
+add_boost_if_needed()
+
+if(BUILD_DAEMON)
+  find_package(Libevent 2.1.8 MODULE REQUIRED)
+endif()
+
 include(cmake/introspection.cmake)
 
 include(cmake/crc32c.cmake)
@@ -172,6 +180,9 @@ get_target_interface(definitions core_interface COMPILE_DEFINITIONS)
 message("\n")
 message("Configure summary")
 message("=================")
+message("Executables:")
+message("  bitcoind ............................ ${BUILD_DAEMON}")
+message("")
 message("Preprocessor defined macros ........... ${definitions}")
 message("C compiler ............................ ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}, ${CMAKE_C_COMPILER}")
 message("CFLAGS ................................ ${CMAKE_C_FLAGS}")
