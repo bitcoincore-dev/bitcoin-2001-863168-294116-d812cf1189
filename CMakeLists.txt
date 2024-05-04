@@ -236,6 +236,7 @@ if(WIN32)
       /utf-8
       /Zc:preprocessor
       /Zc:__cplusplus
+      /sdl
     )
     # Improve parallelism in MSBuild.
     # See: https://devblogs.microsoft.com/cppblog/improved-parallelism-in-msbuild/.
