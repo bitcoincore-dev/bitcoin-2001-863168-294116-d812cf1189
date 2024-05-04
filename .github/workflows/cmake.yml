@@ -265,7 +265,7 @@ jobs:
   cross-build:
     name: ${{ matrix.host.name }}
     runs-on: ubuntu-latest
-    container: debian:bookworm
+    container: ubuntu:noble
 
     strategy:
       fail-fast: false
