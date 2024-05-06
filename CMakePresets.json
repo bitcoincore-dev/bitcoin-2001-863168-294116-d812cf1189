@@ -47,6 +47,14 @@
       }
     },
     {
+      "name": "coverage",
+      "displayName": "Build for coverage analysis",
+      "cacheVariables": {
+        "APPEND_CXXFLAGS": "--coverage -Og -fprofile-update=prefer-atomic",
+        "APPEND_LDFLAGS": "--coverage"
+      }
+    },
+    {
       "name": "vs2022",
       "displayName": "Build using 'Visual Studio 17 2022' generator and 'x64-windows' triplet",
       "condition": {

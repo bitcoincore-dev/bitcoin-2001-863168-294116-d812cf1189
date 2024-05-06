@@ -485,6 +485,11 @@ else()
   unset(c_flags_debug_overridden)
 endif()
 
+configure_file(cmake/script/Coverage.cmake Coverage.cmake COPYONLY)
+configure_file(cmake/script/CoverageFuzz.cmake CoverageFuzz.cmake COPYONLY)
+configure_file(cmake/script/CoverageInclude.cmake.in CoverageInclude.cmake @ONLY)
+configure_file(contrib/filter-lcov.py filter-lcov.py COPYONLY)
+
 include(cmake/optional.cmake)
 
 # Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
