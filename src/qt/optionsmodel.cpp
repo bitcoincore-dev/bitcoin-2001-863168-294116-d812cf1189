@@ -656,6 +656,8 @@ QVariant OptionsModel::getOption(OptionID option, const std::string& suffix) con
         return qlonglong(std::chrono::duration_cast<std::chrono::hours>(node().mempool().m_expiry).count());
     case rejectunknownscripts:
         return node().mempool().m_require_standard;
+    case rejectparasites:
+        return node().mempool().m_reject_parasites;
     case rejecttokens:
         return node().mempool().m_reject_tokens;
     case rejectspkreuse:
@@ -1109,6 +1111,15 @@ bool OptionsModel::setOption(OptionID option, const QVariant& value, const std::
             node().mempool().m_require_standard = fNewValue;
             // This option is inverted in the config:
             gArgs.ModifyRWConfigFile("acceptnonstdtxn", strprintf("%d", ! fNewValue));
+        }
+        break;
+    }
+    case rejectparasites:
+    {
+        if (changed()) {
+            const bool nv = value.toBool();
+            node().mempool().m_reject_parasites = nv;
+            node().updateRwSetting("rejectparasites", nv);
         }
         break;
     }
