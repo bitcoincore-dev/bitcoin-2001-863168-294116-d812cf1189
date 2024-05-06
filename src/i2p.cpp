@@ -384,10 +384,25 @@ Binary Session::MyDestination() const
     static constexpr size_t CERT_LEN_POS = 385;
 
     uint16_t cert_len;
+
+    if (m_private_key.size() < CERT_LEN_POS + sizeof(cert_len)) {
+        throw std::runtime_error(strprintf("The private key is too short (%d < %d)",
+                                           m_private_key.size(),
+                                           CERT_LEN_POS + sizeof(cert_len)));
+    }
+
     memcpy(&cert_len, &m_private_key.at(CERT_LEN_POS), sizeof(cert_len));
     cert_len = be16toh(cert_len);
 
     const size_t dest_len = DEST_LEN_BASE + cert_len;
+
+    if (dest_len > m_private_key.size()) {
+        throw std::runtime_error(strprintf("Certificate length (%d) designates that the private key should "
+                                           "be %d bytes, but it is only %d bytes",
+                                           cert_len,
+                                           dest_len,
+                                           m_private_key.size()));
+    }
 
     return Binary{m_private_key.begin(), m_private_key.begin() + dest_len};
 }
@@ -412,7 +427,7 @@ void Session::CreateIfNotCreatedAlready()
         const Reply& reply = SendRequestAndGetReply(
             *sock,
             strprintf("SESSION CREATE STYLE=STREAM ID=%s DESTINATION=TRANSIENT SIGNATURE_TYPE=7 "
-                      "inbound.quantity=1 outbound.quantity=1",
+                      "i2cp.leaseSetEncType=4,0 inbound.quantity=1 outbound.quantity=1",
                       session_id));
 
         m_private_key = DecodeI2PBase64(reply.Get("DESTINATION"));
@@ -430,7 +445,7 @@ void Session::CreateIfNotCreatedAlready()
 
         SendRequestAndGetReply(*sock,
                                strprintf("SESSION CREATE STYLE=STREAM ID=%s DESTINATION=%s "
-                                         "inbound.quantity=3 outbound.quantity=3",
+                                         "i2cp.leaseSetEncType=4,0 inbound.quantity=3 outbound.quantity=3",
                                          session_id,
                                          private_key_b64));
     }

@@ -1,13 +1,9 @@
-*The release notes draft is a temporary file that can be added to by anyone. See
-[/doc/developer-notes.md#release-notes](/doc/developer-notes.md#release-notes)
-for the process.*
+26.1rc1 Release Notes
+==================
 
-*version* Release Notes Draft
-===============================
+Bitcoin Core version 26.1rc1 is now available from:
 
-Bitcoin Core version *version* is now available from:
-
-  <https://bitcoincore.org/bin/bitcoin-core-*version*/>
+  <https://bitcoincore.org/bin/bitcoin-core-26.1/test.rc1/>
 
 This release includes new features, various bug fixes and performance
 improvements, as well as updated translations.
@@ -44,56 +40,55 @@ unsupported systems.
 Notable changes
 ===============
 
-P2P and network changes
------------------------
+### Wallet
 
-Updated RPCs
-------------
+- #28994 wallet: skip BnB when SFFO is enabled
+- #28920 wallet: birth time update during tx scanning
+- #29176 wallet: Fix use-after-free in WalletBatch::EraseRecords
 
+### RPC
 
-Changes to wallet related RPCs can be found in the Wallet section below.
+- #29003 rpc: fix getrawtransaction segfault
 
-New RPCs
---------
+### Logs
 
-Build System
-------------
+- #29227 log mempool loading progress
 
-Updated settings
-----------------
+### P2P and network changes
 
+- #29200 net: create I2P sessions using both ECIES-X25519 and ElGamal encryption
 
-Changes to GUI or wallet related settings can be found in the GUI or Wallet section below.
+### Build
 
-New settings
-------------
+- #29127 Use hardened runtime on macOS release builds.
+- #29195 build: Fix -Xclang -internal-isystem option
 
-Tools and Utilities
--------------------
+### CI
 
-Wallet
-------
+- #28992 ci: Use Ubuntu 24.04 Noble for asan,tsan,tidy,fuzz
+- #29080 ci: Set HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK to avoid unrelated failures
 
-GUI changes
------------
+### Miscellaneous
 
-Low-level changes
-=================
-
-RPC
----
-
-Tests
------
-
-*version* change log
-====================
+- #28391 refactor: Simplify CTxMempool/BlockAssembler fields, remove some external mapTx access
+- #29179 test: wallet rescan with reorged parent + IsFromMe child in mempool
+- #28791 snapshots: don't core dump when running -checkblockindex after loadtxoutset
 
 Credits
 =======
 
 Thanks to everyone who directly contributed to this release:
 
+- fanquake
+- furszy
+- glozow
+- Hennadii Stepanov
+- Jon Atack
+- MarcoFalke
+- Mark Friedenbach
+- Martin Zumsande
+- Murch
+- stickies-v
 
 As well as to everyone that helped with translations on
 [Transifex](https://www.transifex.com/bitcoin/bitcoin/).
