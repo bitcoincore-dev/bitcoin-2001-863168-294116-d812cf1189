@@ -103,32 +103,26 @@ There are many ways to configure Bitcoin Core, here are a few common examples:
 ##### Descriptor Wallet and GUI:
 This explicitly enables the GUI and disables legacy wallet support, assuming `sqlite` and `qt` are installed.
 ```bash
-mkdir build
-cd build
-cmake -S .. -DWITH_BDB=OFF -DWITH_GUI=Qt5
+cmake -B build -DWITH_BDB=OFF -DWITH_GUI=Qt5
 ```
 
-Run `cmake .. -LH` to see the full list of available options. 
+Run `cmake -B build -LH` to see the full list of available options.
 
 ##### Descriptor & Legacy Wallet. No GUI:
 This enables support for both wallet types and disables the GUI, assuming
 `sqlite3` and `db4` are both installed.
 ```bash
-mkdir build
-cd build
-cmake -S .. -DWITH_GUI=OFF -DBerkeleyDB_INCLUDE_DIR:PATH="${BDB_PREFIX}/include"
+cmake -B build -DWITH_GUI=OFF -DBerkeleyDB_INCLUDE_DIR:PATH="${BDB_PREFIX}/include"
 ```
 
 ##### No Wallet or GUI
 ```bash
-mkdir build
-cd build
-cmake -S .. -DENABLE_WALLET=OFF -DWITH_GUI=OFF
+cmake -B build -DENABLE_WALLET=OFF -DWITH_GUI=OFF
 ```
 
 ### 2. Compile
 
 ```bash
-cmake --build . # Use "-j N" for N parallel jobs.
-ctest # Run tests if Python 3 is available. Use "-j N" for N parallel tests.
+cmake --build build     # Use "-j N" for N parallel jobs.
+ctest --test-dir build  # Use "-j N" for N parallel tests. Some tests are disabled if Python 3 is not available.
 ```
