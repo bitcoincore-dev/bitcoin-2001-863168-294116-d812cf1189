@@ -316,7 +316,7 @@ BOOST_FIXTURE_TEST_CASE(package_submission_tests, TestChain100Setup)
         BOOST_CHECK(it_parent != result_quit_early.m_tx_results.end());
         BOOST_CHECK(it_child != result_quit_early.m_tx_results.end());
         BOOST_CHECK_EQUAL(it_parent->second.m_state.GetResult(), TxValidationResult::TX_WITNESS_MUTATED);
-        BOOST_CHECK_EQUAL(it_parent->second.m_state.GetRejectReason(), "bad-witness-nonstandard");
+        BOOST_CHECK_EQUAL(it_parent->second.m_state.GetRejectReason(), "bad-witness-nonwitness-input");
         BOOST_CHECK_EQUAL(it_child->second.m_state.GetResult(), TxValidationResult::TX_MISSING_INPUTS);
         BOOST_CHECK_EQUAL(it_child->second.m_state.GetRejectReason(), "bad-txns-inputs-missingorspent");
     }

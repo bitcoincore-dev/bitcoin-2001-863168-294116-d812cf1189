@@ -15,7 +15,9 @@
 #include <uint256.h>
 #include <util/fs.h>
 #include <util/fs_helpers.h>
+#include <util/serfloat.h>
 #include <util/signalinterrupt.h>
+#include <util/syserror.h>
 #include <util/time.h>
 #include <validation.h>
 
@@ -35,6 +37,40 @@ using fsbridge::FopenFn;
 namespace kernel {
 
 static const uint64_t MEMPOOL_DUMP_VERSION = 1;
+static constexpr uint64_t MEMPOOL_KNOTS_DUMP_VERSION = 0;
+
+bool LoadMempoolKnots(CTxMemPool& pool, const fs::path& knots_filepath, FopenFn mockable_fopen_function)
+{
+    FILE* filestr{mockable_fopen_function(knots_filepath, "rb")};
+    CAutoFile file(filestr, CLIENT_VERSION);
+    if (file.IsNull()) {
+        // Typically missing if there's nothing to save
+        return false;
+    }
+
+    try {
+        uint64_t version;
+        file >> version;
+        if (version != MEMPOOL_KNOTS_DUMP_VERSION) {
+            return false;
+        }
+
+        const unsigned int priority_deltas_count = ReadCompactSize(file);
+        uint256 txid;
+        uint64_t encoded_priority;
+        for (unsigned int i = 0; i < priority_deltas_count; ++i) {
+            Unserialize(file, txid);
+            Unserialize(file, encoded_priority);
+            const double priority = DecodeDouble(encoded_priority);
+            pool.PrioritiseTransaction(txid, priority, 0);
+        }
+    } catch (const std::exception& e) {
+        LogPrintf("Failed to deserialize mempool-knots data on disk: %s. Continuing anyway.\n", e.what());
+        return false;
+    }
+
+    return true;
+}
 
 bool LoadMempool(CTxMemPool& pool, const fs::path& load_path, Chainstate& active_chainstate, ImportMempoolOptions&& opts)
 {
@@ -91,7 +127,7 @@ bool LoadMempool(CTxMemPool& pool, const fs::path& load_path, Chainstate& active
             }
             if (nTime > TicksSinceEpoch<std::chrono::seconds>(now - pool.m_expiry)) {
                 LOCK(cs_main);
-                const auto& accepted = AcceptToMemoryPool(active_chainstate, tx, nTime, /*bypass_limits=*/false, /*test_accept=*/false);
+                const auto& accepted = AcceptToMemoryPool(active_chainstate, tx, nTime, empty_ignore_rejects, /*test_accept=*/false);
                 if (accepted.m_result_type == MempoolAcceptResult::ResultType::VALID) {
                     ++count;
                 } else {
@@ -135,6 +171,12 @@ bool LoadMempool(CTxMemPool& pool, const fs::path& load_path, Chainstate& active
         return false;
     }
 
+    if (opts.load_knots_data) {
+        auto knots_filepath = load_path;
+        knots_filepath.replace_filename("mempool-knots.dat");
+        LoadMempoolKnots(pool, knots_filepath, opts.mockable_fopen_function);
+    }
+
     LogPrintf("Imported mempool transactions from disk: %i succeeded, %i failed, %i expired, %i already there, %i waiting for initial broadcast\n", count, failed, expired, already_there, unbroadcast);
     return true;
 }
@@ -144,6 +186,7 @@ bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path, FopenFn mock
     auto start = SteadyClock::now();
 
     std::map<uint256, CAmount> mapDeltas;
+    std::map<uint256, double> priority_deltas;
     std::vector<TxMempoolInfo> vinfo;
     std::set<uint256> unbroadcast_txids;
 
@@ -153,7 +196,12 @@ bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path, FopenFn mock
     {
         LOCK(pool.cs);
         for (const auto &i : pool.mapDeltas) {
-            mapDeltas[i.first] = i.second;
+            if (i.second.first) {   // priority delta
+                priority_deltas[i.first] = i.second.first;
+            }
+            if (i.second.second) {  // fee delta
+                mapDeltas[i.first] = i.second.second;
+            }
         }
         vinfo = pool.infoAll();
         unbroadcast_txids = pool.GetUnbroadcastTxs();
@@ -187,7 +235,44 @@ bool DumpMempool(const CTxMemPool& pool, const fs::path& dump_path, FopenFn mock
 
         if (!skip_file_commit && !FileCommit(file.Get()))
             throw std::runtime_error("FileCommit failed");
-        file.fclose();
+        if (file.fclose() != 0) {
+            const fs::path file_fspath{dump_path + ".new"};
+            throw std::runtime_error(
+                strprintf("Error closing %s: %s", fs::PathToString(file_fspath), SysErrorString(errno)));
+        }
+
+        auto knots_filepath = dump_path;
+        knots_filepath.replace_filename("mempool-knots.dat");
+        if (priority_deltas.size()) {
+            auto knots_tmppath = knots_filepath;
+            knots_tmppath += ".new";
+
+            FILE* filestr{mockable_fopen_function(knots_tmppath, "wb")};
+            if (!filestr) return false;
+            CAutoFile file(filestr, CLIENT_VERSION);
+
+            uint64_t version = MEMPOOL_KNOTS_DUMP_VERSION;
+            file << version;
+
+            WriteCompactSize(file, priority_deltas.size());
+            for (const auto& [txid, priority] : priority_deltas) {
+                Serialize(file, txid);
+                const uint64_t encoded_priority = EncodeDouble(priority);
+                Serialize(file, encoded_priority);
+            }
+
+            if (!FileCommit(file.Get())) throw std::runtime_error("FileCommit failed");
+            if (file.fclose() != 0) {
+                throw std::runtime_error(
+                    strprintf("Error closing %s: %s", fs::PathToString(knots_tmppath), SysErrorString(errno)));
+            }
+            if (!RenameOver(knots_tmppath, knots_filepath)) {
+                throw std::runtime_error("Rename failed (mempool-knots.dat)");
+            }
+        } else {
+            fs::remove(knots_filepath);
+        }
+
         if (!RenameOver(dump_path + ".new", dump_path)) {
             throw std::runtime_error("Rename failed");
         }
