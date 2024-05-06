@@ -481,20 +481,24 @@ $ ./test/functional/test_runner.py --valgrind
 
 ### Compiling for test coverage
 
-LCOV can be used to generate a test coverage report based upon `make check`
+LCOV can be used to generate a test coverage report based upon `ctest`
 execution. LCOV must be installed on your system (e.g. the `lcov` package
 on Debian/Ubuntu).
 
 To enable LCOV report generation during test runs:
 
 ```shell
-./configure --enable-lcov
-make
-make cov
+cmake -B build -DCMAKE_BUILD_TYPE=Coverage
+cmake --build build
+cmake -P build/Coverage.cmake
 
-# A coverage report will now be accessible at `./test_bitcoin.coverage/index.html`,
-# which covers unit tests, and `./total.coverage/index.html`, which covers
-# unit and functional tests.
+# A coverage report will now be accessible at `./build/test_bitcoin.coverage/index.html`,
+# which covers unit tests.
+```
+
+To enable test parallelism and testing branch coverage:
+```
+cmake -DJOBS=$(nproc) -DLCOV_RC="lcov_branch_coverage=1" -P build/Coverage.cmake
 ```
 
 ### Performance profiling with perf
