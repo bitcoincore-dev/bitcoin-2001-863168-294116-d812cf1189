@@ -451,6 +451,7 @@ public:
     const CFeeRate m_dust_relay_feerate;
     const bool m_permit_bare_pubkey;
     const bool m_permit_bare_multisig;
+    bool m_reject_tokens;
     const std::optional<unsigned> m_max_datacarrier_bytes;
     bool m_datacarrier_fullcount;
     bool m_accept_non_std_datacarrier;
