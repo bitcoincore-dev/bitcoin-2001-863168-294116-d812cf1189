@@ -478,6 +478,14 @@ else()
   unset(c_flags_debug_overridden)
 endif()
 
+set(CMAKE_C_FLAGS_COVERAGE "-Og --coverage")
+set(CMAKE_CXX_FLAGS_COVERAGE "-Og --coverage")
+set(CMAKE_OBJCXX_FLAGS_COVERAGE "-Og --coverage")
+set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "--coverage")
+set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "--coverage")
+
+configure_file(cmake/script/Coverage.cmake.in Coverage.cmake @ONLY)
+
 include(cmake/optional.cmake)
 
 # Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
