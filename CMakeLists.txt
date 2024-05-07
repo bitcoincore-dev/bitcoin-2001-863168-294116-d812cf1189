@@ -357,7 +357,6 @@ include(cmake/introspection.cmake)
 include(cmake/crc32c.cmake)
 include(cmake/leveldb.cmake)
 include(cmake/minisketch.cmake)
-include(cmake/secp256k1.cmake)
 
 include(ProcessConfigurations)
 are_flags_overridden(CMAKE_CXX_FLAGS cxx_flags_overridden)
@@ -424,15 +423,12 @@ target_compile_definitions(core_depends_debug_interface INTERFACE
 )
 # We leave assertions on.
 if(MSVC)
-  remove_c_flag_from_all_configs(/DNDEBUG)
   remove_cxx_flag_from_all_configs(/DNDEBUG)
 else()
-  remove_c_flag_from_all_configs(-DNDEBUG)
   remove_cxx_flag_from_all_configs(-DNDEBUG)
 
-  # Adjust flags used by the C/CXX compiler during RELEASE builds.
+  # Adjust flags used by the CXX compiler during RELEASE builds.
   # Prefer -O2 optimization level. (-O3 is CMake's default for Release for many compilers.)
-  replace_c_flag_in_config(Release -O3 -O2)
   replace_cxx_flag_in_config(Release -O3 -O2)
 
   are_flags_overridden(CMAKE_CXX_FLAGS_DEBUG cxx_flags_debug_overridden)
@@ -633,8 +629,6 @@ else()
 endif()
 message("Cross compiling ....................... ${cross_status}")
 message("Preprocessor defined macros ........... ${definitions}")
-message("C compiler ............................ ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}, ${CMAKE_C_COMPILER}")
-message("CFLAGS ................................ ${CMAKE_C_FLAGS}")
 message("C++ compiler .......................... ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}, ${CMAKE_CXX_COMPILER}")
 message("CXXFLAGS .............................. ${CMAKE_CXX_FLAGS}")
 get_target_interface(common_compile_options core_interface COMPILE_OPTIONS)
