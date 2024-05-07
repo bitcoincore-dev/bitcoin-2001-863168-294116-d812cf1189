@@ -193,9 +193,7 @@ If `sqlite` is installed, then descriptor wallet support will also be built.
 Additionally, this explicitly disables the GUI.
 
 ``` bash
-mkdir build
-cd build
-cmake -S .. -DWITH_GUI=OFF
+cmake -B build -DWITH_GUI=OFF
 ```
 
 ##### Wallet (only SQlite) and GUI Support:
@@ -206,17 +204,13 @@ If `sqlite` is installed then descriptor wallet functionality will be built.
 If `sqlite` is not installed, then wallet functionality will be disabled.
 
 ``` bash
-mkdir build
-cd build
-cmake -S .. -DWITH_BDB=OFF -DWITH_GUI=Qt5
+cmake -B build -DWITH_BDB=OFF -DWITH_GUI=Qt5
 ```
 
 ##### No Wallet or GUI
 
 ``` bash
-mkdir build
-cd build
-cmake -S .. -DENABLE_WALLET=OFF -DWITH_GUI=OFF
+cmake -B build -DENABLE_WALLET=OFF -DWITH_GUI=OFF
 ```
 
 ##### Further Configuration
@@ -225,7 +219,7 @@ You may want to dig deeper into the configuration options to achieve your desire
 Examine the output of the following command for a full list of configuration options:
 
 ``` bash
-cmake -S .. -LH
+cmake -B build -LH
 ```
 
 ### 2. Compile
@@ -234,8 +228,8 @@ After configuration, you are ready to compile.
 Run the following in your terminal to compile Bitcoin Core:
 
 ``` bash
-cmake --build .  # Use "-j N" here for N parallel jobs.
-ctest            # Run tests if Python 3 is available. Use "-j N" here for N parallel jobs.
+cmake --build build     # Use "-j N" here for N parallel jobs.
+ctest --test-dir build  # Use "-j N" for N parallel tests. Some tests are disabled if Python 3 is not available.
 ```
 
 ### 3. Deploy (optional)
@@ -243,7 +237,7 @@ ctest            # Run tests if Python 3 is available. Use "-j N" here for N par
 You can also create a  `.zip` containing the `.app` bundle by running the following command:
 
 ``` bash
-cmake --build . --target deploy
+cmake --build build --target deploy
 ```
 
 ## Running Bitcoin Core
@@ -279,8 +273,8 @@ tail -f $HOME/Library/Application\ Support/Bitcoin/debug.log
 ## Other commands:
 
 ```shell
-./src/bitcoind -daemon      # Starts the bitcoin daemon.
-./src/bitcoin-cli --help    # Outputs a list of command-line options.
-./src/bitcoin-cli help      # Outputs a list of RPC commands when the daemon is running.
-./src/qt/bitcoin-qt -server # Starts the bitcoin-qt server mode, allows bitcoin-cli control
+./build/src/bitcoind -daemon      # Starts the bitcoin daemon.
+./build/src/bitcoin-cli --help    # Outputs a list of command-line options.
+./build/src/bitcoin-cli help      # Outputs a list of RPC commands when the daemon is running.
+./build/src/qt/bitcoin-qt -server # Starts the bitcoin-qt server mode, allows bitcoin-cli control
 ```
