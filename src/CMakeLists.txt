@@ -1,9 +1,19 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2024-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 include(GNUInstallDirs)
 include(AddWindowsResources)
+
+option(SECP256K1_DISABLE_SHARED "" ON)
+option(SECP256K1_ENABLE_MODULE_ECDH "" OFF)
+option(SECP256K1_ENABLE_MODULE_RECOVERY "" ON)
+option(SECP256K1_BUILD_BENCHMARK "" OFF)
+option(SECP256K1_BUILD_TESTS "" OFF)
+option(SECP256K1_BUILD_EXHAUSTIVE_TESTS "" OFF)
+option(SECP256K1_BUILD_CTIME_TESTS "" OFF)
+add_subdirectory(secp256k1)
+target_link_libraries(secp256k1 PRIVATE core_base_interface)
 
 configure_file(${CMAKE_SOURCE_DIR}/cmake/bitcoin-config.h.in config/bitcoin-config.h @ONLY)
 add_compile_definitions(HAVE_CONFIG_H)
