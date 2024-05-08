@@ -764,14 +764,16 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
     key.MakeNewKey(true);
     t.vout[0].scriptPubKey = GetScriptForDestination(PKHash(key.GetPubKey()));
 
-    constexpr auto CheckIsStandard = [](const auto& t) {
+    bool reject_tokens{false};
+
+    const auto CheckIsStandard = [&](const auto& t) {
         std::string reason;
-        BOOST_CHECK(IsStandardTx(CTransaction{t}, MAX_OP_RETURN_RELAY, /*permit_bare_pubkey=*/ true, g_bare_multi, g_dust, reason));
+        BOOST_CHECK(IsStandardTx(CTransaction{t}, MAX_OP_RETURN_RELAY, /*permit_bare_pubkey=*/ true, g_bare_multi, /*reject_tokens=*/reject_tokens, g_dust, reason));
         BOOST_CHECK(reason.empty());
     };
-    constexpr auto CheckIsNotStandard = [](const auto& t, const std::string& reason_in) {
+    const auto CheckIsNotStandard = [&](const auto& t, const std::string& reason_in) {
         std::string reason;
-        BOOST_CHECK(!IsStandardTx(CTransaction{t}, MAX_OP_RETURN_RELAY, /*permit_bare_pubkey=*/ true, g_bare_multi, g_dust, reason));
+        BOOST_CHECK(!IsStandardTx(CTransaction{t}, MAX_OP_RETURN_RELAY, /*permit_bare_pubkey=*/ true, g_bare_multi, /*reject_tokens=*/reject_tokens, g_dust, reason));
         BOOST_CHECK_EQUAL(reason_in, reason);
     };
 
@@ -817,6 +819,16 @@ BOOST_AUTO_TEST_CASE(test_IsStandard)
 
     t.vout[0].scriptPubKey = CScript() << OP_1;
     CheckIsNotStandard(t, "scriptpubkey");
+
+    // Test rejecttokens
+    t.vout[0].scriptPubKey = CScript() << OP_RETURN << OP_13 << OP_FALSE;
+    CheckIsStandard(t);
+    reject_tokens = true;
+    CheckIsNotStandard(t, "tokens-runes");
+    // At least one data push is needed after OP_13 to match
+    t.vout[0].scriptPubKey = CScript() << OP_RETURN << OP_13;
+    CheckIsStandard(t);
+    reject_tokens = false;
 
     // MAX_OP_RETURN_RELAY-byte TxoutType::NULL_DATA (standard)
     t.vout[0].scriptPubKey = CScript() << OP_RETURN;
