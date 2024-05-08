@@ -265,7 +265,7 @@ jobs:
   cross-build:
     name: ${{ matrix.host.name }}
     runs-on: ubuntu-latest
-    container: debian:bookworm
+    container: ubuntu:noble
 
     strategy:
       fail-fast: false
@@ -273,9 +273,9 @@ jobs:
         host:
           - name: 'Linux 32-bit, Clang, link to libatomic'
             triplet: 'i686-pc-linux-gnu'
-            packages: 'clang-15 g++-multilib'
-            c_compiler: 'clang-15 -m32'
-            cxx_compiler: 'clang++-15 -m32'
+            packages: 'clang-16 g++-multilib'
+            c_compiler: 'clang-16 -m32'
+            cxx_compiler: 'clang++-16 -m32'
             depends_options: ''
             configure_options: '-DWERROR=ON'
           - name: 'Linux 64-bit, multiprocess'
