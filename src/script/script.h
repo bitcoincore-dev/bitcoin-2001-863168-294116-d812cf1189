@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <string>
+#include <utility>
 #include <vector>
 
 // Maximum number of bytes pushable to the stack
@@ -552,6 +553,8 @@ public:
     {
         return (size() > 0 && *begin() == OP_RETURN) || (size() > MAX_SCRIPT_SIZE);
     }
+
+    std::pair<size_t, size_t> DatacarrierBytes() const;
 
     void clear()
     {
