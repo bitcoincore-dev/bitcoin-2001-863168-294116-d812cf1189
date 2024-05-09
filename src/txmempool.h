@@ -461,6 +461,7 @@ public:
     unsigned int m_dust_relay_multiplier;
     bool m_permit_bare_pubkey;
     bool m_permit_bare_multisig;
+    bool m_reject_parasites;
     bool m_reject_tokens;
     std::optional<unsigned> m_max_datacarrier_bytes;
     bool m_datacarrier_fullcount;
