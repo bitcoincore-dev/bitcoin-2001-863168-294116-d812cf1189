@@ -60,3 +60,7 @@ find_package_handle_standard_args(Qt5
   REQUIRED_VARS Qt5_DIR
   VERSION_VAR Qt5_VERSION
 )
+
+foreach(component IN LISTS Qt5_FIND_COMPONENTS ITEMS "")
+  mark_as_advanced(Qt5${component}_DIR)
+endforeach()
