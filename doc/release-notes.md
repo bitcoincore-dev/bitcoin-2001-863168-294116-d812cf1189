@@ -1,20 +1,20 @@
 26.1 Release Notes
 ==================
 
-Bitcoin Core version 26.1 is now available from:
+Bitcoin Knots version 26.1.knots20240513 is now available from:
 
-  <https://bitcoincore.org/bin/bitcoin-core-26.1/>
+  <https://bitcoinknots.org/files/26.x/26.1.knots20240513/>
 
-This release includes various bug fixes and performance
+This release includes new features, various bug fixes and performance
 improvements, as well as updated translations.
 
 Please report bugs using the issue tracker at GitHub:
 
-  <https://github.com/bitcoin/bitcoin/issues>
+  <https://github.com/bitcoinknots/bitcoin/issues>
 
 To receive security and update notifications, please subscribe to:
 
-  <https://bitcoincore.org/en/list/announcements/join/>
+  <https://bitcoinknots.org/list/announcements/join/>
 
 How to Upgrade
 ==============
@@ -24,82 +24,104 @@ shut down (which might take a few minutes in some cases), then run the
 installer (on Windows) or just copy over `/Applications/Bitcoin-Qt` (on macOS)
 or `bitcoind`/`bitcoin-qt` (on Linux).
 
-Upgrading directly from a version of Bitcoin Core that has reached its EOL is
+Upgrading directly from very old versions of Bitcoin Core or Knots is
 possible, but it might take some time if the data directory needs to be migrated. Old
-wallet versions of Bitcoin Core are generally supported.
+wallet versions of Bitcoin Knots are generally supported.
 
 Compatibility
 ==============
 
-Bitcoin Core is supported and extensively tested on operating systems
-using the Linux kernel, macOS 11.0+, and Windows 7 and newer.  Bitcoin
-Core should also work on most other Unix-like systems but is not as
-frequently tested on them.  It is not recommended to use Bitcoin Core on
-unsupported systems.
+Bitcoin Knots is supported on operating systems using the Linux kernel,
+macOS 11.0+, and Windows 7 and newer. It is not recommended to use
+Bitcoin Knots on unsupported systems.
+
+Known Bugs
+==========
+
+In various locations, including the GUI's transaction details dialog and the
+"vsize" result in many RPC results, transaction virtual sizes may not account
+for an unusually high number of sigops (ie, as determined by the
+`-bytespersigop` policy). This could result in reporting a lower virtual size
+than is actually used for mempool or mining purposes.
+
+Due to disruption of the shared Bitcoin Transifex repository, this release
+still does not include updated translations, and Bitcoin Knots may be unable
+to do so until/unless that is resolved.
 
 Notable changes
 ===============
 
-### Wallet
+Node policy changes
+-------------------
 
-- #28994 wallet: skip BnB when SFFO is enabled
-- #28920 wallet: birth time update during tx scanning
-- #29176 wallet: Fix use-after-free in WalletBatch::EraseRecords
-- #29510 wallet: getrawchangeaddress and getnewaddress failures should not affect keypools for descriptor wallets
+- A new non-standard token/asset protocol launched a few weeks ago ("Runes").
+  Due to its lack of competent review, design flaws (as well as the relative
+  worthlessness of the tokens at least when first minted) resulted in it being
+  particularly spammy in practice. Some users have chosen to block all
+  datacarrier transactions in an effort to mitigate this.
 
-### RPC
+  To better address users' concerns, this release adds a new `-rejecttokens`
+  policy filter (also available in the GUI) that will only block Runes
+  transactions, thereby enabling users who choose to tolerate datacarrier
+  otherwise to re-enable that policy. Note that it is _not_ enabled by
+  default at this time.
 
-- #29003 rpc: fix getrawtransaction segfault
-- #28784 rpc: keep .cookie file if it was not generated
+- Similarly, a new policy filter has been added to block parasitic
+  transactions. Many parasite transactions cannot be detected, but this new
+  filter aims to do what it can when possible, currently just so-called
+  "CAT-21" transactions built using the Ordinal attack. It _is_ enabled by
+  default, and can be disabled using `-rejectparasites=0` (or in the GUI) if
+  you wish to tolerate these. (knots#78)
 
-### Logs
+- The dust limit has historically required outputs to be at least three times
+  the value they provide when later spent. The experimental dynamic adjustment
+  function, however, was adjusting it based on exactly (1x) the value the
+  output provides. To address this, you can now specify a multiplier by
+  prefixing your policy by a number (with up to three decimal places) followed
+  by an asterisk. So `-dustdynamic=3.142*target:N` will require outputs to be
+  3.142 times the value they provide; or `-dustdynamic=1*target:N` will behave
+  the same as previous versions for `target:N`. The default multiplier, if
+  none is specified, is now three times as historically has been used. If you
+  use this feature, please leave a comment about your experience on GitHub:
+  <https://github.com/bitcoinknots/bitcoin/issues/74>
 
-- #29227 log mempool loading progress
+Updated RPCs
+------------
 
-### P2P and network changes
+- `submitpackage` now returns results with per-transaction errors rather than
+  throwing an exception potentially obscuring other transactions being
+  accepted. (#28848)
 
-- #29200 net: create I2P sessions using both ECIES-X25519 and ElGamal encryption
-- #29412 p2p: Don't process mutated blocks
-- #29524 p2p: Don't consider blocks mutated if they don't connect to known prev block
+- `getprioritisedtransactions` now also includes "modified_fee" in results,
+  with the sum of the real transaction fee and the fee delta. (#28885)
 
-### Build
-
-- #29127 Use hardened runtime on macOS release builds.
-- #29195 build: Fix -Xclang -internal-isystem option
-
-### CI
-
-- #28992 ci: Use Ubuntu 24.04 Noble for asan,tsan,tidy,fuzz
-- #29080 ci: Set HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK to avoid unrelated failures
-- #29610 ci: Fix "macOS native" job
-
-### Miscellaneous
-
-- #28391 refactor: Simplify CTxMempool/BlockAssembler fields, remove some external mapTx access
-- #29179 test: wallet rescan with reorged parent + IsFromMe child in mempool
-- #28791 snapshots: don't core dump when running -checkblockindex after loadtxoutset
-- #29357 test: Drop x modifier in fsbridge::fopen call for MinGW builds
-- #29529 fuzz: restrict fopencookie usage to Linux & FreeBSD
+- `getrawaddrman` has been extended to include in the results for each entry
+  "mapped_as" and "source_mapped_as". (#30062)
 
 Credits
 =======
 
 Thanks to everyone who directly contributed to this release:
 
-- dergoegge
+- Antoine Poinsot
+- Ava Chow
+- brunoerg
+- Charlie
+- Fabian Jahr
 - fanquake
 - furszy
-- glozow
 - Greg Sanders
 - Hennadii Stepanov
 - Jon Atack
+- kevkevin
+- Léo Haf
+- Luke Dashjr
 - MarcoFalke
-- Mark Friedenbach
 - Martin Zumsande
-- Murch
-- Roman Zeyde
-- stickies-v
-- UdjinM6
-
-As well as to everyone that helped with translations on
-[Transifex](https://www.transifex.com/bitcoin/bitcoin/).
+- Matthew Zipkin
+- pablomartin4btc
+- Sebastian Falbesoner
+- Sergi Delgado Segura
+- Vasil Dimov
+- willcl-ark
+- Wladimir J. van der Laan
