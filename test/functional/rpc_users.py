@@ -252,6 +252,18 @@ class HTTPBasicsTest(BitcoinTestFramework):
         (self.nodes[0].chain_path / ".cookie.tmp").mkdir()
         (self.nodes[0].chain_path / ".cookie.tmp/subdir").mkdir()
         self.nodes[0].assert_start_raises_init_error(expected_msg=init_error)
+        (self.nodes[0].chain_path / ".cookie.tmp/subdir").rmdir()
+        (self.nodes[0].chain_path / ".cookie.tmp").rmdir()
+
+        (self.nodes[0].chain_path / ".cookie").mkdir()
+        (self.nodes[0].chain_path / ".cookie/subdir").mkdir()
+        self.nodes[0].assert_start_raises_init_error(expected_msg=init_error)
+        (self.nodes[0].chain_path / ".cookie/subdir").rmdir()
+        (self.nodes[0].chain_path / ".cookie").rmdir()
+
+        self.log.info('Check that a non-writable cookie file will get replaced gracefully')
+        (self.nodes[0].chain_path / ".cookie").mkdir(mode=1)
+        self.restart_node(0)
 
         self.test_rpccookieperms()
 
