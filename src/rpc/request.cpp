@@ -106,6 +106,11 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
     file.close();
 
     fs::path filepath = GetAuthCookieFile(false);
+    try {
+        fs::remove(filepath);
+    } catch (const fs::filesystem_error& e) {
+        // ignore
+    }
     if (!RenameOver(filepath_tmp, filepath)) {
         LogInfo("Unable to rename cookie authentication file %s to %s\n", fs::PathToString(filepath_tmp), fs::PathToString(filepath));
         return false;
