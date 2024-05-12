@@ -109,7 +109,7 @@ option(WERROR "Treat compiler warnings as errors." OFF)
 # TODO: These tri-state options will be removed and most features
 #       will become opt-in by default before merging into master.
 include(TristateOption)
-tristate_option(CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
+tristate_option(WITH_CCACHE "Use ccache for compiling." "if ccache is found." AUTO)
 
 option(WITH_NATPMP "Enable NAT-PMP." OFF)
 if(WITH_NATPMP)
@@ -642,7 +642,7 @@ message("Linker flags for shared libraries ..... ${CMAKE_SHARED_LINKER_FLAGS}")
 print_config_flags()
 message("Attempt to harden executables ......... ${HARDENING}")
 message("Treat compiler warnings as errors ..... ${WERROR}")
-message("Use ccache for compiling .............. ${CCACHE}")
+message("Use ccache for compiling .............. ${WITH_CCACHE}")
 message("\n")
 if(configure_warnings)
     message("  ******\n")
