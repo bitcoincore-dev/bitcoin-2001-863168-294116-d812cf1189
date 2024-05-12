@@ -171,9 +171,9 @@ else()
 endif()
 
 if("@no_harden@")
-  set(HARDENING OFF CACHE BOOL "")
+  set(ENABLE_HARDENING OFF CACHE BOOL "")
 else()
-  set(HARDENING ON CACHE BOOL "")
+  set(ENABLE_HARDENING ON CACHE BOOL "")
 endif()
 
 if("@multiprocess@" STREQUAL "1")
