@@ -102,7 +102,7 @@ endif()
 cmake_dependent_option(BUILD_WALLET_TOOL "Build bitcoin-wallet tool." ON "ENABLE_WALLET" OFF)
 
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
-option(HARDENING "Attempt to harden the resulting executables." ON)
+option(ENABLE_HARDENING "Attempt to harden the resulting executables." ON)
 option(REDUCE_EXPORTS "Attempt to reduce exported symbols in the resulting executables." OFF)
 option(WERROR "Treat compiler warnings as errors." OFF)
 
@@ -495,7 +495,7 @@ try_append_cxx_flags("-fno-extended-identifiers" TARGET core_base_interface SKIP
 # -fstack-reuse=none for all gcc builds. (Only gcc understands this flag).
 try_append_cxx_flags("-fstack-reuse=none" TARGET core_base_interface)
 
-if(HARDENING)
+if(ENABLE_HARDENING)
   add_library(hardening_interface INTERFACE)
   target_link_libraries(core_base_interface INTERFACE hardening_interface)
   if(MSVC)
@@ -647,7 +647,7 @@ message("Common link options ................... ${common_link_options}")
 message("Linker flags for executables .......... ${CMAKE_EXE_LINKER_FLAGS} ${APPEND_LDFLAGS}")
 message("Linker flags for shared libraries ..... ${CMAKE_SHARED_LINKER_FLAGS} ${APPEND_LDFLAGS}")
 print_config_flags()
-message("Attempt to harden executables ......... ${HARDENING}")
+message("Attempt to harden executables ......... ${ENABLE_HARDENING}")
 message("Treat compiler warnings as errors ..... ${WERROR}")
 message("Use ccache for compiling .............. ${WITH_CCACHE}")
 message("\n")
