@@ -155,7 +155,7 @@ if(ENABLE_WALLET)
   add_subdirectory(${PROJECT_SOURCE_DIR}/src/wallet/test wallet)
 endif()
 
-if(MULTIPROCESS)
+if(BUILD_MULTIPROCESS)
   add_library(bitcoin_ipc_test STATIC EXCLUDE_FROM_ALL
     ipc_test.cpp
   )
