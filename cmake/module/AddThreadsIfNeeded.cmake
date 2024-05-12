@@ -34,7 +34,7 @@ function(add_threads_if_needed)
      - https://github.com/bitcoin/bitcoin/pull/16059
      - https://groups.google.com/d/msg/bsdmailinglist/22ncTZAbDp4/Dii_pII5AwAJ
     ]=]
-  elseif(THREADLOCAL)
+  elseif(ENABLE_THREADLOCAL)
     target_compile_definitions(core_interface INTERFACE
       "$<$<COMPILE_FEATURES:cxx_thread_local>:HAVE_THREAD_LOCAL>"
     )
