@@ -424,18 +424,18 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
             // We don't want to connect any more of them if we are already connected to one
             for (const auto& r : resolved) {
                 addrConnect = CAddress{MaybeFlipIPv6toCJDNS(r), NODE_NONE};
-                if (!addrConnect.IsValid()) {
-                    LogPrint(BCLog::NET, "Resolver returned invalid address %s for %s\n", addrConnect.ToStringAddrPort(), pszDest);
-                    return nullptr;
-                }
-                // It is possible that we already have a connection to the IP/port pszDest resolved to.
-                // In that case, drop the connection that was just created.
-                LOCK(m_nodes_mutex);
-                CNode* pnode = FindNode(static_cast<CService>(addrConnect));
-                if (pnode) {
+            if (!addrConnect.IsValid()) {
+                LogPrint(BCLog::NET, "Resolver returned invalid address %s for %s\n", addrConnect.ToStringAddrPort(), pszDest);
+                return nullptr;
+            }
+            // It is possible that we already have a connection to the IP/port pszDest resolved to.
+            // In that case, drop the connection that was just created.
+            LOCK(m_nodes_mutex);
+            CNode* pnode = FindNode(static_cast<CService>(addrConnect));
+            if (pnode) {
                     LogPrintf("Not opening a connection to %s, already connected to %s\n", pszDest, addrConnect.ToStringAddrPort());
-                    return nullptr;
-                }
+                return nullptr;
+            }
             }
         }
     }
@@ -2839,16 +2839,16 @@ void CConnman::ThreadOpenAddedConnections()
         std::vector<AddedNodeInfo> vInfo = GetAddedNodeInfo(/*include_connected=*/false);
         bool tried = false;
         for (const AddedNodeInfo& info : vInfo) {
-            if (!grant) {
-                // If we've used up our semaphore and need a new one, let's not wait here since while we are waiting
-                // the addednodeinfo state might change.
-                break;
-            }
-            tried = true;
-            CAddress addr(CService(), NODE_NONE);
-            OpenNetworkConnection(addr, false, std::move(grant), info.m_params.m_added_node.c_str(), ConnectionType::MANUAL, info.m_params.m_use_v2transport);
-            if (!interruptNet.sleep_for(std::chrono::milliseconds(500))) return;
-            grant = CSemaphoreGrant(*semAddnode, /*fTry=*/true);
+                if (!grant) {
+                    // If we've used up our semaphore and need a new one, let's not wait here since while we are waiting
+                    // the addednodeinfo state might change.
+                    break;
+                }
+                tried = true;
+                CAddress addr(CService(), NODE_NONE);
+                OpenNetworkConnection(addr, false, std::move(grant), info.m_params.m_added_node.c_str(), ConnectionType::MANUAL, info.m_params.m_use_v2transport);
+                if (!interruptNet.sleep_for(std::chrono::milliseconds(500))) return;
+                grant = CSemaphoreGrant(*semAddnode, /*fTry=*/true);
         }
         // Retry every 60 seconds if a connection was attempted, otherwise two seconds
         if (!interruptNet.sleep_for(std::chrono::seconds(tried ? 60 : 2)))

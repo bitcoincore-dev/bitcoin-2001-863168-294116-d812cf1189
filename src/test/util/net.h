@@ -6,12 +6,12 @@
 #define BITCOIN_TEST_UTIL_NET_H
 
 #include <compat/compat.h>
+#include <node/eviction.h>
+#include <netaddress.h>
 #include <net.h>
 #include <net_permissions.h>
 #include <net_processing.h>
-#include <netaddress.h>
 #include <node/connection_types.h>
-#include <node/eviction.h>
 #include <sync.h>
 #include <util/sock.h>
 

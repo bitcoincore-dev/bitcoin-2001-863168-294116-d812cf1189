@@ -4,12 +4,13 @@
 
 #include <test/util/net.h>
 
+#include <chainparams.h>
+#include <node/eviction.h>
 #include <net.h>
 #include <net_processing.h>
 #include <netaddress.h>
 #include <netmessagemaker.h>
 #include <node/connection_types.h>
-#include <node/eviction.h>
 #include <protocol.h>
 #include <random.h>
 #include <serialize.h>
