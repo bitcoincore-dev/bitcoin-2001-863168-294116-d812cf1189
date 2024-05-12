@@ -165,7 +165,7 @@ option(BUILD_TESTS "Build test_bitcoin executable." ON)
 cmake_dependent_option(BUILD_GUI_TESTS "Build test_bitcoin-qt executable." ON "BUILD_GUI;BUILD_TESTS" OFF)
 option(BUILD_BENCH "Build bench_bitcoin executable." ON)
 option(BUILD_FUZZ_BINARY "Build fuzz binary." ON)
-cmake_dependent_option(FUZZ "Build for fuzzing. Enabling this will disable all other targets and override BUILD_FUZZ_BINARY." OFF "NOT MSVC" OFF)
+cmake_dependent_option(ENABLE_FUZZ "Build for fuzzing. Enabling this will disable all other targets and override BUILD_FUZZ_BINARY." OFF "NOT MSVC" OFF)
 
 option(INSTALL_MAN "Install man pages." ON)
 
@@ -206,8 +206,8 @@ target_link_libraries(core_base_interface INTERFACE
 )
 target_link_libraries(core_interface INTERFACE core_base_interface)
 
-if(FUZZ)
-  message(WARNING "FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
+if(ENABLE_FUZZ)
+  message(WARNING "ENABLE_FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
   set(BUILD_DAEMON OFF)
   set(BUILD_CLI OFF)
   set(BUILD_TX OFF)
