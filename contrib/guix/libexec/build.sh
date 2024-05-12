@@ -260,7 +260,7 @@ mkdir -p "$DISTSRC"
     env CFLAGS="${HOST_CFLAGS}" CXXFLAGS="${HOST_CXXFLAGS}" LDFLAGS="${HOST_LDFLAGS}" \
     cmake -S . -B build \
           --toolchain "${BASEPREFIX}/${HOST}/toolchain.cmake" \
-          -DCCACHE=OFF \
+          -DWITH_CCACHE=OFF \
           ${CONFIGFLAGS}
 
     # Build Bitcoin Core

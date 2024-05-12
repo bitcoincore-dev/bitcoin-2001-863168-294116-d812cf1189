@@ -4,7 +4,7 @@
 
 # Optional features and packages.
 
-if(CCACHE)
+if(WITH_CCACHE)
   set(ccache_hints)
   if(MSVC AND EXISTS "$ENV{ChocolateyInstall}")
     # Bypass a shim executable provided by Chocolatey.
@@ -19,7 +19,7 @@ if(CCACHE)
       if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
         # ccache >= 4.8 requires compile batching turned off that is available since CMake 3.24.
         # See https://github.com/ccache/ccache/wiki/MS-Visual-Studio
-        set(CCACHE ON)
+        set(WITH_CCACHE ON)
         file(COPY_FILE ${CCACHE_COMMAND} ${CMAKE_BINARY_DIR}/cl.exe ONLY_IF_DIFFERENT)
         list(APPEND CMAKE_VS_GLOBALS
           "CLToolExe=cl.exe"
@@ -30,20 +30,20 @@ if(CCACHE)
         # By default Visual Studio generators will use /Zi which is not compatible
         # with ccache, so tell Visual Studio to use /Z7 instead.
         set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
-      elseif(CCACHE STREQUAL "AUTO")
+      elseif(WITH_CCACHE STREQUAL "AUTO")
         message(WARNING "ccache requested and found, but CMake >= 3.24 is required to use it properly. Disabling.\n"
-                        "To skip ccache check, use \"-DCCACHE=OFF\".\n")
-        set(CCACHE OFF)
+                        "To skip ccache check, use \"-DWITH_CCACHE=OFF\".\n")
+        set(WITH_CCACHE OFF)
       else()
         message(FATAL_ERROR "ccache requested and found, but CMake >= 3.24 is required to use it properly.")
       endif()
     else()
-      set(CCACHE ON)
+      set(WITH_CCACHE ON)
       list(APPEND CMAKE_C_COMPILER_LAUNCHER ${CCACHE_COMMAND})
       list(APPEND CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE_COMMAND})
     endif()
-  elseif(CCACHE STREQUAL "AUTO")
-    set(CCACHE OFF)
+  elseif(WITH_CCACHE STREQUAL "AUTO")
+    set(WITH_CCACHE OFF)
   else()
     message(FATAL_ERROR "ccache requested, but not found.")
   endif()
