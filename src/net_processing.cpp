@@ -2316,7 +2316,7 @@ void PeerManagerImpl::ProcessGetBlockData(CNode& pfrom, Peer& peer, const CInv& 
         // Fast-path: in this case it is possible to serve the block directly from disk,
         // as the network format matches the format on disk
         std::vector<uint8_t> block_data;
-        if (!m_chainman.m_blockman.ReadRawBlockFromDisk(block_data, pindex->GetBlockPos())) {
+        if (!m_chainman.m_blockman.ReadRawBlockFromDisk(block_data, pindex->GetBlockPos(), /*lowprio=*/true)) {
             assert(!"cannot load block from disk");
         }
         m_connman.PushMessage(&pfrom, msgMaker.Make(NetMsgType::BLOCK, Span{block_data}));
@@ -2324,7 +2324,7 @@ void PeerManagerImpl::ProcessGetBlockData(CNode& pfrom, Peer& peer, const CInv& 
     } else {
         // Send block from disk
         std::shared_ptr<CBlock> pblockRead = std::make_shared<CBlock>();
-        if (!m_chainman.m_blockman.ReadBlockFromDisk(*pblockRead, *pindex)) {
+        if (!m_chainman.m_blockman.ReadBlockFromDisk(*pblockRead, *pindex, /*lowprio=*/true)) {
             assert(!"cannot load block from disk");
         }
         pblock = pblockRead;
@@ -4090,7 +4090,7 @@ void PeerManagerImpl::ProcessMessage(CNode& pfrom, const std::string& msg_type, 
 
             if (pindex->nHeight >= m_chainman.ActiveChain().Height() - MAX_BLOCKTXN_DEPTH) {
                 CBlock block;
-                const bool ret{m_chainman.m_blockman.ReadBlockFromDisk(block, *pindex)};
+                const bool ret{m_chainman.m_blockman.ReadBlockFromDisk(block, *pindex, /*lowprio=*/true)};
                 assert(ret);
 
                 SendBlockTransactions(pfrom, *peer, block, req);
@@ -5719,7 +5719,7 @@ bool PeerManagerImpl::SendMessages(CNode* pto)
                         m_connman.PushMessage(pto, std::move(cached_cmpctblock_msg.value()));
                     } else {
                         CBlock block;
-                        const bool ret{m_chainman.m_blockman.ReadBlockFromDisk(block, *pBestIndex)};
+                        const bool ret{m_chainman.m_blockman.ReadBlockFromDisk(block, *pBestIndex, /*lowprio=*/true)};
                         assert(ret);
                         CBlockHeaderAndShortTxIDs cmpctblock{block};
                         m_connman.PushMessage(pto, msgMaker.Make(NetMsgType::CMPCTBLOCK, cmpctblock));
