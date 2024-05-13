@@ -110,6 +110,9 @@ static int AppInitRawTx(int argc, char* argv[])
             strUsage += FormatParagraph(LicenseInfo());
         } else {
             strUsage += "\n"
+                "The bitcoin-tx tool is used for creating and modifying bitcoin transactions.\n\n"
+                "bitcoin-tx can be used with \"<hex-tx> [commands]\" to update a hex-encoded bitcoin transaction, or with \"-create [commands]\" to create a hex-encoded bitcoin transaction.\n"
+                "\n"
                 "Usage:  bitcoin-tx [options] <hex-tx> [commands]  Update hex-encoded bitcoin transaction\n"
                 "or:     bitcoin-tx [options] -create [commands]   Create hex-encoded bitcoin transaction\n"
                 "\n";
