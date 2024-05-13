@@ -644,6 +644,7 @@ void CNode::CopyStats(CNodeStats& stats)
         if (info.session_id) stats.m_session_id = HexStr(*info.session_id);
     }
     X(m_permission_flags);
+    X(m_forced_inbound);
 
     X(m_last_ping_time);
     X(m_min_ping_time);
@@ -1674,7 +1675,7 @@ std::pair<size_t, bool> CConnman::SocketSendData(CNode& node) const
  *   to forge.  In order to partition a node the attacker must be
  *   simultaneously better at all of them than honest peers.
  */
-bool CConnman::AttemptToEvictConnection()
+bool CConnman::AttemptToEvictConnection(bool force)
 {
     std::vector<NodeEvictionCandidate> vEvictionCandidates;
     {
@@ -1702,7 +1703,7 @@ bool CConnman::AttemptToEvictConnection()
             vEvictionCandidates.push_back(candidate);
         }
     }
-    const std::optional<NodeId> node_id_to_evict = SelectNodeToEvict(std::move(vEvictionCandidates));
+    const std::optional<NodeId> node_id_to_evict = SelectNodeToEvict(std::move(vEvictionCandidates), force);
     if (!node_id_to_evict) {
         return false;
     }
@@ -1796,13 +1797,19 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
         return;
     }
 
+    bool forced{false};
     if (nInbound >= nMaxInbound)
     {
-        if (!AttemptToEvictConnection()) {
+        // If the inbound connection attempt is granted ForceInbound permission, try a little harder
+        // to make room by evicting a peer we may not have otherwise evicted.
+        if (!AttemptToEvictConnection(NetPermissions::HasFlag(permission_flags, NetPermissionFlags::ForceInbound))) {
             // No connection to evict, disconnect the new connection
             LogPrint(BCLog::NET, "failed to find an eviction candidate - connection dropped (full)\n");
             return;
         }
+
+        // We kicked someone out
+        forced = true;
     }
 
     NodeId id = GetNewNodeId();
@@ -1827,6 +1834,7 @@ void CConnman::CreateNodeFromAcceptedSocket(std::unique_ptr<Sock>&& sock,
                              CNodeOptions{
                                  .permission_flags = permission_flags,
                                  .prefer_evict = discouraged,
+                                 .forced_inbound = forced,
                                  .recv_flood_size = nReceiveFloodSize,
                                  .use_v2transport = use_v2transport,
                              });
@@ -3706,6 +3714,7 @@ CNode::CNode(NodeId idIn,
       m_dest(addrNameIn),
       m_inbound_onion{inbound_onion},
       m_prefer_evict{node_opts.prefer_evict},
+      m_forced_inbound{node_opts.forced_inbound},
       nKeyedNetGroup{nKeyedNetGroupIn},
       m_conn_type{conn_type_in},
       id{idIn},
