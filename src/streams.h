@@ -9,6 +9,7 @@
 #include <serialize.h>
 #include <span.h>
 #include <support/allocators/zeroafterfree.h>
+#include <util/fs_helpers.h>
 #include <util/overflow.h>
 
 #include <algorithm>
@@ -621,13 +622,20 @@ public:
     {
         if (nRewindIn >= nBufSize)
             throw std::ios_base::failure("Rewind limit must be less than buffer size");
+        AdviseSequential(m_src.Get());
     }
 
     int GetVersion() const { return m_src.GetVersion(); }
 
     ~BufferedFile() { fclose(); }
 
-    int fclose() { return m_src.fclose(); }
+    int fclose()
+    {
+        if (auto rel{m_src.release()}) {
+            return CloseAndUncache(rel);
+        }
+        return 0;
+    }
 
     //! check whether we're at the end of the source file
     bool eof() const {
