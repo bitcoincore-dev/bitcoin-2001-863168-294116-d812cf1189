@@ -12,6 +12,7 @@
 #include <util/sock.h>
 #include <util/strencodings.h>
 #include <util/string.h>
+#include <util/threadinterrupt.h>
 #include <util/time.h>
 
 #include <atomic>
@@ -30,7 +31,7 @@ bool fNameLookup = DEFAULT_NAME_LOOKUP;
 
 // Need ample time for negotiation for very slow proxies such as Tor
 std::chrono::milliseconds g_socks5_recv_timeout = 20s;
-static std::atomic<bool> interruptSocks5Recv(false);
+CThreadInterrupt interruptSocks5Recv;
 
 ReachableNets g_reachable_nets;
 
@@ -333,6 +334,7 @@ static std::string Socks5ErrorString(uint8_t err)
 
 bool Socks5(const std::string& strDest, uint16_t port, const ProxyCredentials* auth, const Sock& sock)
 {
+    try {
     IntrRecvError recvr;
     LogPrint(BCLog::NET, "SOCKS5 connecting %s\n", strDest);
     if (strDest.size() > 255) {
@@ -349,10 +351,7 @@ bool Socks5(const std::string& strDest, uint16_t port, const ProxyCredentials* a
         vSocks5Init.push_back(0x01); // 1 method identifier follows...
         vSocks5Init.push_back(SOCKS5Method::NOAUTH);
     }
-    ssize_t ret = sock.Send(vSocks5Init.data(), vSocks5Init.size(), MSG_NOSIGNAL);
-    if (ret != (ssize_t)vSocks5Init.size()) {
-        return error("Error sending to proxy");
-    }
+        sock.SendComplete(vSocks5Init, g_socks5_recv_timeout, interruptSocks5Recv);
     uint8_t pchRet1[2];
     if (InterruptibleRecv(pchRet1, 2, g_socks5_recv_timeout, sock) != IntrRecvError::OK) {
         LogPrintf("Socks5() connect to %s:%d failed: InterruptibleRecv() timeout or other failure\n", strDest, port);
@@ -371,10 +370,7 @@ bool Socks5(const std::string& strDest, uint16_t port, const ProxyCredentials* a
         vAuth.insert(vAuth.end(), auth->username.begin(), auth->username.end());
         vAuth.push_back(auth->password.size());
         vAuth.insert(vAuth.end(), auth->password.begin(), auth->password.end());
-        ret = sock.Send(vAuth.data(), vAuth.size(), MSG_NOSIGNAL);
-        if (ret != (ssize_t)vAuth.size()) {
-            return error("Error sending authentication to proxy");
-        }
+            sock.SendComplete(vAuth, g_socks5_recv_timeout, interruptSocks5Recv);
         LogPrint(BCLog::PROXY, "SOCKS5 sending proxy authentication %s:%s\n", auth->username, auth->password);
         uint8_t pchRetA[2];
         if (InterruptibleRecv(pchRetA, 2, g_socks5_recv_timeout, sock) != IntrRecvError::OK) {
@@ -397,10 +393,7 @@ bool Socks5(const std::string& strDest, uint16_t port, const ProxyCredentials* a
     vSocks5.insert(vSocks5.end(), strDest.begin(), strDest.end());
     vSocks5.push_back((port >> 8) & 0xFF);
     vSocks5.push_back((port >> 0) & 0xFF);
-    ret = sock.Send(vSocks5.data(), vSocks5.size(), MSG_NOSIGNAL);
-    if (ret != (ssize_t)vSocks5.size()) {
-        return error("Error sending to proxy");
-    }
+        sock.SendComplete(vSocks5, g_socks5_recv_timeout, interruptSocks5Recv);
     uint8_t pchRet2[4];
     if ((recvr = InterruptibleRecv(pchRet2, 4, g_socks5_recv_timeout, sock)) != IntrRecvError::OK) {
         if (recvr == IntrRecvError::Timeout) {
@@ -448,6 +441,9 @@ bool Socks5(const std::string& strDest, uint16_t port, const ProxyCredentials* a
     }
     LogPrint(BCLog::NET, "SOCKS5 connected %s\n", strDest);
     return true;
+    } catch (const std::runtime_error& e) {
+        return error("Error during SOCKS5 proxy handshake: %s", e.what());
+    }
 }
 
 std::unique_ptr<Sock> CreateSockTCP(const CService& address_family)
@@ -683,7 +679,8 @@ bool LookupSubNet(const std::string& subnet_str, CSubNet& subnet_out)
 
 void InterruptSocks5(bool interrupt)
 {
-    interruptSocks5Recv = interrupt;
+    if (!interrupt) return;
+    interruptSocks5Recv();
 }
 
 bool IsBadPort(uint16_t port)
