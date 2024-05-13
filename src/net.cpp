@@ -417,10 +417,13 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
     const uint16_t default_port{pszDest != nullptr ? GetDefaultPort(pszDest) :
                                                      m_params.GetDefaultPort()};
     if (pszDest) {
-        const std::vector<CService> resolved{Lookup(pszDest, default_port, fNameLookup && !HaveNameProxy(), 256)};
+        std::vector<CService> resolved{Lookup(pszDest, default_port, fNameLookup && !HaveNameProxy(), 256)};
         if (!resolved.empty()) {
-            const CService& rnd{resolved[GetRand(resolved.size())]};
-            addrConnect = CAddress{MaybeFlipIPv6toCJDNS(rnd), NODE_NONE};
+            Shuffle(resolved.begin(), resolved.end(), FastRandomContext());
+            // If the connection is made by name, it can be the case that the name resolves to more than one address.
+            // We don't want to connect any more of them if we are already connected to one
+            for (const auto& r : resolved) {
+                addrConnect = CAddress{MaybeFlipIPv6toCJDNS(r), NODE_NONE};
             if (!addrConnect.IsValid()) {
                 LogPrint(BCLog::NET, "Resolver returned invalid address %s for %s\n", addrConnect.ToStringAddrPort(), pszDest);
                 return nullptr;
@@ -430,8 +433,9 @@ CNode* CConnman::ConnectNode(CAddress addrConnect, const char *pszDest, bool fCo
             LOCK(m_nodes_mutex);
             CNode* pnode = FindNode(static_cast<CService>(addrConnect));
             if (pnode) {
-                LogPrintf("Failed to open new connection, already connected\n");
+                    LogPrintf("Not opening a connection to %s, already connected to %s\n", pszDest, addrConnect.ToStringAddrPort());
                 return nullptr;
+            }
             }
         }
     }
@@ -2769,7 +2773,7 @@ std::vector<CAddress> CConnman::GetCurrentBlockRelayOnlyConns() const
     return ret;
 }
 
-std::vector<AddedNodeInfo> CConnman::GetAddedNodeInfo() const
+std::vector<AddedNodeInfo> CConnman::GetAddedNodeInfo(bool include_connected) const
 {
     std::vector<AddedNodeInfo> ret;
 
@@ -2804,6 +2808,9 @@ std::vector<AddedNodeInfo> CConnman::GetAddedNodeInfo() const
             // strAddNode is an IP:port
             auto it = mapConnected.find(service);
             if (it != mapConnected.end()) {
+                if (!include_connected) {
+                    continue;
+                }
                 addedNode.resolvedAddress = service;
                 addedNode.fConnected = true;
                 addedNode.fInbound = it->second;
@@ -2812,6 +2819,9 @@ std::vector<AddedNodeInfo> CConnman::GetAddedNodeInfo() const
             // strAddNode is a name
             auto it = mapConnectedByName.find(addr.m_added_node);
             if (it != mapConnectedByName.end()) {
+                if (!include_connected) {
+                    continue;
+                }
                 addedNode.resolvedAddress = it->second.second;
                 addedNode.fConnected = true;
                 addedNode.fInbound = it->second.first;
@@ -2830,10 +2840,9 @@ void CConnman::ThreadOpenAddedConnections()
     while (true)
     {
         CSemaphoreGrant grant(*semAddnode);
-        std::vector<AddedNodeInfo> vInfo = GetAddedNodeInfo();
+        std::vector<AddedNodeInfo> vInfo = GetAddedNodeInfo(/*include_connected=*/false);
         bool tried = false;
         for (const AddedNodeInfo& info : vInfo) {
-            if (!info.fConnected) {
                 if (!grant) {
                     // If we've used up our semaphore and need a new one, let's not wait here since while we are waiting
                     // the addednodeinfo state might change.
@@ -2844,7 +2853,6 @@ void CConnman::ThreadOpenAddedConnections()
                 OpenNetworkConnection(addr, false, std::move(grant), info.m_params.m_added_node.c_str(), ConnectionType::MANUAL, info.m_params.m_use_v2transport);
                 if (!interruptNet.sleep_for(std::chrono::milliseconds(500))) return;
                 grant = CSemaphoreGrant(*semAddnode, /*fTry=*/true);
-            }
         }
         // Retry every 60 seconds if a connection was attempted, otherwise two seconds
         if (!interruptNet.sleep_for(std::chrono::seconds(tried ? 60 : 2)))
@@ -3441,9 +3449,12 @@ std::vector<CAddress> CConnman::GetAddresses(CNode& requestor, size_t max_addres
 
 bool CConnman::AddNode(const AddedNodeParams& add)
 {
+    const CService resolved(LookupNumeric(add.m_added_node, GetDefaultPort(add.m_added_node)));
+    const bool resolved_is_valid{resolved.IsValid()};
+
     LOCK(m_added_nodes_mutex);
     for (const auto& it : m_added_node_params) {
-        if (add.m_added_node == it.m_added_node) return false;
+        if (add.m_added_node == it.m_added_node || (resolved_is_valid && resolved == LookupNumeric(it.m_added_node, GetDefaultPort(it.m_added_node)))) return false;
     }
 
     m_added_node_params.push_back(add);
