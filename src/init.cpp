@@ -155,6 +155,11 @@ static const char* DEFAULT_ASMAP_FILENAME="ip_asn.map";
  * The PID file facilities.
  */
 static const char* BITCOIN_PID_FILENAME = "bitcoind.pid";
+/**
+ * True if this process has created a PID file.
+ * Used to determine whether we should remove the PID file on shutdown.
+ */
+static bool g_generated_pid{false};
 
 static fs::path GetPidFile(const ArgsManager& args)
 {
@@ -170,6 +175,7 @@ static fs::path GetPidFile(const ArgsManager& args)
 #else
         tfm::format(file, "%d\n", getpid());
 #endif
+        g_generated_pid = true;
         return true;
     } else {
         return InitError(strprintf(_("Unable to create the PID file '%s': %s"), fs::PathToString(GetPidFile(args)), SysErrorString(errno)));
@@ -349,12 +355,14 @@ void Shutdown(NodeContext& node)
     node.chainman.reset();
     node.scheduler.reset();
 
+    if (g_generated_pid) {
     try {
         if (!fs::remove(GetPidFile(*node.args))) {
             LogPrintf("%s: Unable to remove PID file: File does not exist\n", __func__);
         }
     } catch (const fs::filesystem_error& e) {
         LogPrintf("%s: Unable to remove PID file: %s\n", __func__, fsbridge::get_filesystem_error_message(e));
+        }
     }
 
     LogPrintf("%s: done\n", __func__);
