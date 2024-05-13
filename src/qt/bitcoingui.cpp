@@ -769,6 +769,7 @@ void BitcoinGUI::setCurrentWallet(WalletModel* wallet_model)
             break;
         }
     }
+    enableHistoryAction(isPrivacyModeActivated());
     updateWindowTitle();
     m_migrate_wallet_action->setEnabled(wallet_model->wallet().isLegacy());
 }
