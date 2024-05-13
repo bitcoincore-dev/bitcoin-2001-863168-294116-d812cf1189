@@ -20,7 +20,7 @@
 // Helpers:
 static bool IsStandardTx(const CTransaction& tx, std::string& reason)
 {
-    return IsStandardTx(tx, std::nullopt, DEFAULT_PERMIT_BAREPUBKEY, DEFAULT_PERMIT_BAREMULTISIG, /*reject_parasites=*/ false, /*reject_tokens=*/false, CFeeRate{DUST_RELAY_TX_FEE}, reason);
+    return IsStandardTx(tx, std::nullopt, /*permit_bare_pubkey=*/ true, DEFAULT_PERMIT_BAREMULTISIG, /*reject_parasites=*/ false, /*reject_tokens=*/false, CFeeRate{DUST_RELAY_TX_FEE}, reason);
 }
 
 static std::vector<unsigned char> Serialize(const CScript& s)
@@ -195,7 +195,7 @@ BOOST_AUTO_TEST_CASE(set)
         txTo[i].vin[0].prevout.n = i;
         txTo[i].vin[0].prevout.hash = txFrom.GetHash();
         txTo[i].vout[0].nValue = 1*CENT;
-        txTo[i].vout[0].scriptPubKey = inner[i];
+        txTo[i].vout[0].scriptPubKey = outer[i];
     }
     for (int i = 0; i < 4; i++)
     {
