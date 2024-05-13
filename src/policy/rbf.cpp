@@ -116,12 +116,17 @@ std::optional<std::string> HasNoNewUnconfirmed(const CTransaction& tx,
 }
 
 std::optional<std::string> EntriesAndTxidsDisjoint(const CTxMemPool::setEntries& ancestors,
-                                                   const std::set<uint256>& direct_conflicts,
-                                                   const uint256& txid)
+                                                   const std::map<uint256, bool>& direct_conflicts,
+                                                   const uint256& txid, bool* const out_violates_policy)
 {
     for (CTxMemPool::txiter ancestorIt : ancestors) {
         const uint256& hashAncestor = ancestorIt->GetTx().GetHash();
-        if (direct_conflicts.count(hashAncestor)) {
+        const auto& conflictit = direct_conflicts.find(hashAncestor);
+        if (conflictit != direct_conflicts.end()) {
+            if (!conflictit->second /* mere SPK conflict, NOT invalid */) {
+                if (out_violates_policy) *out_violates_policy = true;
+                continue;
+            }
             return strprintf("%s spends conflicting transaction %s",
                              txid.ToString(),
                              hashAncestor.ToString());
