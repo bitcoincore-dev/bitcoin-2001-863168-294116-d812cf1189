@@ -68,6 +68,7 @@
 #include <scheduler.h>
 #include <script/sigcache.h>
 #include <shutdown.h>
+#include <stats/stats.h>
 #include <sync.h>
 #include <timedata.h>
 #include <torcontrol.h>
@@ -656,6 +657,8 @@ void SetupServerArgs(ArgsManager& argsman)
     hidden_args.emplace_back("-daemonwait");
 #endif
 
+    CStats::AddStatsOptions();
+
     // Add the hidden options
     argsman.AddHiddenArgs(hidden_args);
 }
@@ -1039,6 +1042,8 @@ bool AppInitParameterInteraction(const ArgsManager& args)
             return InitError(util::ErrorString(blockman_result));
         }
     }
+
+    if (!CStats::parameterInteraction()) return false;
 
     return true;
 }
