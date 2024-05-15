@@ -102,8 +102,8 @@ BOOST_AUTO_TEST_CASE(run_command)
 #endif
         BOOST_CHECK_EXCEPTION(RunCommandParseJSON(command), std::runtime_error, HasReason("Unable to parse JSON: {"));
     }
-    // Test std::in, except for Windows
 #ifndef WIN32
+    // Test std::in
     {
         const UniValue result = RunCommandParseJSON("cat", "{\"success\": true}");
         BOOST_CHECK(result.isObject());
