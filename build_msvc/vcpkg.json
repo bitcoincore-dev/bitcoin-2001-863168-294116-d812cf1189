@@ -5,6 +5,7 @@
     "berkeleydb",
     "boost-date-time",
     "boost-multi-index",
+    "boost-process",
     "boost-signals2",
     "boost-test",
     "libevent",
