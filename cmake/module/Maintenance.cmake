@@ -30,11 +30,15 @@ function(add_maintenance_targets)
   else()
     set(exe_format ELF)
   endif()
-  if(CMAKE_CROSSCOMPILING)
-    list(JOIN DEPENDS_C_COMPILER_WITH_LAUNCHER " " c_compiler_command)
-  else()
-    set(c_compiler_command ${CMAKE_C_COMPILER})
-  endif()
+
+  # In CMake, the components of the compiler invocation are separated into three distinct variables:
+  #  - CMAKE_C_COMPILER_LAUNCHER: a semicolon-separated list of launchers or tools to precede the compiler (e.g., env or ccache).
+  #  - CMAKE_C_COMPILER: the full path to the compiler binary itself (e.g., /usr/bin/clang).
+  #  - CMAKE_C_COMPILER_ARG1: a string containing initial compiler options (e.g., --target=x86_64-apple-darwin -nostdlibinc).
+  # By concatenating these variables, we form the complete command line to be passed to a Python script via the CC environment variable.
+  list(JOIN CMAKE_C_COMPILER_LAUNCHER " " c_compiler_command)
+  string(STRIP "${c_compiler_command} ${CMAKE_C_COMPILER}" c_compiler_command)
+  string(STRIP "${c_compiler_command} ${CMAKE_C_COMPILER_ARG1}" c_compiler_command)
   add_custom_target(test-security-check
     COMMAND ${CMAKE_COMMAND} -E env CC=${c_compiler_command} CFLAGS=${CMAKE_C_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-security-check.py TestSecurityChecks.test_${exe_format}
     COMMAND ${CMAKE_COMMAND} -E env CC=${c_compiler_command} CFLAGS=${CMAKE_C_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-symbol-check.py TestSymbolChecks.test_${exe_format}
@@ -111,7 +115,20 @@ function(add_macos_deploy_target)
     )
 
     string(REPLACE " " "-" osx_volname ${PACKAGE_NAME})
-    if(CMAKE_CROSSCOMPILING)
+    if(CMAKE_HOST_APPLE)
+      add_custom_command(
+        OUTPUT ${CMAKE_BINARY_DIR}/${osx_volname}.zip
+        COMMAND ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR} -zip
+        DEPENDS ${CMAKE_BINARY_DIR}/${macos_app}/Contents/MacOS/Bitcoin-Qt
+        VERBATIM
+      )
+      add_custom_target(deploydir
+        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
+      )
+      add_custom_target(deploy
+        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
+      )
+    else()
       add_custom_command(
         OUTPUT ${CMAKE_BINARY_DIR}/dist/${macos_app}/Contents/MacOS/Bitcoin-Qt
         COMMAND OTOOL=${OTOOL} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR}
@@ -133,19 +150,6 @@ function(add_macos_deploy_target)
         DEPENDS ${CMAKE_BINARY_DIR}/dist/${osx_volname}.zip
       )
       add_dependencies(deploy deploydir)
-    else()
-      add_custom_command(
-        OUTPUT ${CMAKE_BINARY_DIR}/${osx_volname}.zip
-        COMMAND ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/macdeploy/macdeployqtplus ${macos_app} ${osx_volname} -translations-dir=${QT_TRANSLATIONS_DIR} -zip
-        DEPENDS ${CMAKE_BINARY_DIR}/${macos_app}/Contents/MacOS/Bitcoin-Qt
-        VERBATIM
-      )
-      add_custom_target(deploydir
-        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
-      )
-      add_custom_target(deploy
-        DEPENDS ${CMAKE_BINARY_DIR}/${osx_volname}.zip
-      )
     endif()
   endif()
 endfunction()
