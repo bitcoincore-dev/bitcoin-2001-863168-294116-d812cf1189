@@ -5,7 +5,7 @@
 # This file is expected to be highly volatile and may still change substantially.
 
 if(@depends_crosscompiling@)
-  set(CMAKE_SYSTEM_NAME @host_system@)
+  set(CMAKE_SYSTEM_NAME @host_system_name@)
   set(CMAKE_SYSTEM_PROCESSOR @host_arch@)
 endif()
 
