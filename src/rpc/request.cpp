@@ -102,6 +102,21 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
         LogInfo("Unable to open cookie authentication file %s for writing\n", fs::PathToString(filepath_tmp));
         return false;
     }
+
+    if (cookie_perms.first) {
+        std::error_code code;
+        fs::permissions(filepath_tmp, *(cookie_perms.first), fs::perm_options::replace, code);
+        if (code) {
+            LogInfo("Unable to set permissions on cookie authentication file %s\n", fs::PathToString(filepath_tmp));
+#ifdef WIN32
+            // Allow default permission assignment to fail on Windows
+            if (cookie_perms.second) return false;
+#else
+            return false;
+#endif
+        }
+    }
+
     file << cookie;
     file.close();
 
@@ -114,19 +129,6 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
     if (!RenameOver(filepath_tmp, filepath)) {
         LogInfo("Unable to rename cookie authentication file %s to %s\n", fs::PathToString(filepath_tmp), fs::PathToString(filepath));
         return false;
-    }
-    if (cookie_perms.first) {
-        std::error_code code;
-        fs::permissions(filepath, *(cookie_perms.first), fs::perm_options::replace, code);
-        if (code) {
-            LogInfo("Unable to set permissions on cookie authentication file %s\n", fs::PathToString(filepath_tmp));
-#ifdef WIN32
-            // Allow default permission assignment to fail on Windows
-            if (cookie_perms.second) return false;
-#else
-            return false;
-#endif
-        }
     }
 
     g_generated_cookie = cookie;
