@@ -249,7 +249,7 @@ static bool InitRPCAuthentication()
 {
     if (gArgs.GetArg("-rpcpassword", "") == "")
     {
-        LogInfo("Using random cookie authentication.\n");
+        LogPrintf("Using random cookie authentication.\n");
 
         std::optional<fs::perms> cookie_perms{DEFAULT_COOKIE_PERMS};
         auto cookie_perms_arg{gArgs.GetArg("-rpccookieperms")};

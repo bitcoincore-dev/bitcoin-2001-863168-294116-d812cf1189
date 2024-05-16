@@ -5,11 +5,12 @@
 
 #include <rpc/request.h>
 
+#include <util/fs.h>
+
 #include <common/args.h>
 #include <logging.h>
 #include <random.h>
 #include <rpc/protocol.h>
-#include <util/fs.h>
 #include <util/fs_helpers.h>
 #include <util/strencodings.h>
 
@@ -90,6 +91,9 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
     GetRandBytes(rand_pwd);
     std::string cookie = COOKIEAUTH_USER + ":" + HexStr(rand_pwd);
 
+    /** the umask determines what permissions are used to create this file -
+     * these are set to 0077 in common/system.cpp.
+     */
     std::ofstream file;
     fs::path filepath_tmp = GetAuthCookieFile(true);
     try {
@@ -99,7 +103,7 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
     }
     file.open(filepath_tmp);
     if (!file.is_open()) {
-        LogInfo("Unable to open cookie authentication file %s for writing\n", fs::PathToString(filepath_tmp));
+        LogPrintf("Unable to open cookie authentication file %s for writing\n", fs::PathToString(filepath_tmp));
         return false;
     }
 
@@ -127,12 +131,12 @@ bool GenerateAuthCookie(std::string* cookie_out, const std::pair<std::optional<f
         // ignore
     }
     if (!RenameOver(filepath_tmp, filepath)) {
-        LogInfo("Unable to rename cookie authentication file %s to %s\n", fs::PathToString(filepath_tmp), fs::PathToString(filepath));
+        LogPrintf("Unable to rename cookie authentication file %s to %s\n", fs::PathToString(filepath_tmp), fs::PathToString(filepath));
         return false;
     }
 
     g_generated_cookie = cookie;
-    LogInfo("Generated RPC authentication cookie %s\n", fs::PathToString(filepath));
+    LogPrintf("Generated RPC authentication cookie %s\n", fs::PathToString(filepath));
     LogInfo("Permissions used for cookie%s: %s\n",
               (cookie_perms.first && cookie_perms.second) ? " (set by -rpccookieperms)" : "",
               PermsToString(fs::status(filepath).permissions()));
