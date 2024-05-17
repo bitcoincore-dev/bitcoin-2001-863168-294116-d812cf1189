@@ -28,10 +28,6 @@ macro(check_evhttp_connection_get_peer target)
 endmacro()
 
 function(add_libevent_if_needed)
-  # TODO: Not all targets, which will be added in the future,
-  #       require libevent. Therefore, a proper check will be
-  #       appropriate here.
-
   set(libevent_minimum_version 2.1.8)
 
   if(MSVC)

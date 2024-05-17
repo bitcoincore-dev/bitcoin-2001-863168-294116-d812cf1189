@@ -359,8 +359,10 @@ target_link_options(sanitizing_interface INTERFACE ${SANITIZER_LDFLAGS})
 include(AddBoostIfNeeded)
 add_boost_if_needed()
 
-include(AddLibeventIfNeeded)
-add_libevent_if_needed()
+if(BUILD_DAEMON OR BUILD_GUI OR BUILD_CLI OR BUILD_TESTS OR BUILD_BENCH OR BUILD_FUZZ_BINARY)
+  include(AddLibeventIfNeeded)
+  add_libevent_if_needed()
+endif()
 
 include(cmake/introspection.cmake)
 
