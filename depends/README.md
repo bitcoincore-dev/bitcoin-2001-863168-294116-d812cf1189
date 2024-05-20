@@ -85,6 +85,10 @@ For linux S390X cross compilation:
 
     pkg install bash
 
+### Install the required dependencies: NetBSD
+
+    pkgin install bash gmake
+
 ### Install the required dependencies: OpenBSD
 
     pkg_add bash gmake gtar
