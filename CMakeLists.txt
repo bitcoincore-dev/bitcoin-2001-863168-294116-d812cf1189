@@ -60,6 +60,7 @@ list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
 # Configurable options.
 # When adding a new option, end the <help_text> with a full stop for consistency.
 option(BUILD_DAEMON "Build bitcoind executable." ON)
+option(BUILD_CLI "Build bitcoin-cli executable." ON)
 option(THREADLOCAL "Enable features that depend on the C++ thread_local keyword (currently just thread names in debug logs)." ON)
 
 # TODO: These tri-state options will be removed and most features
@@ -180,7 +181,7 @@ add_threads_if_needed()
 include(AddBoostIfNeeded)
 add_boost_if_needed()
 
-if(BUILD_DAEMON)
+if(BUILD_DAEMON OR BUILD_CLI)
   find_package(Libevent 2.1.8 MODULE REQUIRED)
 endif()
 
@@ -210,6 +211,7 @@ message("Configure summary")
 message("=================")
 message("Executables:")
 message("  bitcoind ............................ ${BUILD_DAEMON}")
+message("  bitcoin-cli ......................... ${BUILD_CLI}")
 message("Optional packages:")
 message("  NAT-PMP ............................. ${WITH_NATPMP}")
 message("  UPnP ................................ ${WITH_MINIUPNPC}")
