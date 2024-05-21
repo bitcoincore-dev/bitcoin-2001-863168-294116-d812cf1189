@@ -140,6 +140,7 @@ if(ENABLE_WALLET)
       ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/coinselection.cpp
       ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/fees.cpp
       ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/parse_iso8601.cpp
+      ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/wallet_bdb_parser.cpp
       $<$<BOOL:${USE_SQLITE}>:${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/notifications.cpp>
       $<$<BOOL:${USE_SQLITE}>:${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/scriptpubkeyman.cpp>
   )
