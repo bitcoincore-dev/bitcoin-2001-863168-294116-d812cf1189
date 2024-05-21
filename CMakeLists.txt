@@ -365,10 +365,15 @@ endif()
 
 include(cmake/introspection.cmake)
 
+include(SaveRestoreVariable)
+save_variable(CMAKE_EXPORT_COMPILE_COMMANDS)
+# We are not interested in checking the code in subtrees.
+set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 include(cmake/crc32c.cmake)
 include(cmake/leveldb.cmake)
 include(cmake/minisketch.cmake)
 include(cmake/secp256k1.cmake)
+restore_variable(CMAKE_EXPORT_COMPILE_COMMANDS)
 
 add_library(warn_interface INTERFACE)
 target_link_libraries(core_interface INTERFACE warn_interface)
