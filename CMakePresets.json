@@ -6,6 +6,8 @@
       "name": "ci-common",
       "hidden": true,
       "cacheVariables": {
+        "BUILD_BENCH": "ON",
+        "BUILD_FUZZ_BINARY": "ON",
         "ENABLE_WALLET": "ON",
         "WITH_SQLITE": "ON",
         "WITH_BDB": "ON",
@@ -58,6 +60,8 @@
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "x64-windows",
         "BUILD_GUI": "ON",
+        "BUILD_BENCH": "ON",
+        "BUILD_FUZZ_BINARY": "ON",
         "WITH_QRENCODE": "OFF",
         "WITH_NATPMP": "OFF"
       }
@@ -76,6 +80,8 @@
       "cacheVariables": {
         "VCPKG_TARGET_TRIPLET": "x64-windows-static",
         "BUILD_GUI": "ON",
+        "BUILD_BENCH": "ON",
+        "BUILD_FUZZ_BINARY": "ON",
         "WITH_QRENCODE": "OFF",
         "WITH_NATPMP": "OFF"
       }
