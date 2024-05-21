@@ -27,11 +27,8 @@ if(CMAKE_HOST_APPLE)
   endif()
 endif()
 
-# Save CMAKE_FIND_ROOT_PATH_MODE_LIBRARY state.
-unset(_qt_find_root_path_mode_library_saved)
-if(DEFINED CMAKE_FIND_ROOT_PATH_MODE_LIBRARY)
-  set(_qt_find_root_path_mode_library_saved ${CMAKE_FIND_ROOT_PATH_MODE_LIBRARY})
-endif()
+include(SaveRestoreVariable)
+save_variable(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY)
 
 # The Qt config files internally use find_library() calls for all
 # dependencies to ensure their availability. In turn, the find_library()
@@ -47,13 +44,7 @@ find_package(Qt5 ${Qt5_FIND_VERSION}
 )
 unset(_qt_homebrew_prefix)
 
-# Restore CMAKE_FIND_ROOT_PATH_MODE_LIBRARY state.
-if(DEFINED _qt_find_root_path_mode_library_saved)
-  set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ${_qt_find_root_path_mode_library_saved})
-  unset(_qt_find_root_path_mode_library_saved)
-else()
-  unset(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY)
-endif()
+restore_variable(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY)
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Qt5
