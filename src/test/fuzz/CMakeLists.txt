@@ -134,14 +134,5 @@ target_link_libraries(fuzz
 )
 
 if(ENABLE_WALLET)
-  target_sources(fuzz
-    PRIVATE
-      ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/coincontrol.cpp
-      ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/coinselection.cpp
-      ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/fees.cpp
-      ${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/parse_iso8601.cpp
-      $<$<BOOL:${USE_SQLITE}>:${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/notifications.cpp>
-      $<$<BOOL:${USE_SQLITE}>:${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz/scriptpubkeyman.cpp>
-  )
-  target_link_libraries(fuzz bitcoin_wallet)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/src/wallet/test/fuzz wallet)
 endif()
