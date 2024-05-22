@@ -1,8 +1,8 @@
 package=miniupnpc
 $(package)_version=2.2.7
-$(package)_download_path=https://miniupnp.tuxfamily.org/files/
-$(package)_file_name=$(package)-$($(package)_version).tar.gz
-$(package)_sha256_hash=b0c3a27056840fd0ec9328a5a9bac3dc5e0ec6d2e8733349cf577b0aa1e70ac1
+$(package)_download_path=https://github.com/miniupnp/miniupnp/archive
+$(package)_file_name=$(package)_$(subst .,_,$($(package)_version)).tar.gz
+$(package)_sha256_hash=c57f3e78f9d2e97d62c0f50dc88cbed7e8c883d0364cae605a35595931301beb
 $(package)_patches=dont_leak_info.patch cmake_get_src_addr.patch fix_windows_snprintf.patch
 $(package)_build_subdir=build
 
@@ -10,6 +10,13 @@ define $(package)_set_vars
 $(package)_config_opts = -DUPNPC_BUILD_SAMPLE=OFF -DUPNPC_BUILD_SHARED=OFF
 $(package)_config_opts += -DUPNPC_BUILD_STATIC=ON -DUPNPC_BUILD_TESTS=OFF
 $(package)_config_opts_mingw32 += -DMINIUPNPC_TARGET_WINDOWS_VERSION=0x0601
+endef
+
+define $(package)_extract_cmds
+  mkdir -p $$($(1)_extract_dir) && \
+  echo "$$($(1)_sha256_hash)  $$($(1)_source)" > $$($(1)_extract_dir)/.$$($(1)_file_name).hash && \
+  $(build_SHA256SUM) -c $$($(1)_extract_dir)/.$$($(1)_file_name).hash && \
+  $(build_TAR) --no-same-owner --strip-components=2 -xf $$($(1)_source) miniupnp-$(package)_$(subst .,_,$($(package)_version))/miniupnpc
 endef
 
 define $(package)_preprocess_cmds
