@@ -26,7 +26,7 @@
         "rhs": "Linux"
       },
       "cacheVariables": {
-        "WITH_EXTERNAL_SIGNER": "ON",
+        "ENABLE_EXTERNAL_SIGNER": "ON",
         "WITH_USDT": "ON"
       }
     },
@@ -41,7 +41,7 @@
       },
       "cacheVariables": {
         "BUILD_GUI": "ON",
-        "WITH_EXTERNAL_SIGNER": "ON"
+        "ENABLE_EXTERNAL_SIGNER": "ON"
       }
     },
     {
