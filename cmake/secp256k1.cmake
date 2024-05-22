@@ -57,3 +57,4 @@ if(MSVC)
 endif()
 
 target_link_libraries(secp256k1 PRIVATE core_base_interface)
+set_target_properties(secp256k1 PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
