@@ -34,7 +34,7 @@ add_dependencies(bitcoin_clientversion generate_build_info)
 add_subdirectory(crypto)
 add_subdirectory(univalue)
 add_subdirectory(util)
-if(MULTIPROCESS)
+if(WITH_MULTIPROCESS)
   add_subdirectory(ipc)
 endif()
 
@@ -276,7 +276,7 @@ if(BUILD_DAEMON)
   )
   list(APPEND installable_targets bitcoind)
 endif()
-if(MULTIPROCESS)
+if(WITH_MULTIPROCESS)
   add_executable(bitcoin-node
     bitcoind.cpp
     init/bitcoin-node.cpp
