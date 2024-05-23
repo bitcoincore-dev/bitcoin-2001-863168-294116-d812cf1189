@@ -496,7 +496,9 @@ try_append_cxx_flags("-fstack-reuse=none" TARGET core_base_interface)
 
 if(ENABLE_HARDENING)
   add_library(hardening_interface INTERFACE)
-  target_link_libraries(core_base_interface INTERFACE hardening_interface)
+  target_link_libraries(core_base_interface INTERFACE
+    $<$<COMPILE_LANGUAGE:CXX,OBJCXX>:hardening_interface>
+  )
   if(MSVC)
     try_append_linker_flag("/DYNAMICBASE" TARGET hardening_interface)
     try_append_linker_flag("/HIGHENTROPYVA" TARGET hardening_interface)
@@ -519,7 +521,7 @@ if(ENABLE_HARDENING)
     endif()
 
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
-      try_append_cxx_flags("-mbranch-protection=bti" TARGET hardening_interface)
+      try_append_cxx_flags("-mbranch-protection=bti" TARGET hardening_interface SKIP_LINK)
     endif()
 
     try_append_linker_flag("-Wl,--enable-reloc-section" TARGET hardening_interface)
