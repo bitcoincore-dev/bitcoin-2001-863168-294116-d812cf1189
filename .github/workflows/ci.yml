@@ -308,3 +308,23 @@ jobs:
           BITCOINFUZZ: "${{ github.workspace}}\\src\\fuzz.exe"
         shell: cmd
         run: py -3 test\fuzz\test_runner.py --par %NUMBER_OF_PROCESSORS% --loglevel DEBUG %RUNNER_TEMP%\qa-assets\fuzz_seed_corpus
+
+
+  freebsd:
+    name: 'FreeBSD, no depends, sqlite only, no gui'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: vmactions/freebsd-vm@v1
+      with:
+        prepare: |
+          pkg install -y autoconf automake boost-libs gmake libevent libtool pkgconf sqlite3 libzmq4 python3 databases/py-sqlite3
+        run: |
+          ./autogen.sh
+          ./configure --enable-werror MAKE=gmake
+          gmake -j $(sysctl -n hw.ncpu)
+          gmake -j $(sysctl -n hw.ncpu) check
+          ./test/functional/test_runner.py
+        copyback: false
