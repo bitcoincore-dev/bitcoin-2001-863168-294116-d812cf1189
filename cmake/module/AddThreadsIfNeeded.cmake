@@ -18,25 +18,4 @@ function(add_threads_if_needed)
   set(THREADS_PREFER_PTHREAD_FLAG ON)
   find_package(Threads REQUIRED)
   set_target_properties(Threads::Threads PROPERTIES IMPORTED_GLOBAL TRUE)
-
-  if(MINGW)
-    #[=[
-    mingw32's implementation of thread_local has been shown to behave
-    erroneously under concurrent usage.
-    See:
-     - https://github.com/bitcoin/bitcoin/pull/15849
-     - https://gist.github.com/jamesob/fe9a872051a88b2025b1aa37bfa98605
-    ]=]
-  elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-    #[=[
-    FreeBSD's implementation of thread_local is buggy.
-    See:
-     - https://github.com/bitcoin/bitcoin/pull/16059
-     - https://groups.google.com/d/msg/bsdmailinglist/22ncTZAbDp4/Dii_pII5AwAJ
-    ]=]
-  elseif(ENABLE_THREADLOCAL)
-    target_compile_definitions(core_interface INTERFACE
-      "$<$<COMPILE_FEATURES:cxx_thread_local>:HAVE_THREAD_LOCAL>"
-    )
-  endif()
 endfunction()
