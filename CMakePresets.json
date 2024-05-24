@@ -6,6 +6,8 @@
       "name": "ci-common",
       "hidden": true,
       "cacheVariables": {
+        "BUILD_BENCH": "ON",
+        "BUILD_FUZZ_BINARY": "ON",
         "ENABLE_WALLET": "ON",
         "WITH_SQLITE": "ON",
         "WITH_BDB": "ON",
