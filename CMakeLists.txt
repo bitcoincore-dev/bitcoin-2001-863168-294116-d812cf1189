@@ -323,7 +323,7 @@ include(AddThreadsIfNeeded)
 add_threads_if_needed()
 
 add_library(sanitizing_interface INTERFACE)
-target_link_libraries(core_base_interface INTERFACE sanitizing_interface)
+target_link_libraries(core_interface INTERFACE sanitizing_interface)
 if(SANITIZERS)
   # First check if the compiler accepts flags. If an incompatible pair like
   # -fsanitize=address,thread is used here, this check will fail. This will also
@@ -366,6 +366,19 @@ endif()
 
 include(introspection)
 
+# The subtree_<lang>_interface libraries aim to encapsulate build
+# flags for subtree targets.
+add_library(subtree_cxx_interface INTERFACE)
+target_link_libraries(subtree_cxx_interface INTERFACE
+  core_base_interface
+  sanitizing_interface
+  hardening_interface
+)
+add_library(subtree_c_interface INTERFACE)
+target_link_libraries(subtree_c_interface INTERFACE
+  core_base_interface
+  sanitizing_interface
+)
 include(crc32c)
 include(leveldb)
 include(minisketch)
@@ -498,7 +511,7 @@ try_append_cxx_flags("-fstack-reuse=none" TARGET core_base_interface)
 
 if(ENABLE_HARDENING)
   add_library(hardening_interface INTERFACE)
-  target_link_libraries(core_base_interface INTERFACE hardening_interface)
+  target_link_libraries(core_interface INTERFACE hardening_interface)
   if(MSVC)
     try_append_linker_flag("/DYNAMICBASE" TARGET hardening_interface)
     try_append_linker_flag("/HIGHENTROPYVA" TARGET hardening_interface)
