@@ -503,7 +503,8 @@ if(ENABLE_HARDENING)
     try_append_linker_flag("/NXCOMPAT" TARGET hardening_interface)
   else()
     target_compile_options(hardening_interface INTERFACE
-      $<$<NOT:$<CONFIG:Debug>>:-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3>
+      $<$<NOT:$<CONFIG:Debug>>:-U_FORTIFY_SOURCE>
+      $<$<NOT:$<CONFIG:Debug>>:-D_FORTIFY_SOURCE=3>
     )
 
     try_append_cxx_flags("-Wstack-protector" TARGET hardening_interface SKIP_LINK)
@@ -519,7 +520,7 @@ if(ENABLE_HARDENING)
     endif()
 
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64" OR CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
-      try_append_cxx_flags("-mbranch-protection=bti" TARGET hardening_interface)
+      try_append_cxx_flags("-mbranch-protection=bti" TARGET hardening_interface SKIP_LINK)
     endif()
 
     try_append_linker_flag("-Wl,--enable-reloc-section" TARGET hardening_interface)
