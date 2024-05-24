@@ -55,7 +55,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${PROJECT_SOURCE_DIR}/cmake/module)
 
 #=============================
 # Configurable options
@@ -364,12 +364,12 @@ if(BUILD_DAEMON OR BUILD_GUI OR BUILD_CLI OR BUILD_TESTS OR BUILD_BENCH OR BUILD
   find_package(Libevent 2.1.8 MODULE REQUIRED)
 endif()
 
-include(cmake/introspection.cmake)
+include(introspection)
 
-include(cmake/crc32c.cmake)
-include(cmake/leveldb.cmake)
-include(cmake/minisketch.cmake)
-include(cmake/secp256k1.cmake)
+include(crc32c)
+include(leveldb)
+include(minisketch)
+include(secp256k1)
 
 add_library(warn_interface INTERFACE)
 target_link_libraries(core_interface INTERFACE warn_interface)
@@ -485,7 +485,7 @@ else()
   unset(c_flags_debug_overridden)
 endif()
 
-include(cmake/optional.cmake)
+include(optional)
 
 # Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
 try_append_cxx_flags("-fno-extended-identifiers" TARGET core_base_interface SKIP_LINK)
@@ -585,7 +585,7 @@ add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(doc)
 
-include(cmake/tests.cmake)
+include(tests)
 
 include(Maintenance)
 setup_split_debug_script()
