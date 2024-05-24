@@ -15,7 +15,7 @@ export RUN_FUNCTIONAL_TESTS=false
 export RUN_FUZZ_TESTS=true
 export GOAL="install"
 export CI_CONTAINER_CAP="--cap-add SYS_PTRACE"  # If run with (ASan + LSan), the container needs access to ptrace (https://github.com/google/sanitizers/issues/764)
-export BITCOIN_CONFIG="-DFUZZ=ON -DSANITIZERS=fuzzer,address,undefined,float-divide-by-zero,integer \
+export BITCOIN_CONFIG="-DENABLE_FUZZ=ON -DSANITIZERS=fuzzer,address,undefined,float-divide-by-zero,integer \
 -DCMAKE_C_COMPILER=clang-18 -DCMAKE_CXX_COMPILER=clang++-18 \
 -DCMAKE_C_FLAGS='-ftrivial-auto-var-init=pattern' \
 -DCMAKE_CXX_FLAGS='-ftrivial-auto-var-init=pattern'"
