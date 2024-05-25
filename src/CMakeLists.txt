@@ -1,6 +1,20 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
+
+#=============================
+# secp256k1 subtree
+#=============================
+set(SECP256K1_DISABLE_SHARED ON CACHE BOOL "" FORCE)
+set(SECP256K1_ENABLE_MODULE_ECDH OFF CACHE BOOL "" FORCE)
+set(SECP256K1_ENABLE_MODULE_RECOVERY ON CACHE BOOL "" FORCE)
+include(GetTargetInterface)
+get_target_interface(core_c_flags "" core_base_interface COMPILE_OPTIONS)
+set(SECP256K1_LATE_CFLAGS ${core_c_flags} CACHE STRING "" FORCE)
+unset(core_c_flags)
+add_subdirectory(secp256k1 EXCLUDE_FROM_ALL)
+set_target_properties(secp256k1 PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
+
 
 include(GNUInstallDirs)
 include(AddWindowsResources)
