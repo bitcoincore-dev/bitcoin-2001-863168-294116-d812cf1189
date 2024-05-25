@@ -366,7 +366,6 @@ include(introspection)
 include(crc32c)
 include(leveldb)
 include(minisketch)
-include(secp256k1)
 
 add_library(warn_interface INTERFACE)
 target_link_libraries(core_interface INTERFACE warn_interface)
