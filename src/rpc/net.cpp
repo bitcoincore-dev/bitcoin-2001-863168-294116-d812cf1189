@@ -1071,14 +1071,20 @@ UniValue AddrmanEntryToJSON(const AddrInfo& info, CConnman& connman)
 {
     UniValue ret(UniValue::VOBJ);
     ret.pushKV("address", info.ToStringAddr());
+    const auto mapped_as{connman.GetMappedAS(info)};
+    if (mapped_as != 0) {
+        ret.pushKV("mapped_as", mapped_as);
+    }
     ret.pushKV("port", info.GetPort());
     ret.pushKV("services", (uint64_t)info.nServices);
     ret.pushKV("time", int64_t{TicksSinceEpoch<std::chrono::seconds>(info.nTime)});
     ret.pushKV("network", GetNetworkName(info.GetNetClass()));
     ret.pushKV("source", info.source.ToStringAddr());
     ret.pushKV("source_network", GetNetworkName(info.source.GetNetClass()));
-    ret.pushKV("mapped_as", connman.GetMappedAS(info));
-    ret.pushKV("source_mapped_as", connman.GetMappedAS(info.source));
+    const auto source_mapped_as{connman.GetMappedAS(info.source)};
+    if (source_mapped_as != 0) {
+        ret.pushKV("source_mapped_as", source_mapped_as);
+    }
     return ret;
 }
 
@@ -1109,14 +1115,14 @@ static RPCHelpMan getrawaddrman()
                 {RPCResult::Type::OBJ_DYN, "table", "buckets with addresses in the address manager table ( new, tried )", {
                     {RPCResult::Type::OBJ, "bucket/position", "the location in the address manager table (<bucket>/<position>)", {
                         {RPCResult::Type::STR, "address", "The address of the node"},
+                        {RPCResult::Type::NUM, "mapped_as", /*optional=*/true, "The ASN mapped to the IP of this peer per our current ASMap"},
                         {RPCResult::Type::NUM, "port", "The port number of the node"},
                         {RPCResult::Type::STR, "network", "The network (" + Join(GetNetworkNames(), ", ") + ") of the address"},
                         {RPCResult::Type::NUM, "services", "The services offered by the node"},
                         {RPCResult::Type::NUM_TIME, "time", "The " + UNIX_EPOCH_TIME + " when the node was last seen"},
                         {RPCResult::Type::STR, "source", "The address that relayed the address to us"},
                         {RPCResult::Type::STR, "source_network", "The network (" + Join(GetNetworkNames(), ", ") + ") of the source address"},
-                        {RPCResult::Type::NUM, "mapped_as", "The AS in the BGP route mapped to the node (0 if not mapped)"},
-                        {RPCResult::Type::NUM, "source_mapped_as", "The AS in the BGP route mapped to the node's source (0 if not mapped)"}
+                        {RPCResult::Type::NUM, "source_mapped_as", /*optional=*/true, "The ASN mapped to the IP of this peer's source per our current ASMap"}
                     }}
                 }}
             }
