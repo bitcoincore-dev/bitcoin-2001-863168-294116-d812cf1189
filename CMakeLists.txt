@@ -140,7 +140,9 @@ endif()
 
 option(WITH_USDT "Enable tracepoints for Userspace, Statically Defined Tracing." OFF)
 if(WITH_USDT)
+if(UNIX AND NOT APPLE)
   find_package(USDT MODULE REQUIRED)
+endif()
 endif()
 
 cmake_dependent_option(ENABLE_EXTERNAL_SIGNER "Enable external signer support." ON "NOT WIN32" OFF)
