@@ -8,6 +8,7 @@
 #include <any>
 #include <set>
 #include <string>
+#include <util/fs.h>
 
 /** Start HTTP RPC subsystem.
  * Precondition; HTTP and RPC has been started.
@@ -20,6 +21,11 @@ void InterruptHTTPRPC();
  * Precondition; HTTP and RPC has been stopped.
  */
 void StopHTTPRPC();
+
+/** Default permissions for cookie file.
+ * Set to owner read/write, which on Windows sets the write permission.
+ */
+const fs::perms DEFAULT_COOKIE_PERMS{fs::perms::owner_read | fs::perms::owner_write};
 
 /** Start HTTP REST subsystem.
  * Precondition; HTTP and RPC has been started.
