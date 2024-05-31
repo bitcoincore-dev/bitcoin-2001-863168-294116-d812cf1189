@@ -56,6 +56,7 @@ struct ParentInfo {
 };
 
 std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t vsize,
+                                           const std::string& reason_prefix, std::string& out_reason,
                                            const Package& package,
                                            const CTxMemPool::setEntries& mempool_ancestors)
 {
@@ -69,11 +70,13 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
     if (ptx->nVersion == 3) {
         // SingleV3Checks should have checked this already.
         if (!Assume(vsize <= V3_MAX_VSIZE)) {
+            out_reason = reason_prefix + "vsize-toobig";
             return strprintf("v3 tx %s (wtxid=%s) is too big: %u > %u virtual bytes",
                              ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(), vsize, V3_MAX_VSIZE);
         }
 
         if (mempool_ancestors.size() + in_package_parents.size() + 1 > V3_ANCESTOR_LIMIT) {
+            out_reason = reason_prefix + "ancestors-toomany";
             return strprintf("tx %s (wtxid=%s) would have too many ancestors",
                              ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString());
         }
@@ -82,6 +85,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
         if (has_parent) {
             // A v3 child cannot be too large.
             if (vsize > V3_CHILD_MAX_VSIZE) {
+                out_reason = reason_prefix + "child-toobig";
                 return strprintf("v3 child tx %s (wtxid=%s) is too big: %u > %u virtual bytes",
                                  ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(),
                                  vsize, V3_CHILD_MAX_VSIZE);
@@ -108,6 +112,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
 
             // If there is a parent, it must have the right version.
             if (parent_info.m_version != 3) {
+                out_reason = reason_prefix + "spends-nontruc";
                 return strprintf("v3 tx %s (wtxid=%s) cannot spend from non-v3 tx %s (wtxid=%s)",
                                  ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(),
                                  parent_info.m_txid.ToString(), parent_info.m_wtxid.ToString());
@@ -122,6 +127,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
                     // sibling is to-be-replaced (done in SingleV3Checks) because these transactions
                     // are within the same package.
                     if (input.prevout.hash == parent_info.m_txid) {
+                        out_reason = reason_prefix + "sibling-known";
                         return strprintf("tx %s (wtxid=%s) would exceed descendant count limit",
                                          parent_info.m_txid.ToString(),
                                          parent_info.m_wtxid.ToString());
@@ -129,6 +135,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
 
                     // This tx can't have both a parent and an in-package child.
                     if (input.prevout.hash == ptx->GetHash()) {
+                        out_reason = reason_prefix + "parent-and-child-both";
                         return strprintf("tx %s (wtxid=%s) would have too many ancestors",
                                          package_tx->GetHash().ToString(), package_tx->GetWitnessHash().ToString());
                     }
@@ -139,6 +146,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
             // catches mempool siblings. Also, if the package consists of connected transactions,
             // any tx having a mempool ancestor would mean the package exceeds ancestor limits.
             if (!Assume(!parent_info.m_has_mempool_descendant)) {
+                out_reason = reason_prefix + "descendant-toomany";
                 return strprintf("tx %s (wtxid=%s) would exceed descendant count limit",
                                 parent_info.m_txid.ToString(), parent_info.m_wtxid.ToString());
             }
@@ -147,6 +155,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
         // Non-v3 transactions cannot have v3 parents.
         for (auto it : mempool_ancestors) {
             if (it->GetTx().nVersion == 3) {
+                out_reason = reason_prefix + "spent-by-nontruc";
                 return strprintf("non-v3 tx %s (wtxid=%s) cannot spend from v3 tx %s (wtxid=%s)",
                                  ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(),
                                  it->GetSharedTx()->GetHash().ToString(), it->GetSharedTx()->GetWitnessHash().ToString());
@@ -154,6 +163,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
         }
         for (const auto& index: in_package_parents) {
             if (package.at(index)->nVersion == 3) {
+                out_reason = reason_prefix + "spent-by-nontruc";
                 return strprintf("non-v3 tx %s (wtxid=%s) cannot spend from v3 tx %s (wtxid=%s)",
                                  ptx->GetHash().ToString(),
                                  ptx->GetWitnessHash().ToString(),
@@ -166,6 +176,7 @@ std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t v
 }
 
 std::optional<std::pair<std::string, CTransactionRef>> SingleV3Checks(const CTransactionRef& ptx,
+                                          const std::string& reason_prefix, std::string& out_reason,
                                           const CTxMemPool::setEntries& mempool_ancestors,
                                           const std::set<Txid>& direct_conflicts,
                                           int64_t vsize)
@@ -173,11 +184,13 @@ std::optional<std::pair<std::string, CTransactionRef>> SingleV3Checks(const CTra
     // Check v3 and non-v3 inheritance.
     for (const auto& entry : mempool_ancestors) {
         if (ptx->nVersion != 3 && entry->GetTx().nVersion == 3) {
+            out_reason = reason_prefix + "spent-by-nontruc";
             return std::make_pair(strprintf("non-v3 tx %s (wtxid=%s) cannot spend from v3 tx %s (wtxid=%s)",
                              ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(),
                              entry->GetSharedTx()->GetHash().ToString(), entry->GetSharedTx()->GetWitnessHash().ToString()),
                 nullptr);
         } else if (ptx->nVersion == 3 && entry->GetTx().nVersion != 3) {
+            out_reason = reason_prefix + "spends-nontruc";
             return std::make_pair(strprintf("v3 tx %s (wtxid=%s) cannot spend from non-v3 tx %s (wtxid=%s)",
                              ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(),
                              entry->GetSharedTx()->GetHash().ToString(), entry->GetSharedTx()->GetWitnessHash().ToString()),
@@ -193,6 +206,7 @@ std::optional<std::pair<std::string, CTransactionRef>> SingleV3Checks(const CTra
     if (ptx->nVersion != 3) return std::nullopt;
 
     if (vsize > V3_MAX_VSIZE) {
+        out_reason = reason_prefix + "vsize-toobig";
         return std::make_pair(strprintf("v3 tx %s (wtxid=%s) is too big: %u > %u virtual bytes",
                          ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(), vsize, V3_MAX_VSIZE),
             nullptr);
@@ -200,6 +214,7 @@ std::optional<std::pair<std::string, CTransactionRef>> SingleV3Checks(const CTra
 
     // Check that V3_ANCESTOR_LIMIT would not be violated.
     if (mempool_ancestors.size() + 1 > V3_ANCESTOR_LIMIT) {
+        out_reason = reason_prefix + "ancestors-toomany";
         return std::make_pair(strprintf("tx %s (wtxid=%s) would have too many ancestors",
                          ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString()),
             nullptr);
@@ -209,6 +224,7 @@ std::optional<std::pair<std::string, CTransactionRef>> SingleV3Checks(const CTra
     if (mempool_ancestors.size() > 0) {
         // If this transaction spends V3 parents, it cannot be too large.
         if (vsize > V3_CHILD_MAX_VSIZE) {
+            out_reason = reason_prefix + "child-toobig";
             return std::make_pair(strprintf("v3 child tx %s (wtxid=%s) is too big: %u > %u virtual bytes",
                              ptx->GetHash().ToString(), ptx->GetWitnessHash().ToString(), vsize, V3_CHILD_MAX_VSIZE),
                 nullptr);
@@ -237,6 +253,7 @@ std::optional<std::pair<std::string, CTransactionRef>> SingleV3Checks(const CTra
 
             // Return the sibling if its eviction can be considered. Provide the "descendant count
             // limit" string either way, as the caller may decide not to do sibling eviction.
+            out_reason = reason_prefix + "descendants-toomany";
             return std::make_pair(strprintf("tx %u (wtxid=%s) would exceed descendant count limit",
                                             parent_entry->GetSharedTx()->GetHash().ToString(),
                                             parent_entry->GetSharedTx()->GetWitnessHash().ToString()),
