@@ -985,7 +985,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
     // Even though just checking direct mempool parents for inheritance would be sufficient, we
     // check using the full ancestor set here because it's more convenient to use what we have
     // already calculated.
-    if (const auto err{SingleV3Checks(ws.m_ptx, "truc-", reason, ws.m_ancestors, ws.m_conflicts, ws.m_vsize)}) {
+    if (const auto err{SingleV3Checks(ws.m_ptx, "truc-", reason, ignore_rejects, ws.m_ancestors, ws.m_conflicts, ws.m_vsize)}) {
         // Disabled within package validation.
         if (err->second != nullptr && args.m_allow_replacement) {
             // Potential sibling eviction. Add the sibling to our list of mempool conflicts to be
@@ -1376,7 +1376,7 @@ PackageMempoolAcceptResult MemPoolAccept::AcceptMultipleTransactions(const std::
     // Run the v3 checks on the package.
     std::string reason;
     for (Workspace& ws : workspaces) {
-        if (auto err{PackageV3Checks(ws.m_ptx, ws.m_vsize, "truc-", reason, txns, ws.m_ancestors)}) {
+        if (auto err{PackageV3Checks(ws.m_ptx, ws.m_vsize, "truc-", reason, args.m_ignore_rejects, txns, ws.m_ancestors)}) {
             package_state.Invalid(PackageValidationResult::PCKG_POLICY, reason, err.value());
             return PackageMempoolAcceptResult(package_state, {});
         }
