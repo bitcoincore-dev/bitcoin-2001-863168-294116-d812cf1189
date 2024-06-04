@@ -42,7 +42,6 @@ static_assert(V3_MAX_VSIZE + V3_CHILD_MAX_VSIZE <= DEFAULT_DESCENDANT_SIZE_LIMIT
  * 4. A v3's descendant set, including itself, must be within V3_DESCENDANT_LIMIT.
  * 5. If a v3 tx has any unconfirmed ancestors, the tx's sigop-adjusted vsize must be within
  * V3_CHILD_MAX_VSIZE.
- * 6. A v3 tx must be within V3_MAX_VSIZE.
  *
  *
  * @param[in]   mempool_ancestors       The in-mempool ancestors of ptx.

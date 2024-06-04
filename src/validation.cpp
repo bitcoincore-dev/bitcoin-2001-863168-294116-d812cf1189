@@ -936,8 +936,7 @@ bool MemPoolAccept::PreChecks(ATMPArgs& args, Workspace& ws)
         // If the new transaction is relatively small (up to 40k weight)
         // and has at most one ancestor (ie ancestor limit of 2, including
         // the new transaction), allow it if its parent has exactly the
-        // descendant limit descendants. The transaction also cannot be v3,
-        // as its topology restrictions do not allow a second child.
+        // descendant limit descendants.
         //
         // This allows protocols which rely on distrusting counterparties
         // being able to broadcast descendants of an unconfirmed transaction
