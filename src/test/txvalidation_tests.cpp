@@ -329,7 +329,8 @@ BOOST_FIXTURE_TEST_CASE(version3_tests, RegTestingSetup)
         BOOST_CHECK(PackageV3Checks(tx_mempool_v3_child, GetVirtualTransactionSize(*tx_mempool_v3_child), package_v3_1p1c, empty_ancestors) == std::nullopt);
     }
 
-    // A v3 transaction cannot have more than 1 descendant. Sibling is returned when exactly 1 exists.
+    // A v3 transaction cannot have more than 1 descendant.
+    // Configuration where tx has multiple direct children.
     {
         auto tx_v3_child2 = make_tx({COutPoint{mempool_tx_v3->GetHash(), 1}}, /*version=*/3);
 

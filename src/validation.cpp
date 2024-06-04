@@ -589,14 +589,12 @@ private:
     // of checking a given transaction.
     struct Workspace {
         explicit Workspace(const CTransactionRef& ptx) : m_ptx(ptx), m_hash(ptx->GetHash()) {}
-        /** Txids of mempool transactions that this transaction directly conflicts with or may
-         * replace via sibling eviction. */
+        /** Txids of mempool transactions that this transaction directly conflicts with. */
         std::set<Txid> m_conflicts;
-        /** Iterators to mempool entries that this transaction directly conflicts with or may
-         * replace via sibling eviction. */
+        /** Iterators to mempool entries that this transaction directly conflicts with. */
         CTxMemPool::setEntries m_iters_conflicting;
         /** Iterators to all mempool entries that would be replaced by this transaction, including
-         * m_conflicts and their descendants. */
+         * those it directly conflicts with and their descendants. */
         CTxMemPool::setEntries m_all_conflicting;
         /** All mempool ancestors of this transaction. */
         CTxMemPool::setEntries m_ancestors;
@@ -604,7 +602,7 @@ private:
          * inserted into the mempool until Finalize(). */
         std::unique_ptr<CTxMemPoolEntry> m_entry;
         /** Pointers to the transactions that have been removed from the mempool and replaced by
-         * this transaction (everything in m_all_conflicting), used to return to the MemPoolAccept caller. Only populated if
+         * this transaction, used to return to the MemPoolAccept caller. Only populated if
          * validation is successful and the original transactions are removed. */
         std::list<CTransactionRef> m_replaced_transactions;
         /** Whether RBF-related data structures (m_conflicts, m_iters_conflicting, m_all_conflicting,
@@ -699,8 +697,7 @@ private:
 
     Chainstate& m_active_chainstate;
 
-    /** Whether the transaction(s) would replace any mempool transactions and/or evict any siblings.
-     * If so, RBF rules apply. */
+    /** Whether the transaction(s) would replace any mempool transactions. If so, RBF rules apply. */
     bool m_rbf{false};
 };
 
