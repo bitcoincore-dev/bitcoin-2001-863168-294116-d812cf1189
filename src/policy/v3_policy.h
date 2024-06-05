@@ -24,11 +24,13 @@ static constexpr unsigned int V3_DESCENDANT_LIMIT{2};
 /** Maximum number of transactions including a V3 tx and all its mempool ancestors. */
 static constexpr unsigned int V3_ANCESTOR_LIMIT{2};
 
+/** Maximum sigop-adjusted virtual size of all v3 transactions. */
+static constexpr int64_t V3_MAX_VSIZE{10000};
 /** Maximum sigop-adjusted virtual size of a tx which spends from an unconfirmed v3 transaction. */
 static constexpr int64_t V3_CHILD_MAX_VSIZE{1000};
 // These limits are within the default ancestor/descendant limits.
-static_assert(V3_CHILD_MAX_VSIZE + MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR <= DEFAULT_ANCESTOR_SIZE_LIMIT_KVB * 1000);
-static_assert(V3_CHILD_MAX_VSIZE + MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR <= DEFAULT_DESCENDANT_SIZE_LIMIT_KVB * 1000);
+static_assert(V3_MAX_VSIZE + V3_CHILD_MAX_VSIZE <= DEFAULT_ANCESTOR_SIZE_LIMIT_KVB * 1000);
+static_assert(V3_MAX_VSIZE + V3_CHILD_MAX_VSIZE <= DEFAULT_DESCENDANT_SIZE_LIMIT_KVB * 1000);
 
 /** Must be called for every transaction, even if not v3. Not strictly necessary for transactions
  * accepted through AcceptMultipleTransactions.
@@ -50,7 +52,9 @@ static_assert(V3_CHILD_MAX_VSIZE + MAX_STANDARD_TX_WEIGHT / WITNESS_SCALE_FACTOR
  *
  * @returns debug string if an error occurs, std::nullopt otherwise.
  */
-std::optional<std::string> SingleV3Checks(const CTransactionRef& ptx,
+std::optional<std::pair<std::string, CTransactionRef>> SingleV3Checks(const CTransactionRef& ptx,
+                                          const std::string& reason_prefix, std::string& out_reason,
+                                          const ignore_rejects_type& ignore_rejects,
                                           const CTxMemPool::setEntries& mempool_ancestors,
                                           const std::set<Txid>& direct_conflicts,
                                           int64_t vsize);
@@ -77,6 +81,8 @@ std::optional<std::string> SingleV3Checks(const CTransactionRef& ptx,
  * @returns debug string if an error occurs, std::nullopt otherwise.
  * */
 std::optional<std::string> PackageV3Checks(const CTransactionRef& ptx, int64_t vsize,
+                                           const std::string& reason_prefix, std::string& out_reason,
+                                           const ignore_rejects_type& ignore_rejects,
                                            const Package& package,
                                            const CTxMemPool::setEntries& mempool_ancestors);
 
