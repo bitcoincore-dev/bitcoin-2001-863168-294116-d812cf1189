@@ -55,6 +55,9 @@ function(add_boost_if_needed)
   endif()
 
   if(BUILD_TESTS)
+    # Some package managers, such as vcpkg, install Boost headers individually
+    # for each package. Therefore, even after a successful `FindBoost` call, we
+    # explicitly check for the Boost.Test headers.
     include(CheckCXXSourceCompiles)
     check_cxx_source_compiles("
       #define BOOST_TEST_MAIN
