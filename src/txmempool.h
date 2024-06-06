@@ -468,7 +468,7 @@ public:
     bool m_accept_non_std_datacarrier;
     bool m_require_standard;
     RBFPolicy m_rbf_policy;
-    const TRUCPolicy m_truc_policy;
+    TRUCPolicy m_truc_policy;
     const bool m_persist_v1_dat;
 
     Limits m_limits;
