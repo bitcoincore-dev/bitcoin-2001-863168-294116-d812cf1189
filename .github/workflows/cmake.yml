@@ -414,7 +414,6 @@ jobs:
           - name: 'Win64, VS 2022, dynamic'
             triplet: 'x64-windows'
             preset: 'vs2022'
-            skip_install_and_run: 'true'
           - name: 'Win64, VS 2022, static'
             triplet: 'x64-windows-static'
             preset: 'vs2022-static'
@@ -426,7 +425,6 @@ jobs:
       - name: Remove non-MSVC tool installations
         run: |
           Remove-Item -Path "$env:ProgramFiles/CMake" -Recurse -Force
-          Remove-Item -Path "$env:VCPKG_INSTALLATION_ROOT" -Recurse -Force
 
       - name: Configure Visual Studio Developer PowerShell
         # Using microsoft/setup-msbuild is not enough as it does not add other Visual Studio tools to PATH.
@@ -446,10 +444,10 @@ jobs:
           # side-by-side. Therefore, the VCPKG_PLATFORM_TOOLSET_VERSION must be set explicitly
           # to avoid linker errors when using vcpkg in the manifest mode.
           # See: https://github.com/bitcoin/bitcoin/pull/28934
-          Add-Content -Path "$env:VCPKG_ROOT\triplets\${{ matrix.conf.triplet }}.cmake" -Value "set(VCPKG_PLATFORM_TOOLSET_VERSION $env:VCToolsVersion)"
+          Add-Content -Path "$env:VCPKG_INSTALLATION_ROOT\triplets\${{ matrix.conf.triplet }}.cmake" -Value "set(VCPKG_PLATFORM_TOOLSET_VERSION $env:VCToolsVersion)"
           # Skip debug configuration to speed up build and minimize cache size.
-          Add-Content -Path "$env:VCPKG_ROOT\triplets\x64-windows.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
-          Add-Content -Path "$env:VCPKG_ROOT\triplets\${{ matrix.conf.triplet }}.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
+          Add-Content -Path "$env:VCPKG_INSTALLATION_ROOT\triplets\x64-windows.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
+          Add-Content -Path "$env:VCPKG_INSTALLATION_ROOT\triplets\${{ matrix.conf.triplet }}.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
 
       - name: Restore vcpkg binary cache
         uses: actions/cache/restore@v4
@@ -464,7 +462,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build --preset ${{ matrix.conf.preset }} -DBUILD_GUI=ON -DWERROR=ON
+          cmake -B build --preset ${{ matrix.conf.preset }} -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON -DWERROR=ON
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v4
@@ -507,12 +505,13 @@ jobs:
           (Get-Item src\Release\bitcoind.exe).Length
 
       - name: Test Release configuration
+        if: ${{ matrix.conf.triplet == 'x64-windows-static' }}
         working-directory: build
         run: |
           ctest -j $env:NUMBER_OF_PROCESSORS -C Release
 
       - name: Install and run Release configuration
-        if: ${{ matrix.conf.skip_install_and_run != 'true' }}
+        if: ${{ matrix.conf.triplet == 'x64-windows-static' }}
         run: |
           cmake --install build --prefix install --config Release
           tree /f install
