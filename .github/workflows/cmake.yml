@@ -414,7 +414,6 @@ jobs:
           - name: 'Win64, VS 2022, dynamic'
             triplet: 'x64-windows'
             preset: 'vs2022'
-            skip_install_and_run: 'true'
           - name: 'Win64, VS 2022, static'
             triplet: 'x64-windows-static'
             preset: 'vs2022-static'
@@ -506,12 +505,13 @@ jobs:
           (Get-Item src\Release\bitcoind.exe).Length
 
       - name: Test Release configuration
+        if: ${{ matrix.conf.triplet == 'x64-windows-static' }}
         working-directory: build
         run: |
           ctest -j $env:NUMBER_OF_PROCESSORS -C Release
 
       - name: Install and run Release configuration
-        if: ${{ matrix.conf.skip_install_and_run != 'true' }}
+        if: ${{ matrix.conf.triplet == 'x64-windows-static' }}
         run: |
           cmake --install build --prefix install --config Release
           tree /f install
