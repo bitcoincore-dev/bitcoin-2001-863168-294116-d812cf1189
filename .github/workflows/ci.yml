@@ -171,6 +171,7 @@ jobs:
         run: |
           Set-Location "$env:VCPKG_INSTALLATION_ROOT"
           Add-Content -Path "triplets\x64-windows.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
+          Add-Content -Path "triplets\x64-windows-static.cmake" -Value "set(VCPKG_BUILD_TYPE release)"
 
       - name: vcpkg tools cache
         uses: actions/cache@v4
@@ -187,7 +188,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build --preset vs2022 -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON -DWERROR=ON
+          cmake -B build --preset vs2022-static -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON -DWERROR=ON
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v4
