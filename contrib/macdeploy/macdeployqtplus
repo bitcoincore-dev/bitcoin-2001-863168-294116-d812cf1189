@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import base64
+import lzma
 import sys, re, os, platform, shutil, stat, subprocess, os.path
 from argparse import ArgumentParser
 from ds_store import DSStore
@@ -554,8 +556,11 @@ print("+ Installing background.tiff +")
 bg_path = os.path.join('dist', '.background', 'background.tiff')
 os.mkdir(os.path.dirname(bg_path))
 
-tiff_path = os.path.join('contrib', 'macdeploy', 'background.tiff')
-shutil.copy2(tiff_path, bg_path)
+tiff_in_path = os.path.join('contrib', 'macdeploy', 'background.tiff.in')
+
+with open(tiff_in_path, 'r') as tiff_in:
+    with open(bg_path, 'wb') as bg:
+        bg.write(lzma.decompress(base64.b85decode(tiff_in.read())))
 
 # ------------------------------------------------
 
