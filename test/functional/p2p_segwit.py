@@ -2068,4 +2068,4 @@ class SegWitTest(BitcoinTestFramework):
 
 
 if __name__ == '__main__':
-    SegWitTest().main()
+    SegWitTest(__file__).main()

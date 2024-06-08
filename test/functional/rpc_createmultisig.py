@@ -247,4 +247,4 @@ class RpcCreateMultiSigTest(BitcoinTestFramework):
 
 
 if __name__ == '__main__':
-    RpcCreateMultiSigTest().main()
+    RpcCreateMultiSigTest(__file__).main()
