@@ -578,4 +578,4 @@ class WalletSendTest(BitcoinTestFramework):
         assert_equal(round(actual_fee_rate_sat_vb), target_fee_rate_sat_vb)
 
 if __name__ == '__main__':
-    WalletSendTest().main()
+    WalletSendTest(__file__).main()
