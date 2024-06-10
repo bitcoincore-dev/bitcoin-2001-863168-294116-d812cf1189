@@ -55,6 +55,8 @@ function(add_boost_if_needed)
   endif()
 
   if(BUILD_TESTS)
+    # Some package managers, such as vcpkg, vendor Boost.Test separately
+    # from the rest of the headers, so we have to check for it individually.
     include(CheckCXXSourceCompiles)
     check_cxx_source_compiles("
       #define BOOST_TEST_MAIN
