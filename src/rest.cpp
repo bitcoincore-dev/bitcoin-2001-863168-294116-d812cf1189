@@ -35,6 +35,7 @@
 #include <validation.h>
 
 #include <any>
+#include <string>
 #include <vector>
 
 #include <univalue.h>
