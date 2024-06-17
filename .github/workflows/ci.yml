@@ -134,6 +134,7 @@ jobs:
 
     env:
       CCACHE_MAXSIZE: '200M'
+      CI_CCACHE_VERSION: '4.10'
       PYTHONUTF8: 1
       TEST_RUNNER_TIMEOUT_FACTOR: 40
 
@@ -165,7 +166,7 @@ jobs:
 
       - name: Install Ccache
         run: |
-          choco install --yes --no-progress ccache
+          choco install --yes --no-progress ccache --version=${{ env.CI_CCACHE_VERSION }}
 
       - name: Using vcpkg with MSBuild
         run: |
@@ -188,7 +189,7 @@ jobs:
 
       - name: Generate build system
         run: |
-          cmake -B build --preset vs2022-static -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON -DWERROR=ON
+          cmake -B build --preset vs2022-static -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" -DCCACHE_EXECUTABLE="$env:ChocolateyInstall\lib\ccache\tools\ccache-${{ env.CI_CCACHE_VERSION }}-windows-x86_64\ccache.exe" -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON -DWERROR=ON
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v4
