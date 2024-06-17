@@ -418,6 +418,9 @@ jobs:
             triplet: 'x64-windows-static'
             preset: 'vs2022-static'
 
+    env:
+      CI_CCACHE_VERSION: '4.10.0'
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -458,11 +461,11 @@ jobs:
 
       - name: Install Ccache
         run: |
-          choco install --yes --no-progress ccache
+          choco install --yes --no-progress ccache --version=$env:CI_CCACHE_VERSION
 
       - name: Generate build system
         run: |
-          cmake -B build --preset ${{ matrix.conf.preset }} -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON -DWERROR=ON
+          cmake -B build --preset ${{ matrix.conf.preset }} -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT\scripts\buildsystems\vcpkg.cmake" -DCCACHE_EXECUTABLE="$env:ChocolateyInstall\lib\ccache\tools\ccache-$env:CI_CCACHE_VERSION-windows-x86_64\ccache.exe" -DBUILD_BENCH=ON -DBUILD_FUZZ_BINARY=ON -DWERROR=ON
 
       - name: Save vcpkg binary cache
         uses: actions/cache/save@v4
