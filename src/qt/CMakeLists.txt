@@ -76,36 +76,67 @@ qt5_add_translation(qm_files ${ts_files})
 
 configure_file(bitcoin_locale.qrc bitcoin_locale.qrc COPYONLY)
 
+# The bitcoinqt sources have to include headers in
+# order to parse them to collect translatable strings.
 add_library(bitcoinqt STATIC EXCLUDE_FROM_ALL
   bantablemodel.cpp
+  bantablemodel.h
   bitcoin.cpp
+  bitcoin.h
   bitcoinaddressvalidator.cpp
+  bitcoinaddressvalidator.h
   bitcoinamountfield.cpp
+  bitcoinamountfield.h
   bitcoingui.cpp
+  bitcoingui.h
   bitcoinunits.cpp
+  bitcoinunits.h
   clientmodel.cpp
+  clientmodel.h
   csvmodelwriter.cpp
+  csvmodelwriter.h
   guiutil.cpp
+  guiutil.h
   initexecutor.cpp
+  initexecutor.h
   intro.cpp
-  modaloverlay.cpp
-  networkstyle.cpp
-  notificator.cpp
-  optionsdialog.cpp
-  optionsmodel.cpp
-  peertablemodel.cpp
-  peertablesortproxy.cpp
-  platformstyle.cpp
-  qvalidatedlineedit.cpp
-  qvaluecombobox.cpp
-  rpcconsole.cpp
-  splashscreen.cpp
-  trafficgraphwidget.cpp
-  utilitydialog.cpp
-  $<$<PLATFORM_ID:Windows>:winshutdownmonitor.cpp>
+  intro.h
+  $<$<PLATFORM_ID:Darwin>:macdockiconhandler.h>
   $<$<PLATFORM_ID:Darwin>:macdockiconhandler.mm>
+  $<$<PLATFORM_ID:Darwin>:macnotificationhandler.h>
   $<$<PLATFORM_ID:Darwin>:macnotificationhandler.mm>
+  $<$<PLATFORM_ID:Darwin>:macos_appnap.h>
   $<$<PLATFORM_ID:Darwin>:macos_appnap.mm>
+  modaloverlay.cpp
+  modaloverlay.h
+  networkstyle.cpp
+  networkstyle.h
+  notificator.cpp
+  notificator.h
+  optionsdialog.cpp
+  optionsdialog.h
+  optionsmodel.cpp
+  optionsmodel.h
+  peertablemodel.cpp
+  peertablemodel.h
+  peertablesortproxy.cpp
+  peertablesortproxy.h
+  platformstyle.cpp
+  platformstyle.h
+  qvalidatedlineedit.cpp
+  qvalidatedlineedit.h
+  qvaluecombobox.cpp
+  qvaluecombobox.h
+  rpcconsole.cpp
+  rpcconsole.h
+  splashscreen.cpp
+  splashscreen.h
+  trafficgraphwidget.cpp
+  trafficgraphwidget.h
+  utilitydialog.cpp
+  utilitydialog.h
+  $<$<PLATFORM_ID:Windows>:winshutdownmonitor.cpp>
+  $<$<PLATFORM_ID:Windows>:winshutdownmonitor.h>
   bitcoin.qrc
   ${CMAKE_CURRENT_BINARY_DIR}/bitcoin_locale.qrc
 )
@@ -141,35 +172,65 @@ if(ENABLE_WALLET)
   target_sources(bitcoinqt
     PRIVATE
       addressbookpage.cpp
+      addressbookpage.h
       addresstablemodel.cpp
+      addresstablemodel.h
       askpassphrasedialog.cpp
+      askpassphrasedialog.h
       coincontroldialog.cpp
+      coincontroldialog.h
       coincontroltreewidget.cpp
+      coincontroltreewidget.h
       createwalletdialog.cpp
+      createwalletdialog.h
       editaddressdialog.cpp
+      editaddressdialog.h
       openuridialog.cpp
+      openuridialog.h
       overviewpage.cpp
+      overviewpage.h
       paymentserver.cpp
+      paymentserver.h
       psbtoperationsdialog.cpp
+      psbtoperationsdialog.h
       qrimagewidget.cpp
+      qrimagewidget.h
       receivecoinsdialog.cpp
+      receivecoinsdialog.h
       receiverequestdialog.cpp
+      receiverequestdialog.h
       recentrequeststablemodel.cpp
+      recentrequeststablemodel.h
       sendcoinsdialog.cpp
+      sendcoinsdialog.h
       sendcoinsentry.cpp
+      sendcoinsentry.h
       signverifymessagedialog.cpp
+      signverifymessagedialog.h
       transactiondesc.cpp
+      transactiondesc.h
       transactiondescdialog.cpp
+      transactiondescdialog.h
       transactionfilterproxy.cpp
+      transactionfilterproxy.h
       transactionoverviewwidget.cpp
+      transactionoverviewwidget.h
       transactionrecord.cpp
+      transactionrecord.h
       transactiontablemodel.cpp
+      transactiontablemodel.h
       transactionview.cpp
+      transactionview.h
       walletcontroller.cpp
+      walletcontroller.h
       walletframe.cpp
+      walletframe.h
       walletmodel.cpp
+      walletmodel.h
       walletmodeltransaction.cpp
+      walletmodeltransaction.h
       walletview.cpp
+      walletview.h
   )
   target_link_libraries(bitcoinqt
     PRIVATE
