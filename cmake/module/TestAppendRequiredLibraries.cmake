@@ -6,7 +6,9 @@ include_guard(GLOBAL)
 
 # Illumos/SmartOS requires linking with -lsocket if
 # using getifaddrs & freeifaddrs.
-# See: https://github.com/bitcoin/bitcoin/pull/21486
+# See:
+# - https://github.com/bitcoin/bitcoin/pull/21486
+# - https://smartos.org/man/3socket/getifaddrs
 function(test_append_socket_library target)
   if (NOT TARGET ${target})
     message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION}() called with non-existent target \"${target}\".")
@@ -25,16 +27,16 @@ function(test_append_socket_library target)
 
   include(CheckSourceCompilesAndLinks)
   check_cxx_source_links("${check_socket_source}" IFADDR_LINKS_WITHOUT_LIBSOCKET)
-  if(IFADDR_LINKS_WITHOUT_LIBSOCKET)
-    return()
+  if(NOT IFADDR_LINKS_WITHOUT_LIBSOCKET)
+    check_cxx_source_links_with_libs(socket "${check_socket_source}" IFADDR_NEEDS_LINK_TO_LIBSOCKET)
+    if(IFADDR_NEEDS_LINK_TO_LIBSOCKET)
+      target_link_libraries(${target} INTERFACE socket)
+    else()
+      message(FATAL_ERROR "Cannot figure out how to use getifaddrs/freeifaddrs.")
+    endif()
   endif()
-
-  check_cxx_source_links_with_libs(socket "${check_socket_source}" IFADDR_NEEDS_LINK_TO_LIBSOCKET)
-  if(IFADDR_NEEDS_LINK_TO_LIBSOCKET)
-    target_link_libraries(${target} INTERFACE socket)
-  else()
-    message(FATAL_ERROR "Cannot figure out how to use getifaddrs/freeifaddrs.")
-  endif()
+  set(HAVE_DECL_GETIFADDRS TRUE PARENT_SCOPE)
+  set(HAVE_DECL_FREEIFADDRS TRUE PARENT_SCOPE)
 endfunction()
 
 # Clang, when building for 32-bit,
