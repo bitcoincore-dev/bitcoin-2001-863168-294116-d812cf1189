@@ -1,9 +1,9 @@
 AC_PREREQ([2.69])
-define(_CLIENT_VERSION_MAJOR, 26)
-define(_CLIENT_VERSION_MINOR, 99)
+define(_CLIENT_VERSION_MAJOR, 27)
+define(_CLIENT_VERSION_MINOR, 0)
 define(_CLIENT_VERSION_BUILD, 0)
 define(_CLIENT_VERSION_RC, 0)
-define(_CLIENT_VERSION_IS_RELEASE, false)
+define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2024)
 define(_COPYRIGHT_HOLDERS,[The %s developers])
 define(_COPYRIGHT_HOLDERS_SUBSTITUTION,[[Bitcoin Core]])
@@ -128,6 +128,8 @@ AC_PATH_PROG([HEXDUMP], [hexdump])
 AC_PATH_TOOL([OBJCOPY], [objcopy])
 AC_PATH_PROG([DOXYGEN], [doxygen])
 AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
+
+AC_ARG_VAR([PYTHONPATH], [Augments the default search path for python module files])
 
 AC_ARG_ENABLE([wallet],
   [AS_HELP_STRING([--disable-wallet],
@@ -644,6 +646,17 @@ AC_ARG_WITH([daemon],
   [build_bitcoind=$withval],
   [build_bitcoind=yes])
 
+can_render_icons=yes
+AC_PATH_PROGS([RSVG_CONVERT],[rsvg-convert rsvg],no)
+AC_PATH_PROGS([IMAGEMAGICK_CONVERT],[convert],no)
+AC_PATH_PROGS([PNG2ICNS],[png2icns],no)
+
+if test x$RSVG_CONVERT = xno; then
+  can_render_icons='rsvg-convert'
+elif test x$IMAGEMAGICK_CONVERT = xno; then
+  can_render_icons='(ImageMagick) convert'
+fi
+
 case $host in
   *mingw*)
      TARGET_OS=windows
@@ -699,6 +712,10 @@ case $host in
      AX_CHECK_COMPILE_FLAG([-Wa,-muse-unaligned-vector-move], [CORE_CXXFLAGS="$CORE_CXXFLAGS -Wa,-muse-unaligned-vector-move"], [], [$CXXFLAG_WERROR])
      ;;
   *darwin*)
+     if test x$PNG2ICNS = xno; then
+       can_render_icons='png2icns'
+     fi
+
      TARGET_OS=darwin
      if  test $cross_compiling != "yes"; then
        BUILD_OS=darwin
@@ -767,6 +784,7 @@ case $host in
            AC_PATH_TOOL([DSYMUTIL], [dsymutil], [dsymutil])
            AC_PATH_TOOL([INSTALL_NAME_TOOL], [install_name_tool], [install_name_tool])
            AC_PATH_TOOL([OTOOL], [otool], [otool])
+           AC_PATH_PROGS([XORRISOFS], [xorrisofs], [xorrisofs])
            AC_PATH_PROG([ZIP], [zip], [zip])
 
            dnl libtool will try to strip the static lib, which is a problem for
@@ -1224,6 +1242,68 @@ if test "$have_any_system" != "no"; then
   AC_DEFINE([HAVE_SYSTEM], [1], [Define to 1 if std::system or ::wsystem is available.])
 fi
 
+dnl Check for leveldb, only if explicitly requested
+LEVELDB_CPPFLAGS=
+LIBLEVELDB=
+LIBMEMENV=
+AC_ARG_WITH([system-leveldb],
+  [AS_HELP_STRING([--with-system-leveldb],
+  [Build with system LevelDB (default is no; DANGEROUS; NOT SUPPORTED)])],
+  [system_leveldb=$withval],
+  [system_leveldb=no]
+)
+if test x$system_leveldb != xno; then
+  LEVELDB_CPPFLAGS=
+  AC_CHECK_LIB([leveldb],[main],[
+    LIBLEVELDB=-lleveldb
+  ],[
+    AC_MSG_ERROR([leveldb library not found; using --with-system-leveldb is not supported anyway])
+  ])
+  AC_CHECK_HEADER([leveldb/filter_policy.h],[],[
+    AC_MSG_ERROR([LevelDB headers not found; using --with-system-leveldb is not supported anyway])
+  ])
+  AC_CHECK_HEADER([leveldb/helpers/memenv.h],[
+    AC_MSG_CHECKING([for memenv.h path])
+    BITCOIN_SUBDIR_TO_INCLUDE([LEVELDB_CPPFLAGS],[leveldb/helpers/],[memenv])
+  ],[
+    AC_CHECK_HEADER([memenv.h],[],[
+      AC_MSG_ERROR([LevelDB headers not found; using --with-system-leveldb is not supported anyway])
+    ])
+  ])
+
+  AC_MSG_CHECKING([library containing leveldb::NewMemEnv])
+  TEMP_LIBS="$LIBS"
+  TEMP_CPPFLAGS="$CPPFLAGS"
+  CPPFLAGS="$CPPFLAGS $LEVELDB_CPPFLAGS"
+  for searchlib in "" "-lmemenv" ERR; do
+    if test "x$searchlib" = "xERR"; then
+      AC_MSG_RESULT([no])
+      AC_MSG_ERROR([LevelDB's memenv helper not found; using --with-system-leveldb is not supported anyway])
+    fi
+    searchlib="$searchlib $LIBLEVELDB"
+    LIBS="$searchlib $TEMP_LIBS"
+    AC_LINK_IFELSE([AC_LANG_SOURCE([
+        #include <leveldb/env.h>
+        #include <memenv.h>
+
+        int main() {
+            leveldb::Env *myenv = leveldb::NewMemEnv(leveldb::Env::Default());
+            delete myenv;
+        }
+    ])],[
+      AC_MSG_RESULT([$searchlib])
+      LIBMEMENV="$searchlib"
+      break
+    ])
+  done
+  LIBS="$TEMP_LIBS"
+  CPPFLAGS="$TEMP_CPPFLAGS"
+fi
+AM_CONDITIONAL([EMBEDDED_LEVELDB],[test x$system_leveldb = xno])
+AC_SUBST(LEVELDB_CPPFLAGS)
+AC_SUBST(LIBLEVELDB)
+AC_SUBST(LIBMEMENV)
+
 dnl SUPPRESSED_CPPFLAGS=SUPPRESS_WARNINGS([$SOME_CPPFLAGS])
 dnl Replace -I with -isystem in $SOME_CPPFLAGS to suppress warnings from
 dnl headers from its include directories and return the result.
@@ -1271,6 +1351,13 @@ else
     QT_INCLUDES=SUPPRESS_WARNINGS($QT_INCLUDES)
     QT_DBUS_INCLUDES=SUPPRESS_WARNINGS($QT_DBUS_INCLUDES)
     QT_TEST_INCLUDES=SUPPRESS_WARNINGS($QT_TEST_INCLUDES)
+  fi
+fi
+
+AM_CONDITIONAL([CAN_RENDER_ICONS], [test "$can_render_icons" = "yes"])
+if test "$can_render_icons" != "yes"; then
+  if test "$bitcoin_enable_qt" != "no" && test ! -f "${srcdir}/src/qt/res/rendered_icons/bitcoin.ico"; then
+    AC_MSG_ERROR([Couldn't find ${can_render_icons} (required to build GUI from git)])
   fi
 fi
 
@@ -1877,6 +1964,7 @@ AC_CONFIG_FILES([contrib/devtools/split-debug.sh],[chmod +x contrib/devtools/spl
 AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
 AC_CONFIG_LINKS([contrib/devtools/iwyu/bitcoin.core.imp:contrib/devtools/iwyu/bitcoin.core.imp])
 AC_CONFIG_LINKS([contrib/filter-lcov.py:contrib/filter-lcov.py])
+AC_CONFIG_LINKS([contrib/macdeploy/background.tiff.in:contrib/macdeploy/background.tiff.in])
 AC_CONFIG_LINKS([src/.bear-tidy-config:src/.bear-tidy-config])
 AC_CONFIG_LINKS([src/.clang-tidy:src/.clang-tidy])
 AC_CONFIG_LINKS([test/functional/test_runner.py:test/functional/test_runner.py])

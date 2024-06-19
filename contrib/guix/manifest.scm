@@ -3,6 +3,7 @@
              ((gnu packages bash) #:select (bash-minimal))
              (gnu packages bison)
              ((gnu packages certs) #:select (nss-certs))
+             ((gnu packages cdrom) #:select (xorriso))
              ((gnu packages cmake) #:select (cmake-minimal))
              (gnu packages commencement)
              (gnu packages compression)
@@ -10,6 +11,9 @@
              (gnu packages file)
              (gnu packages gawk)
              (gnu packages gcc)
+             (gnu packages gnome)
+             (gnu packages image)
+             (gnu packages imagemagick)
              ((gnu packages installers) #:select (nsis-x86_64))
              ((gnu packages linux) #:select (linux-libre-headers-6.1 util-linux))
              (gnu packages llvm)
@@ -505,6 +509,9 @@ inspecting signatures in Mach-O binaries.")
         automake
         pkg-config
         bison
+        imagemagick
+        libicns
+        librsvg-2.40
         ;; Native GCC 10 toolchain
         gcc-toolchain-10
         (list gcc-toolchain-10 "static")
@@ -525,5 +532,5 @@ inspecting signatures in Mach-O binaries.")
           ((string-contains target "-linux-")
            (list (make-bitcoin-cross-toolchain target)))
           ((string-contains target "darwin")
-           (list clang-toolchain-17 binutils cmake-minimal python-signapple zip))
+           (list clang-toolchain-17 binutils cmake-minimal xorriso python-signapple zip))
           (else '())))))

@@ -14,6 +14,8 @@ endif
 .PHONY: deploy FORCE
 .INTERMEDIATE: $(COVERAGE_INFO)
 
+export PYTHONPATH
+
 if BUILD_BITCOIN_LIBS
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libbitcoinconsensus.pc
@@ -35,9 +37,11 @@ space := $(empty) $(empty)
 
 OSX_APP=Bitcoin-Qt.app
 OSX_VOLNAME = $(subst $(space),-,$(PACKAGE_NAME))
+OSX_DMG = $(OSX_VOLNAME).dmg
 OSX_ZIP = $(OSX_VOLNAME).zip
+MAKE_DMG_OPEN_FINDER_SCRIPT=$(top_srcdir)/contrib/macdeploy/make-dmg-open-finder
 OSX_DEPLOY_SCRIPT=$(top_srcdir)/contrib/macdeploy/macdeployqtplus
-OSX_INSTALLER_ICONS=$(top_srcdir)/src/qt/res/icons/bitcoin.icns
+OSX_INSTALLER_ICONS=src/qt/res/rendered_icons/bitcoin.icns
 OSX_PLIST=$(top_builddir)/share/qt/Info.plist #not installed
 
 DIST_CONTRIB = \
@@ -56,12 +60,13 @@ BIN_CHECKS=$(top_srcdir)/contrib/devtools/symbol-check.py \
            $(top_srcdir)/contrib/devtools/security-check.py \
            $(top_srcdir)/contrib/devtools/utils.py
 
-WINDOWS_PACKAGING = $(top_srcdir)/share/pixmaps/bitcoin.ico \
+WINDOWS_PACKAGING = src/qt/res/rendered_icons/bitcoin.ico \
   $(top_srcdir)/share/pixmaps/nsis-header.bmp \
-  $(top_srcdir)/share/pixmaps/nsis-wizard.bmp \
+  src/qt/res/rendered_icons/nsis-wizard.bmp \
   $(top_srcdir)/doc/README_windows.txt
 
 OSX_PACKAGING = $(OSX_DEPLOY_SCRIPT) $(OSX_INSTALLER_ICONS) \
+  $(MAKE_DMG_OPEN_FINDER_SCRIPT) \
   $(top_srcdir)/contrib/macdeploy/detached-sig-create.sh
 
 COVERAGE_INFO = $(COV_TOOL_WRAPPER) baseline.info \
@@ -69,11 +74,14 @@ COVERAGE_INFO = $(COV_TOOL_WRAPPER) baseline.info \
   baseline_filtered.info functional_test.info functional_test_filtered.info \
   test_bitcoin_coverage.info test_bitcoin.info fuzz.info fuzz_filtered.info fuzz_coverage.info
 
+src/qt/res/rendered_icons/%: FORCE
+	$(MAKE) -C src $(patsubst src/%,%,$@)
+
 dist-hook:
 	-$(GIT) archive --format=tar HEAD -- src/clientversion.cpp | $(AMTAR) -C $(top_distdir) -xf -
 
 if TARGET_WINDOWS
-$(BITCOIN_WIN_INSTALLER): all-recursive
+$(BITCOIN_WIN_INSTALLER): all-recursive $(WINDOWS_PACKAGING)
 	$(MKDIR_P) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIND_BIN) $(top_builddir)/release
 	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_QT_BIN) $(top_builddir)/release
@@ -122,16 +130,20 @@ osx_volname:
 	echo $(OSX_VOLNAME) >$@
 
 if BUILD_DARWIN
-$(OSX_ZIP): $(OSX_APP_BUILT) $(OSX_PACKAGING)
-	$(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) $(OSX_VOLNAME) -translations-dir=$(QT_TRANSLATION_DIR) -zip
+$(OSX_DMG) $(OSX_ZIP): $(OSX_APP_BUILT) $(OSX_PACKAGING)
+	$(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) $(OSX_VOLNAME) -translations-dir=$(QT_TRANSLATION_DIR) -dmg -zip
 
-deploydir: $(OSX_ZIP)
+deploydir: $(OSX_DMG) $(OSX_ZIP)
 else !BUILD_DARWIN
 APP_DIST_DIR=$(top_builddir)/dist
 
+$(OSX_DMG): deploydir
+	$(XORRISOFS) -D -l -V "$(OSX_VOLNAME)" -no-pad -r -dir-mode 0755 -hfsplus -o $@ $(APP_DIST_DIR) -- $(if $(SOURCE_DATE_EPOCH),-volume_date all_file_dates =$(SOURCE_DATE_EPOCH))
+	$(PYTHON) $(MAKE_DMG_OPEN_FINDER_SCRIPT) $@
+
 $(OSX_ZIP): deploydir
 	if [ -n "$(SOURCE_DATE_EPOCH)" ]; then find $(APP_DIST_DIR) -exec touch -d @$(SOURCE_DATE_EPOCH) {} +; fi
-	cd $(APP_DIST_DIR) && find . | sort | $(ZIP) -X@ $@
+	cd $(APP_DIST_DIR) && find . | sort | $(ZIP) --temp-path .. -X@ $@
 
 $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Bitcoin-Qt: $(OSX_APP_BUILT) $(OSX_PACKAGING)
 	INSTALL_NAME_TOOL=$(INSTALL_NAME_TOOL) OTOOL=$(OTOOL) STRIP=$(STRIP) $(PYTHON) $(OSX_DEPLOY_SCRIPT) $(OSX_APP) $(OSX_VOLNAME) -translations-dir=$(QT_TRANSLATION_DIR)
@@ -139,7 +151,7 @@ $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Bitcoin-Qt: $(OSX_APP_BUILT) $(OSX_PAC
 deploydir: $(APP_DIST_DIR)/$(OSX_APP)/Contents/MacOS/Bitcoin-Qt
 endif !BUILD_DARWIN
 
-deploy: $(OSX_ZIP)
+deploy: $(OSX_DMG) $(OSX_ZIP)
 endif
 
 $(BITCOIN_QT_BIN): FORCE
@@ -316,7 +328,7 @@ EXTRA_DIST += \
     test/util/data/txreplacesingleinput.hex \
     test/util/rpcauth-test.py
 
-CLEANFILES = $(OSX_ZIP) $(BITCOIN_WIN_INSTALLER)
+CLEANFILES = $(OSX_DMG) $(OSX_ZIP) $(BITCOIN_WIN_INSTALLER)
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-man
 
@@ -331,6 +343,9 @@ else
 docs:
 	@echo "error: doxygen not found"
 endif
+
+src_files: $(DISTFILES)
+	@true
 
 clean-docs:
 	rm -rf doc/doxygen
