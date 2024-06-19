@@ -315,7 +315,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif()
 
 include(AddThreadsIfNeeded)
-add_threads_if_needed()
+target_link_libraries(core_base_interface INTERFACE
+  Threads::Threads
+)
 
 if(SANITIZERS)
   # First check if the compiler accepts flags. If an incompatible pair like
