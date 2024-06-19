@@ -11,11 +11,13 @@
 #include <consensus/consensus.h>
 #include <consensus/tx_verify.h>
 #include <consensus/validation.h>
+#include <crypto/ripemd160.h>
 #include <logging.h>
 #include <policy/policy.h>
 #include <policy/settings.h>
 #include <random.h>
 #include <reverse_iterator.h>
+#include <script/script.h>
 #include <util/check.h>
 #include <util/moneystr.h>
 #include <util/overflow.h>
@@ -46,6 +48,13 @@ bool TestLockPointValidity(CChain& active_chain, const LockPoints& lp)
 
     // LockPoints still valid
     return true;
+}
+
+uint160 ScriptHashkey(const CScript& script)
+{
+    uint160 hash;
+    CRIPEMD160().Write(script.data(), script.size()).Finalize(hash.begin());
+    return hash;
 }
 
 void CTxMemPool::UpdateForDescendants(txiter updateIt, cacheMap& cachedDescendants,
@@ -404,7 +413,8 @@ CTxMemPool::CTxMemPool(const Options& opts)
       m_permit_bare_multisig{opts.permit_bare_multisig},
       m_max_datacarrier_bytes{opts.max_datacarrier_bytes},
       m_require_standard{opts.require_standard},
-      m_full_rbf{opts.full_rbf},
+      m_rbf_policy{opts.rbf_policy},
+      m_truc_policy{opts.truc_policy},
       m_persist_v1_dat{opts.persist_v1_dat},
       m_limits{opts.limits}
 {
@@ -474,6 +484,17 @@ void CTxMemPool::addUnchecked(const CTxMemPoolEntry &entry, setEntries &setAnces
     txns_randomized.emplace_back(newit->GetSharedTx());
     newit->idx_randomized = txns_randomized.size() - 1;
 
+    for (auto& vSPK : entry.mapSPK) {
+        const uint160& SPKKey = vSPK.first;
+        const MemPool_SPK_State& claims = vSPK.second;
+        if (claims & MSS_CREATED) {
+            mapUsedSPK[SPKKey].first = &tx;
+        }
+        if (claims & MSS_SPENT) {
+            mapUsedSPK[SPKKey].second = &tx;
+        }
+    }
+
     TRACE3(mempool, added,
         entry.GetTx().GetHash().data(),
         entry.GetTxSize(),
@@ -502,6 +523,7 @@ void CTxMemPool::removeUnchecked(txiter it, MemPoolRemovalReason reason)
         std::chrono::duration_cast<std::chrono::duration<std::uint64_t>>(it->GetTime()).count()
     );
 
+    const CTransaction& tx = it->GetTx();
     for (const CTxIn& txin : it->GetTx().vin)
         mapNextTx.erase(txin.prevout);
 
@@ -517,6 +539,19 @@ void CTxMemPool::removeUnchecked(txiter it, MemPoolRemovalReason reason)
             txns_randomized.shrink_to_fit();
     } else
         txns_randomized.clear();
+
+    for (auto& vSPK : it->mapSPK) {
+        const uint160& SPKKey = vSPK.first;
+        if (mapUsedSPK[SPKKey].first == &tx) {
+            mapUsedSPK[SPKKey].first = NULL;
+        }
+        if (mapUsedSPK[SPKKey].second == &tx) {
+            mapUsedSPK[SPKKey].second = NULL;
+        }
+        if (!(mapUsedSPK[SPKKey].first || mapUsedSPK[SPKKey].second)) {
+            mapUsedSPK.erase(SPKKey);
+        }
+    }
 
     totalTxSize -= it->GetTxSize();
     m_total_fee -= it->GetFee();
