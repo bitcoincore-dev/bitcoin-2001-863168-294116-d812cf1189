@@ -8,6 +8,7 @@
 
 #include <common/args.h>
 #include <init.h>
+#include <mapport.h>
 #include <qt/bitcoin.h>
 #include <qt/guiutil.h>
 #include <qt/test/optiontests.h>
@@ -39,7 +40,7 @@ void OptionTests::migrateSettings()
     QSettings settings;
     settings.setValue("nDatabaseCache", 600);
     settings.setValue("nThreadsScriptVerif", 12);
-    settings.setValue("fUseUPnP", false);
+    settings.setValue("fUseUPnP", DEFAULT_UPNP);
     settings.setValue("fListen", false);
     settings.setValue("bPrune", true);
     settings.setValue("nPruneSize", 3);
