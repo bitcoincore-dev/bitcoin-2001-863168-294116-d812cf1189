@@ -589,6 +589,7 @@ if(DEFINED ENV{LDFLAGS})
   deduplicate_flags(CMAKE_EXE_LINKER_FLAGS)
 endif()
 
+set(CMAKE_SKIP_RPATH TRUE)
 add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(doc)
