@@ -168,6 +168,17 @@ public:
         CFeeRate blockMinFeeRate{DEFAULT_BLOCK_MIN_TX_FEE};
         // Whether to call TestBlockValidity() at the end of CreateNewBlock().
         bool test_block_validity{true};
+
+        BlockAssembler::Options Clamped() const;
+
+        bool operator==(const Options &rhs) const {
+            return (
+                nBlockMaxWeight == rhs.nBlockMaxWeight &&
+                nBlockMaxSize == rhs.nBlockMaxSize &&
+                blockMinFeeRate == rhs.blockMinFeeRate &&
+                test_block_validity == rhs.test_block_validity
+            );
+        }
     };
 
     explicit BlockAssembler(Chainstate& chainstate, const CTxMemPool* mempool);
