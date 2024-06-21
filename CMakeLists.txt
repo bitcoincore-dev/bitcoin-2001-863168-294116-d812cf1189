@@ -50,7 +50,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND NOT CMAKE_HOST_APPLE)
   # So disable this tool check in further enable_language() commands.
   set(CMAKE_PLATFORM_HAS_INSTALLNAME FALSE)
 endif()
+set(APPEND_CPPFLAGS "" CACHE STRING "Preprocessor flags that are appended to the flags added by the build system.")
+set(APPEND_CFLAGS "" CACHE STRING "C compiler flags that are appended to the flags added by the build system.")
+set(APPEND_CXXFLAGS "" CACHE STRING "(Objective) C++ compiler flags that are appended to the flags added by the build system.")
+set(APPEND_LDFLAGS "" CACHE STRING "Linker flags that are appended to the flags added by the build system.")
+set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${PROJECT_SOURCE_DIR}/cmake/module/OverrideCXX.cmake)
 enable_language(CXX)
+unset(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -164,14 +170,6 @@ option(BUILD_FUZZ_BINARY "Build fuzz binary." OFF)
 cmake_dependent_option(ENABLE_FUZZ "Build for fuzzing. Enabling this will disable all other targets and override BUILD_FUZZ_BINARY." OFF "NOT MSVC" OFF)
 
 option(INSTALL_MAN "Install man pages." ON)
-
-set(APPEND_CPPFLAGS "" CACHE STRING "Preprocessor flags that are appended to the flags added by the build system.")
-set(APPEND_CFLAGS "" CACHE STRING "C compiler flags that are appended to the flags added by the build system.")
-set(APPEND_CXXFLAGS "" CACHE STRING "(Objective) C++ compiler flags that are appended to the flags added by the build system.")
-set(APPEND_LDFLAGS "" CACHE STRING "Linker flags that are appended to the flags added by the build system.")
-string(APPEND CMAKE_CXX_COMPILE_OBJECT " ${APPEND_CPPFLAGS} ${APPEND_CXXFLAGS}")
-string(APPEND CMAKE_CXX_CREATE_SHARED_LIBRARY " ${APPEND_LDFLAGS}")
-string(APPEND CMAKE_CXX_LINK_EXECUTABLE " ${APPEND_LDFLAGS}")
 
 set(configure_warnings)
 
