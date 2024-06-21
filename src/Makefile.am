@@ -712,11 +712,6 @@ libbitcoin_common_a_SOURCES = \
   script/solver.cpp \
   warnings.cpp \
   $(BITCOIN_CORE_H)
-
-if USE_LIBEVENT
-libbitcoin_common_a_CPPFLAGS += $(EVENT_CFLAGS)
-libbitcoin_common_a_SOURCES += common/url.cpp
-endif
 #
 
 # util #
@@ -761,6 +756,11 @@ libbitcoin_util_a_SOURCES = \
   util/time.cpp \
   util/tokenpipe.cpp \
   $(BITCOIN_CORE_H)
+
+if USE_LIBEVENT
+libbitcoin_util_a_CPPFLAGS += $(EVENT_CFLAGS)
+libbitcoin_util_a_SOURCES += common/url.cpp
+endif
 #
 
 # cli #
