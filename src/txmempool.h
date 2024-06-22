@@ -17,6 +17,7 @@
 #include <policy/feerate.h>
 #include <policy/packages.h>
 #include <primitives/transaction.h>
+#include <script/script.h>
 #include <sync.h>
 #include <util/epochguard.h>
 #include <util/hasher.h>
@@ -195,6 +196,8 @@ public:
         }
     }
 };
+
+uint160 ScriptHashkey(const CScript& script);
 
 // Multi_index tag names
 struct descendant_score {};
@@ -396,6 +399,9 @@ public:
     using Limits = kernel::MemPoolLimits;
 
     uint64_t CalculateDescendantMaximum(txiter entry) const EXCLUSIVE_LOCKS_REQUIRED(cs);
+
+    std::map<uint160, std::pair<const CTransaction *, const CTransaction *>> mapUsedSPK;
+
 private:
     typedef std::map<txiter, setEntries, CompareIteratorByHash> cacheMap;
 
@@ -442,7 +448,8 @@ public:
     const bool m_permit_bare_multisig;
     const std::optional<unsigned> m_max_datacarrier_bytes;
     const bool m_require_standard;
-    const bool m_full_rbf;
+    const RBFPolicy m_rbf_policy;
+    const TRUCPolicy m_truc_policy;
     const bool m_persist_v1_dat;
 
     const Limits m_limits;
