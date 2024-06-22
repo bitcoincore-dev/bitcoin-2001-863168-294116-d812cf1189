@@ -638,7 +638,7 @@ UniValue RPCHelpMan::HandleRequest(const JSONRPCRequest& request) const
                 mismatch.setNull();
                 break;
             }
-            mismatch.push_back(match);
+            mismatch.push_back(std::move(match));
         }
         if (!mismatch.isNull()) {
             std::string explain{
@@ -801,15 +801,21 @@ UniValue RPCHelpMan::GetArgMap() const
         map.push_back(arg_name);
         map.push_back(type == RPCArg::Type::STR ||
                       type == RPCArg::Type::STR_HEX);
-        arr.push_back(map);
+        arr.push_back(std::move(map));
     };
 
     for (int i{0}; i < int(m_args.size()); ++i) {
         const auto& arg = m_args.at(i);
         std::vector<std::string> arg_names = SplitString(arg.m_names, '|');
+        RPCArg::Type argtype = arg.m_type;
+        size_t arg_num = 0;
         for (const auto& arg_name : arg_names) {
-            push_back_arg_info(m_name, i, arg_name, arg.m_type);
-            if (arg.m_type == RPCArg::Type::OBJ_NAMED_PARAMS) {
+            if (!arg.m_type_per_name.empty()) {
+                argtype = arg.m_type_per_name.at(arg_num++);
+            }
+
+            push_back_arg_info(m_name, i, arg_name, argtype);
+            if (argtype == RPCArg::Type::OBJ_NAMED_PARAMS) {
                 for (const auto& inner : arg.m_inner) {
                     std::vector<std::string> inner_names = SplitString(inner.m_names, '|');
                     for (const std::string& inner_name : inner_names) {
@@ -860,13 +866,15 @@ UniValue RPCArg::MatchesType(const UniValue& request) const
 {
     if (m_opts.skip_type_check) return true;
     if (IsOptional() && request.isNull()) return true;
-    const auto exp_type{ExpectedType(m_type)};
-    if (!exp_type) return true; // nothing to check
+    for (auto type : m_type_per_name.empty() ? std::vector<RPCArg::Type>{m_type} : m_type_per_name) {
+        const auto exp_type{ExpectedType(type)};
+        if (!exp_type) return true; // nothing to check
 
-    if (*exp_type != request.getType()) {
-        return strprintf("JSON value of type %s is not of expected type %s", uvTypeName(request.getType()), uvTypeName(*exp_type));
+        if (*exp_type == request.getType()) {
+            return true;
+        }
     }
-    return true;
+    return strprintf("JSON value of type %s is not of expected type %s", uvTypeName(request.getType()), uvTypeName(*ExpectedType(m_type)));
 }
 
 std::string RPCArg::GetFirstName() const
@@ -1105,7 +1113,7 @@ UniValue RPCResult::MatchesType(const UniValue& result) const
             // If there are more results than documented, reuse the last doc_inner.
             const RPCResult& doc_inner{m_inner.at(std::min(m_inner.size() - 1, i))};
             UniValue match{doc_inner.MatchesType(result.get_array()[i])};
-            if (!match.isTrue()) errors.pushKV(strprintf("%d", i), match);
+            if (!match.isTrue()) errors.pushKV(strprintf("%d", i), std::move(match));
         }
         if (errors.empty()) return true; // empty result array is valid
         return errors;
@@ -1118,7 +1126,7 @@ UniValue RPCResult::MatchesType(const UniValue& result) const
             const RPCResult& doc_inner{m_inner.at(0)}; // Assume all types are the same, randomly pick the first
             for (size_t i{0}; i < result.get_obj().size(); ++i) {
                 UniValue match{doc_inner.MatchesType(result.get_obj()[i])};
-                if (!match.isTrue()) errors.pushKV(result.getKeys()[i], match);
+                if (!match.isTrue()) errors.pushKV(result.getKeys()[i], std::move(match));
             }
             if (errors.empty()) return true; // empty result obj is valid
             return errors;
@@ -1144,7 +1152,7 @@ UniValue RPCResult::MatchesType(const UniValue& result) const
                 continue;
             }
             UniValue match{doc_entry.MatchesType(result_it->second)};
-            if (!match.isTrue()) errors.pushKV(doc_entry.m_key_name, match);
+            if (!match.isTrue()) errors.pushKV(doc_entry.m_key_name, std::move(match));
         }
         if (errors.empty()) return true;
         return errors;

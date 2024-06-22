@@ -35,6 +35,7 @@
 
 #include <any>
 #include <string>
+#include <optional>
 
 #include <univalue.h>
 
@@ -651,8 +652,8 @@ static bool rest_mempool(const std::any& context, HTTPRequest* req, const std::s
 
     std::string param;
     const RESTResponseFormat rf = ParseDataFormat(param, str_uri_part);
-    if (param != "contents" && param != "info") {
-        return RESTERR(req, HTTP_BAD_REQUEST, "Invalid URI format. Expected /rest/mempool/<info|contents>.json");
+    if (param != "contents" && param != "info" && param != "info/with_fee_histogram") {
+        return RESTERR(req, HTTP_BAD_REQUEST, "Invalid URI format. Expected /rest/mempool/<info|info/with_fee_histogram|contents>.json");
     }
 
     const CTxMemPool* mempool = GetMemPool(context, req);
@@ -685,9 +686,14 @@ static bool rest_mempool(const std::any& context, HTTPRequest* req, const std::s
             if (verbose && mempool_sequence) {
                 return RESTERR(req, HTTP_BAD_REQUEST, "Verbose results cannot contain mempool sequence values. (hint: set \"verbose=false\")");
             }
-            str_json = MempoolToJSON(*mempool, verbose, mempool_sequence).write() + "\n";
+            ChainstateManager* maybe_chainman = GetChainman(context, req);
+            if (!maybe_chainman) return false;
+            ChainstateManager& chainman = *maybe_chainman;
+            str_json = MempoolToJSON(chainman, *mempool, verbose, mempool_sequence).write() + "\n";
+        } else if (param == "info/with_fee_histogram") {
+            str_json = MempoolInfoToJSON(*mempool, MempoolInfoToJSON_const_histogram_floors).write() + "\n";
         } else {
-            str_json = MempoolInfoToJSON(*mempool).write() + "\n";
+            str_json = MempoolInfoToJSON(*mempool, std::nullopt).write() + "\n";
         }
 
         req->WriteHeader("Content-Type", "application/json");
@@ -934,10 +940,10 @@ static bool rest_getutxos(const std::any& context, HTTPRequest* req, const std::
             // include the script in a json output
             UniValue o(UniValue::VOBJ);
             ScriptToUniv(coin.out.scriptPubKey, /*out=*/o, /*include_hex=*/true, /*include_address=*/true);
-            utxo.pushKV("scriptPubKey", o);
-            utxos.push_back(utxo);
+            utxo.pushKV("scriptPubKey", std::move(o));
+            utxos.push_back(std::move(utxo));
         }
-        objGetUTXOResponse.pushKV("utxos", utxos);
+        objGetUTXOResponse.pushKV("utxos", std::move(utxos));
 
         // return json string
         std::string strJSON = objGetUTXOResponse.write() + "\n";
