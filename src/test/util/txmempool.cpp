@@ -35,7 +35,9 @@ CTxMemPoolEntry TestMemPoolEntryHelper::FromTx(const CMutableTransaction& tx) co
 
 CTxMemPoolEntry TestMemPoolEntryHelper::FromTx(const CTransactionRef& tx) const
 {
-    return CTxMemPoolEntry{tx, nFee, TicksSinceEpoch<std::chrono::seconds>(time), nHeight, m_sequence, spendsCoinbase, sigOpCost, lp};
+    constexpr double coin_age{0};
+    const CAmount inChainValue = 0;
+    return CTxMemPoolEntry{tx, nFee, TicksSinceEpoch<std::chrono::seconds>(time), nHeight, m_sequence, /*entry_tx_inputs_coin_age=*/coin_age, inChainValue, spendsCoinbase, /*extra_weight=*/0, sigOpCost, lp};
 }
 
 std::optional<std::string> CheckPackageMempoolAcceptResult(const Package& txns,
@@ -124,9 +126,15 @@ void CheckMempoolV3Invariants(const CTxMemPool& tx_pool)
     for (const auto& tx_info : tx_pool.infoAll()) {
         const auto& entry = *Assert(tx_pool.GetEntry(tx_info.tx->GetHash()));
         if (tx_info.tx->nVersion == 3) {
+            // Check that special maximum virtual size is respected
+            Assert(entry.GetTxSize() <= V3_MAX_VSIZE);
+
             // Check that special v3 ancestor/descendant limits and rules are always respected
             Assert(entry.GetCountWithDescendants() <= V3_DESCENDANT_LIMIT);
             Assert(entry.GetCountWithAncestors() <= V3_ANCESTOR_LIMIT);
+            Assert(entry.GetSizeWithDescendants() <= V3_MAX_VSIZE + V3_CHILD_MAX_VSIZE);
+            Assert(entry.GetSizeWithAncestors() <= V3_MAX_VSIZE + V3_CHILD_MAX_VSIZE);
+
             // If this transaction has at least 1 ancestor, it's a "child" and has restricted weight.
             if (entry.GetCountWithAncestors() > 1) {
                 Assert(entry.GetTxSize() <= V3_CHILD_MAX_VSIZE);
