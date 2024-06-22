@@ -44,6 +44,10 @@ class CChain;
 /** Fake height value used in Coin to signify they are only in the memory pool (since 0.8) */
 static const uint32_t MEMPOOL_HEIGHT = 0x7FFFFFFF;
 
+inline int64_t maxmempoolMinimumBytes(const int64_t descendant_size_vbytes) {
+    return descendant_size_vbytes * 40;
+}
+
 /**
  * Test whether the LockPoints height and time are still valid on the current chain
  */
@@ -434,15 +438,17 @@ public:
 
     using Options = kernel::MemPoolOptions;
 
-    const int64_t m_max_size_bytes;
+    int64_t m_max_size_bytes;
     const std::chrono::seconds m_expiry;
     const CFeeRate m_incremental_relay_feerate;
     const CFeeRate m_min_relay_feerate;
     const CFeeRate m_dust_relay_feerate;
+    const bool m_permit_bare_pubkey;
     const bool m_permit_bare_multisig;
     const std::optional<unsigned> m_max_datacarrier_bytes;
     const bool m_require_standard;
-    const bool m_full_rbf;
+    const RBFPolicy m_rbf_policy;
+    const TRUCPolicy m_truc_policy;
     const bool m_persist_v1_dat;
 
     const Limits m_limits;

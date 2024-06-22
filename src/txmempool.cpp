@@ -401,10 +401,12 @@ CTxMemPool::CTxMemPool(const Options& opts)
       m_incremental_relay_feerate{opts.incremental_relay_feerate},
       m_min_relay_feerate{opts.min_relay_feerate},
       m_dust_relay_feerate{opts.dust_relay_feerate},
+      m_permit_bare_pubkey{opts.permit_bare_pubkey},
       m_permit_bare_multisig{opts.permit_bare_multisig},
       m_max_datacarrier_bytes{opts.max_datacarrier_bytes},
       m_require_standard{opts.require_standard},
-      m_full_rbf{opts.full_rbf},
+      m_rbf_policy{opts.rbf_policy},
+      m_truc_policy{opts.truc_policy},
       m_persist_v1_dat{opts.persist_v1_dat},
       m_limits{opts.limits}
 {
