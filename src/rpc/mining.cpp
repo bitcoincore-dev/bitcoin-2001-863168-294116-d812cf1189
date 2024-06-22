@@ -420,6 +420,7 @@ static RPCHelpMan getmininginfo()
                     RPCResult::Type::OBJ, "", "",
                     {
                         {RPCResult::Type::NUM, "blocks", "The current block"},
+                        {RPCResult::Type::NUM, "currentblocksize", /*optional=*/true, "The block size of the last assembled block (only present if a block was ever assembled, and blockmaxsize is configured)"},
                         {RPCResult::Type::NUM, "currentblockweight", /*optional=*/true, "The block weight of the last assembled block (only present if a block was ever assembled)"},
                         {RPCResult::Type::NUM, "currentblocktx", /*optional=*/true, "The number of block transactions of the last assembled block (only present if a block was ever assembled)"},
                         {RPCResult::Type::NUM, "difficulty", "The current difficulty"},
@@ -442,6 +443,7 @@ static RPCHelpMan getmininginfo()
 
     UniValue obj(UniValue::VOBJ);
     obj.pushKV("blocks",           active_chain.Height());
+    if (BlockAssembler::m_last_block_size) obj.pushKV("currentblocksize", *BlockAssembler::m_last_block_size);
     if (BlockAssembler::m_last_block_weight) obj.pushKV("currentblockweight", *BlockAssembler::m_last_block_weight);
     if (BlockAssembler::m_last_block_num_txs) obj.pushKV("currentblocktx", *BlockAssembler::m_last_block_num_txs);
     obj.pushKV("difficulty", GetDifficulty(*CHECK_NONFATAL(active_chain.Tip())));
@@ -462,9 +464,10 @@ static RPCHelpMan prioritisetransaction()
                 "Accepts the transaction into mined blocks at a higher (or lower) priority\n",
                 {
                     {"txid", RPCArg::Type::STR_HEX, RPCArg::Optional::NO, "The transaction id."},
-                    {"dummy", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "API-Compatibility for previous API. Must be zero or null.\n"
-            "                  DEPRECATED. For forward compatibility use named arguments and omit this parameter."},
-                    {"fee_delta", RPCArg::Type::NUM, RPCArg::Optional::NO, "The fee value (in satoshis) to add (or subtract, if negative).\n"
+                    {"priority_delta", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "The priority to add or subtract.\n"
+            "                  The transaction selection algorithm considers the tx as it would have a higher priority.\n"
+            "                  (priority of a transaction is calculated: coinage * value_in_satoshis / txsize)\n"},
+                    {"fee_delta", RPCArg::Type::NUM, RPCArg::Optional::OMITTED, "The fee value (in satoshis) to add (or subtract, if negative).\n"
             "                  Note, that this value is not a fee rate. It is a value to modify absolute fee of the TX.\n"
             "                  The fee is not actually paid, only the algorithm for selecting transactions into a block\n"
             "                  considers the transaction as it would have paid a higher (or lower) fee."},
@@ -480,14 +483,17 @@ static RPCHelpMan prioritisetransaction()
     LOCK(cs_main);
 
     uint256 hash(ParseHashV(request.params[0], "txid"));
-    const auto dummy{self.MaybeArg<double>(1)};
-    CAmount nAmount = request.params[2].getInt<int64_t>();
+    double priority_delta = 0;
+    CAmount nAmount = 0;
 
-    if (dummy && *dummy != 0) {
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Priority is no longer supported, dummy argument to prioritisetransaction must be 0.");
+    if (!request.params[1].isNull()) {
+        priority_delta = request.params[1].get_real();
+    }
+    if (!request.params[2].isNull()) {
+        nAmount = request.params[2].getInt<int64_t>();
     }
 
-    EnsureAnyMemPool(request.context).PrioritiseTransaction(hash, nAmount);
+    EnsureAnyMemPool(request.context).PrioritiseTransaction(hash, priority_delta, nAmount);
     return true;
 },
     };
@@ -505,6 +511,7 @@ static RPCHelpMan getprioritisedtransactions()
                     {RPCResult::Type::NUM, "fee_delta", "transaction fee delta in satoshis"},
                     {RPCResult::Type::BOOL, "in_mempool", "whether this transaction is currently in mempool"},
                     {RPCResult::Type::NUM, "modified_fee", /*optional=*/true, "modified fee in satoshis. Only returned if in_mempool=true"},
+                    {RPCResult::Type::NUM, "priority_delta", /*optional=*/true, "transaction coin-age priority delta"},
                 }}
             },
         },
@@ -524,7 +531,8 @@ static RPCHelpMan getprioritisedtransactions()
                 if (delta_info.in_mempool) {
                     result_inner.pushKV("modified_fee", *delta_info.modified_fee);
                 }
-                rpc_result.pushKV(delta_info.txid.GetHex(), result_inner);
+                result_inner.pushKV("priority_delta", delta_info.priority_delta);
+                rpc_result.pushKV(delta_info.txid.GetHex(), std::move(result_inner));
             }
             return rpc_result;
         },
@@ -620,6 +628,7 @@ static RPCHelpMan getblocktemplate()
                             {RPCResult::Type::NUM, "", "transactions before this one (by 1-based index in 'transactions' list) that must be present in the final block if this one is"},
                         }},
                         {RPCResult::Type::NUM, "fee", "difference in value between transaction inputs and outputs (in satoshis); for coinbase transactions, this is a negative Number of the total collected block fees (ie, not including the block subsidy); if key is not present, fee is unknown and clients MUST NOT assume there isn't one"},
+                        {RPCResult::Type::NUM, "priority", /*optional=*/true, "transaction coin-age priority (non-standard)"},
                         {RPCResult::Type::NUM, "sigops", "total SigOps cost, as counted for purposes of block limits; if key is not present, sigop cost is unknown and clients MUST NOT assume it is zero"},
                         {RPCResult::Type::NUM, "weight", "total transaction weight, as counted for purposes of block limits"},
                     }},
@@ -849,7 +858,7 @@ static RPCHelpMan getblocktemplate()
             if (setTxIndex.count(in.prevout.hash))
                 deps.push_back(setTxIndex[in.prevout.hash]);
         }
-        entry.pushKV("depends", deps);
+        entry.pushKV("depends", std::move(deps));
 
         int index_in_template = i - 1;
         entry.pushKV("fee", pblocktemplate->vTxFees[index_in_template]);
@@ -860,8 +869,11 @@ static RPCHelpMan getblocktemplate()
         }
         entry.pushKV("sigops", nTxSigOps);
         entry.pushKV("weight", GetTransactionWeight(tx));
+        if (index_in_template && !pblocktemplate->vTxPriorities.empty()) {
+            entry.pushKV("priority", pblocktemplate->vTxPriorities[index_in_template]);
+        }
 
-        transactions.push_back(entry);
+        transactions.push_back(std::move(entry));
     }
 
     UniValue aux(UniValue::VOBJ);
@@ -874,7 +886,7 @@ static RPCHelpMan getblocktemplate()
     aMutable.push_back("prevblock");
 
     UniValue result(UniValue::VOBJ);
-    result.pushKV("capabilities", aCaps);
+    result.pushKV("capabilities", std::move(aCaps));
 
     UniValue aRules(UniValue::VARR);
     aRules.push_back("csv");
@@ -926,18 +938,18 @@ static RPCHelpMan getblocktemplate()
         }
     }
     result.pushKV("version", pblock->nVersion);
-    result.pushKV("rules", aRules);
-    result.pushKV("vbavailable", vbavailable);
+    result.pushKV("rules", std::move(aRules));
+    result.pushKV("vbavailable", std::move(vbavailable));
     result.pushKV("vbrequired", int(0));
 
     result.pushKV("previousblockhash", pblock->hashPrevBlock.GetHex());
-    result.pushKV("transactions", transactions);
-    result.pushKV("coinbaseaux", aux);
+    result.pushKV("transactions", std::move(transactions));
+    result.pushKV("coinbaseaux", std::move(aux));
     result.pushKV("coinbasevalue", (int64_t)pblock->vtx[0]->vout[0].nValue);
     result.pushKV("longpollid", active_chain.Tip()->GetBlockHash().GetHex() + ToString(nTransactionsUpdatedLast));
     result.pushKV("target", hashTarget.GetHex());
     result.pushKV("mintime", (int64_t)pindexPrev->GetMedianTimePast()+1);
-    result.pushKV("mutable", aMutable);
+    result.pushKV("mutable", std::move(aMutable));
     result.pushKV("noncerange", "00000000ffffffff");
     int64_t nSigOpLimit = MAX_BLOCK_SIGOPS_COST;
     int64_t nSizeLimit = MAX_BLOCK_SERIALIZED_SIZE;
