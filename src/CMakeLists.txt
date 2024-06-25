@@ -2,6 +2,21 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
+include(GNUInstallDirs)
+include(AddWindowsResources)
+
+configure_file(${CMAKE_SOURCE_DIR}/cmake/bitcoin-config.h.in config/bitcoin-config.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+
+#=============================
+# bitcoin_crypto library
+#=============================
+# This subdirectory includes compiler flag checks, which print
+# their results. Therefore, we place it before the secp256k1
+# subtree. This ensures that both summaries—secp256k1's and
+# Bitcoin Core's—are displayed one after the other.
+add_subdirectory(crypto)
+
 #=============================
 # secp256k1 subtree
 #=============================
@@ -31,12 +46,6 @@ add_subdirectory(secp256k1 EXCLUDE_FROM_ALL)
 set_target_properties(secp256k1 PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
 string(APPEND CMAKE_C_COMPILE_OBJECT " ${APPEND_CPPFLAGS} ${APPEND_CFLAGS}")
 
-include(GNUInstallDirs)
-include(AddWindowsResources)
-
-configure_file(${CMAKE_SOURCE_DIR}/cmake/bitcoin-config.h.in config/bitcoin-config.h @ONLY)
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-
 # After the transition from Autotools to CMake, the obj/ subdirectory
 # could be dropped as its only purpose was to separate a generated header
 # from source files.
@@ -60,7 +69,6 @@ target_link_libraries(bitcoin_clientversion
 )
 add_dependencies(bitcoin_clientversion generate_build_info)
 
-add_subdirectory(crypto)
 add_subdirectory(univalue)
 add_subdirectory(util)
 if(WITH_MULTIPROCESS)
