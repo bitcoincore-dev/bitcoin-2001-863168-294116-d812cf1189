@@ -579,9 +579,10 @@ if(DEFINED ENV{LDFLAGS})
 endif()
 
 set(CMAKE_SKIP_RPATH TRUE)
-add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(doc)
+
+add_subdirectory(src)
 
 include(cmake/tests.cmake)
 
