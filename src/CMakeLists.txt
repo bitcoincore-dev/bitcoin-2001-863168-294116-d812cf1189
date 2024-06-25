@@ -3,6 +3,15 @@
 # file COPYING or https://opensource.org/license/mit/.
 
 #=============================
+# bitcoin_crypto library
+#=============================
+# This subdirectory includes compiler flag checks, which print
+# their results. Therefore, we place it before the secp256k1
+# subtree. This ensures that both summaries—secp256k1's and
+# Bitcoin Core's—are displayed one after the other.
+add_subdirectory(crypto)
+
+#=============================
 # secp256k1 subtree
 #=============================
 message("")
@@ -60,7 +69,6 @@ target_link_libraries(bitcoin_clientversion
 )
 add_dependencies(bitcoin_clientversion generate_build_info)
 
-add_subdirectory(crypto)
 add_subdirectory(univalue)
 add_subdirectory(util)
 if(WITH_MULTIPROCESS)
