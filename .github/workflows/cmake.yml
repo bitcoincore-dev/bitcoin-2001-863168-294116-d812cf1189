@@ -262,6 +262,69 @@ jobs:
           ./install/bin/bitcoind -version
 
 
+  ubuntu-chainstate:
+    name: 'Ubuntu, chainstate + ${{ matrix.conf.job_name }} libkernel'
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        conf:
+          - shared_libs: '-DBUILD_SHARED_LIBS=OFF'
+            job_name: 'STATIC'
+          - shared_libs: '-DBUILD_SHARED_LIBS=ON'
+            job_name: 'SHARED'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends ccache libboost-dev libevent-dev
+          echo "CCACHE_DIR=${{ runner.temp }}/ccache" >> "$GITHUB_ENV"
+
+      - name: CMake version
+        run: |
+          cmake --version
+          ctest --version
+
+      - name: Restore Ccache cache
+        uses: actions/cache/restore@v4
+        id: ccache-cache
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ github.job }}-ccache-${{ github.run_id }}
+          restore-keys: ${{ github.job }}-${{ matrix.conf.job_name }}-ccache-
+
+      - name: Generate build system
+        run: |
+          cmake -B build -DBUILD_UTIL_CHAINSTATE=ON ${{ matrix.conf.shared_libs }}
+
+      - name: Build
+        working-directory: build
+        run: |
+          ccache --zero-stats
+          cmake --build . -j $(nproc) --target bitcoin-chainstate
+
+      - name: Ccache stats
+        run: |
+          ccache --version | head -n 1
+          ccache --show-stats
+
+      - name: Save Ccache cache
+        uses: actions/cache/save@v4
+        if: github.event_name != 'pull_request' && steps.ccache-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ${{ github.job }}-${{ matrix.conf.job_name }}-ccache-${{ github.run_id }}
+
+      - name: Run bitcoin-chainstate
+        run: |
+          ./build/src/bitcoin-chainstate || true
+
+
   cross-build:
     name: ${{ matrix.host.name }}
     runs-on: ubuntu-latest
