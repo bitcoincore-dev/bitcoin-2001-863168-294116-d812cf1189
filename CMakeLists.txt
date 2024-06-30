@@ -164,8 +164,10 @@ endif()
 
 cmake_dependent_option(BUILD_GUI_TESTS "Build test_bitcoin-qt executable." ON "BUILD_GUI;BUILD_TESTS" OFF)
 option(BUILD_BENCH "Build bench_bitcoin executable." OFF)
+if(UNIX AND NOT APPLE)
 option(BUILD_FUZZ_BINARY "Build fuzz binary." OFF)
 cmake_dependent_option(ENABLE_FUZZ "Build for fuzzing. Enabling this will disable all other targets and override BUILD_FUZZ_BINARY." OFF "NOT MSVC" OFF)
+endif()
 
 option(INSTALL_MAN "Install man pages." ON)
 
