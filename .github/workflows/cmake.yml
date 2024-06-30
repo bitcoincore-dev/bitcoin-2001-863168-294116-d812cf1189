@@ -237,6 +237,7 @@ jobs:
         working-directory: build
         run: |
           cmake --build . -j $(nproc)
+          make bitcoin-chainstate
 
       - name: Ccache stats
         run: |
