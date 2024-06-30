@@ -368,6 +368,7 @@ if(BUILD_UTIL_CHAINSTATE)
     PRIVATE
       core_interface
       bitcoinkernel
+      bitcoin_node
   )
 endif()
 
