@@ -35,7 +35,7 @@ ModalOverlay::ModalOverlay(bool enable_wallet, QWidget* parent)
 
     m_animation.setTargetObject(this);
     m_animation.setPropertyName("pos");
-    m_animation.setDuration(300 /* ms */);
+    m_animation.setDuration(200 /* ms */);
     m_animation.setEasingCurve(QEasingCurve::OutQuad);
 }
 
