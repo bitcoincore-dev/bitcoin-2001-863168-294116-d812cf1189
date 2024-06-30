@@ -55,7 +55,7 @@ if(HAVE_CLMUL)
   target_link_libraries(minisketch_clmul
     PRIVATE
       core_base_interface
-      hardening_interface
+      $<TARGET_NAME_IF_EXISTS:hardening_interface>
       minisketch_common
   )
   set_target_properties(minisketch_clmul PROPERTIES
@@ -83,7 +83,7 @@ target_include_directories(minisketch
 target_link_libraries(minisketch
   PRIVATE
     core_base_interface
-    hardening_interface
+    $<TARGET_NAME_IF_EXISTS:hardening_interface>
     minisketch_common
     $<TARGET_NAME_IF_EXISTS:minisketch_clmul>
 )
