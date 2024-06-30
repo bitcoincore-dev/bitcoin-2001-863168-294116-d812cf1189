@@ -1,6 +1,6 @@
-# Copyright (c) 2023 The Bitcoin Core developers
+# Copyright (c) 2023-present The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
-# file COPYING or http://www.opensource.org/licenses/mit-license.php.
+# file COPYING or https://opensource.org/license/mit/.
 
 include(GNUInstallDirs)
 include(AddWindowsResources)
@@ -38,6 +38,38 @@ if(WITH_MULTIPROCESS)
   add_subdirectory(ipc)
 endif()
 
+#=============================
+# secp256k1 subtree
+#=============================
+message("")
+message("Configuring secp256k1 subtree...")
+set(SECP256K1_DISABLE_SHARED ON CACHE BOOL "" FORCE)
+set(SECP256K1_ENABLE_MODULE_ECDH OFF CACHE BOOL "" FORCE)
+set(SECP256K1_ENABLE_MODULE_RECOVERY ON CACHE BOOL "" FORCE)
+set(SECP256K1_ECMULT_GEN_KB 86 CACHE STRING "" FORCE)
+set(SECP256K1_BUILD_BENCHMARK OFF CACHE BOOL "" FORCE)
+set(SECP256K1_BUILD_TESTS ${BUILD_TESTS} CACHE BOOL "" FORCE)
+set(SECP256K1_BUILD_EXHAUSTIVE_TESTS ${BUILD_TESTS} CACHE BOOL "" FORCE)
+set(SECP256K1_BUILD_CTIME_TESTS OFF CACHE BOOL "" FORCE)
+set(SECP256K1_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+include(GetTargetInterface)
+# -fsanitize and related flags apply to both C++ and C,
+# so we can pass them down to libsecp256k1 as CFLAGS.
+get_target_interface(core_sanitizer_cxx_flags "" sanitize_interface COMPILE_OPTIONS)
+set(SECP256K1_LATE_CFLAGS ${core_sanitizer_cxx_flags} CACHE STRING "" FORCE)
+unset(core_sanitizer_cxx_flags)
+# We want to build libsecp256k1 with the most tested RelWithDebInfo configuration.
+enable_language(C)
+foreach(config IN LISTS CMAKE_BUILD_TYPE CMAKE_CONFIGURATION_TYPES)
+  if(config STREQUAL "")
+    continue()
+  endif()
+  string(TOUPPER "${config}" config)
+  set(CMAKE_C_FLAGS_${config} "${CMAKE_C_FLAGS_RELWITHDEBINFO}")
+endforeach()
+add_subdirectory(secp256k1)
+set_target_properties(secp256k1 PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
+string(APPEND CMAKE_C_COMPILE_OBJECT " ${APPEND_CPPFLAGS} ${APPEND_CFLAGS}")
 
 # Stable, backwards-compatible consensus functionality.
 add_library(bitcoin_consensus STATIC EXCLUDE_FROM_ALL

@@ -322,11 +322,13 @@ target_link_libraries(core_base_interface INTERFACE
   Threads::Threads
 )
 
+add_library(sanitize_interface INTERFACE)
+target_link_libraries(core_base_interface INTERFACE sanitize_interface)
 if(SANITIZERS)
   # First check if the compiler accepts flags. If an incompatible pair like
   # -fsanitize=address,thread is used here, this check will fail. This will also
   # fail if a bad argument is passed, e.g. -fsanitize=undfeined
-  try_append_cxx_flags("-fsanitize=${SANITIZERS}" TARGET core_base_interface
+  try_append_cxx_flags("-fsanitize=${SANITIZERS}" TARGET sanitize_interface
     RESULT_VAR cxx_supports_sanitizers
     SKIP_LINK
   )
@@ -353,7 +355,7 @@ if(SANITIZERS)
     message(FATAL_ERROR "Linker did not accept requested flags, you are missing required libraries.")
   endif()
 endif()
-target_link_options(core_base_interface INTERFACE ${SANITIZER_LDFLAGS})
+target_link_options(sanitize_interface INTERFACE ${SANITIZER_LDFLAGS})
 
 include(AddBoostIfNeeded)
 add_boost_if_needed()
@@ -369,7 +371,6 @@ include(cmake/ccache.cmake)
 include(cmake/crc32c.cmake)
 include(cmake/leveldb.cmake)
 include(cmake/minisketch.cmake)
-include(cmake/secp256k1.cmake)
 
 add_library(warn_interface INTERFACE)
 target_link_libraries(core_interface INTERFACE warn_interface)
@@ -429,15 +430,12 @@ target_compile_definitions(core_interface_debug INTERFACE
 )
 # We leave assertions on.
 if(MSVC)
-  remove_c_flag_from_all_configs(/DNDEBUG)
   remove_cxx_flag_from_all_configs(/DNDEBUG)
 else()
-  remove_c_flag_from_all_configs(-DNDEBUG)
   remove_cxx_flag_from_all_configs(-DNDEBUG)
 
-  # Adjust flags used by the C/CXX compiler during RELEASE builds.
+  # Adjust flags used by the CXX compiler during RELEASE builds.
   # Prefer -O2 optimization level. (-O3 is CMake's default for Release for many compilers.)
-  replace_c_flag_in_config(Release -O3 -O2)
   replace_cxx_flag_in_config(Release -O3 -O2)
 
   are_flags_overridden(CMAKE_CXX_FLAGS_DEBUG cxx_flags_debug_overridden)
@@ -447,6 +445,7 @@ else()
     if(compiler_supports_g3)
       replace_cxx_flag_in_config(Debug -g -g3)
     endif()
+    unset(compiler_supports_g3)
 
     try_append_cxx_flags("-ftrapv" RESULT_VAR compiler_supports_ftrapv)
     if(compiler_supports_ftrapv)
@@ -463,24 +462,6 @@ else()
     )
   endif()
   unset(cxx_flags_debug_overridden)
-
-  are_flags_overridden(CMAKE_C_FLAGS_DEBUG c_flags_debug_overridden)
-  if(NOT c_flags_debug_overridden)
-    # Redefine flags used by the C compiler during DEBUG builds.
-    if(compiler_supports_g3)
-      replace_c_flag_in_config(Debug -g -g3)
-    endif()
-
-    string(PREPEND CMAKE_C_FLAGS_DEBUG "-O0 ")
-
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}"
-      CACHE STRING
-      "Flags used by the C compiler during DEBUG builds."
-      FORCE
-    )
-  endif()
-  unset(compiler_supports_g3)
-  unset(c_flags_debug_overridden)
 endif()
 
 set(CMAKE_CXX_FLAGS_COVERAGE "-Og --coverage")
@@ -599,6 +580,9 @@ if(DEFINED ENV{LDFLAGS})
   deduplicate_flags(CMAKE_EXE_LINKER_FLAGS)
 endif()
 
+if(BUILD_TESTS)
+  enable_testing()
+endif()
 # TODO: The `CMAKE_SKIP_BUILD_RPATH` variable setting can be deleted
 #       in the future after reordering Guix script commands to
 #       perform binary checks after the installation step.
@@ -607,9 +591,10 @@ endif()
 # - https://github.com/bitcoin/bitcoin/pull/30312#issuecomment-2191235833
 set(CMAKE_SKIP_BUILD_RPATH TRUE)
 set(CMAKE_SKIP_INSTALL_RPATH TRUE)
-add_subdirectory(src)
 add_subdirectory(test)
 add_subdirectory(doc)
+
+add_subdirectory(src)
 
 include(cmake/tests.cmake)
 
@@ -664,7 +649,6 @@ else()
   set(cross_status "FALSE")
 endif()
 message("Cross compiling ....................... ${cross_status}")
-message("C compiler ............................ ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER_VERSION}, ${CMAKE_C_COMPILER}")
 message("C++ compiler .......................... ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}, ${CMAKE_CXX_COMPILER}")
 include(FlagsSummary)
 flags_summary()
