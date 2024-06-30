@@ -41,9 +41,9 @@
 int main(int argc, char* argv[])
 {
     // SETUP: Argument parsing and handling
-    if (argc != 2) {
+    if (argc <= 2) {
         std::cerr
-            << "Usage: " << argv[0] << " DATADIR" << std::endl
+            << "Usage: " << argv[0] << " DATADIR" "[main signet]" << std::endl
             << "Display DATADIR information, and process hex-encoded blocks on standard input." << std::endl
             << std::endl
             << "IMPORTANT: THIS EXECUTABLE IS EXPERIMENTAL, FOR TESTING ONLY, AND EXPECTED TO" << std::endl
@@ -104,6 +104,11 @@ int main(int argc, char* argv[])
 
     // SETUP: Chainstate
     auto chainparams = CChainParams::Main();
+    if (argc == 3) {
+        if (argv[2] == "-signet") {
+           auto chainparams = CChainParams::SigNet();
+        }
+    }
     const ChainstateManager::Options chainman_opts{
         .chainparams = *chainparams,
         .datadir = abs_datadir,
