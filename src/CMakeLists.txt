@@ -2,6 +2,8 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
+include(GNUInstallDirs)
+
 configure_file(${CMAKE_SOURCE_DIR}/cmake/bitcoin-config.h.in config/bitcoin-config.h @ONLY)
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -161,6 +163,7 @@ target_link_libraries(bitcoin_common
 )
 
 
+set(installable_targets)
 if(ENABLE_WALLET)
   add_subdirectory(wallet)
 
@@ -177,6 +180,7 @@ if(ENABLE_WALLET)
       bitcoin_util
       Boost::headers
     )
+    list(APPEND installable_targets bitcoin-wallet)
   endif()
 endif()
 
@@ -306,6 +310,7 @@ if(BUILD_DAEMON)
     bitcoin_node
     $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
+  list(APPEND installable_targets bitcoind)
 endif()
 if(WITH_MULTIPROCESS)
   add_executable(bitcoin-node
@@ -318,6 +323,7 @@ if(WITH_MULTIPROCESS)
     bitcoin_ipc
     $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
+  list(APPEND installable_targets bitcoin-node)
 endif()
 
 
@@ -342,6 +348,7 @@ if(BUILD_CLI)
     bitcoin_util
     $<TARGET_NAME_IF_EXISTS:libevent::libevent>
   )
+  list(APPEND installable_targets bitcoin-cli)
 endif()
 
 
@@ -353,6 +360,7 @@ if(BUILD_TX)
     bitcoin_util
     univalue
   )
+  list(APPEND installable_targets bitcoin-tx)
 endif()
 
 
@@ -363,6 +371,7 @@ if(BUILD_UTIL)
     bitcoin_common
     bitcoin_util
   )
+  list(APPEND installable_targets bitcoin-util)
 endif()
 
 
@@ -407,4 +416,18 @@ endif()
 
 if(BUILD_FUZZ_BINARY)
   add_subdirectory(test/fuzz)
+endif()
+
+
+install(TARGETS ${installable_targets}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+unset(installable_targets)
+
+if(INSTALL_MAN)
+  # TODO: these stubs are no longer needed. man pages should be generated at install time.
+  install(DIRECTORY ../doc/man/
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+    FILES_MATCHING PATTERN *.1
+  )
 endif()
