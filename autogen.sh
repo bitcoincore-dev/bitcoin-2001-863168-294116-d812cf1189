@@ -3,10 +3,14 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+
 rm -f configure >/dev/null || true
 rm -f configure~ >/dev/null || true
 
-if [[ "$OSTYPE" =~ ^darwin ]]; then
+echo "example:"
+echo "/bin/sh ./configure --disable-option-checking '--prefix=/usr/local'  '--with-gui=qt@5' '--disable-tests' '--disable-shared' '--with-pic' '--enable-benchmark=no' '--enable-module-recovery' '--disable-module-ecdh' --cache-file=/dev/null --srcdir=."
+
 type -P convert && echo "convert needed for gui build"|| brew install imagemagick ## needed for gui
 type -P rsvg-convert && echo "rsvg-convert needed for gui build"|| brew install librsvg ## needed for gui
 fi
