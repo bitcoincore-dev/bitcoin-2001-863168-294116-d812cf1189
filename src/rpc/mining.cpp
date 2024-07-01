@@ -49,8 +49,9 @@ using node::UpdateTime;
 
 /**
  * Return average network hashes per second based on the last 'lookup' blocks,
- * or from the last difficulty change if 'lookup' is nonpositive.
- * If 'height' is nonnegative, compute the estimate at the time when a given block was found.
+ * or from the last difficulty change if 'lookup' is -1.
+ * If 'height' is -1, compute the estimate from current chain tip.
+ * If 'height' is a valid block height, compute the estimate at the time when a given block was found.
  */
 static UniValue GetNetworkHashPS(int lookup, int height, const CChain& active_chain) {
     if (lookup < -1 || lookup == 0) {
@@ -63,7 +64,7 @@ static UniValue GetNetworkHashPS(int lookup, int height, const CChain& active_ch
 
     const CBlockIndex* pb = active_chain.Tip();
 
-    if (height >= 0 && height < active_chain.Height()) {
+    if (height >= 0) {
         pb = active_chain[height];
     }
 
@@ -71,7 +72,7 @@ static UniValue GetNetworkHashPS(int lookup, int height, const CChain& active_ch
         return 0;
 
     // If lookup is -1, then use blocks since last difficulty change.
-    if (lookup <= 0)
+    if (lookup == -1)
         lookup = pb->nHeight % Params().GetConsensus().DifficultyAdjustmentInterval() + 1;
 
     // If lookup is larger than chain, then set it to chain length.

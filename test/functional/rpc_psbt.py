@@ -186,8 +186,7 @@ class PSBTTest(BitcoinTestFramework):
 
     def run_test(self):
         # Create and fund a raw tx for sending 10 BTC
-        assert_raises_rpc_error(-4, "Insufficient funds", self.nodes[0].walletcreatefundedpsbt, inputs=[], outputs={self.nodes[2].getnewaddress():1}, options={'min_conf': 201})
-        psbtx1 = self.nodes[0].walletcreatefundedpsbt(inputs=[], outputs={self.nodes[2].getnewaddress():11}, options={'min_conf': 200})['psbt']
+        psbtx1 = self.nodes[0].walletcreatefundedpsbt([], {self.nodes[2].getnewaddress():10})['psbt']
 
         # If inputs are specified, do not automatically add more:
         utxo1 = self.nodes[0].listunspent()[0]
@@ -217,7 +216,6 @@ class PSBTTest(BitcoinTestFramework):
 
         # Sign the transaction but don't finalize
         processed_psbt = self.nodes[0].walletprocesspsbt(psbt=psbtx, finalize=False)
-        assert_equal(processed_psbt, self.nodes[0].walletprocesspsbt(psbtx, {"finalize": False}))
         assert "hex" not in processed_psbt
         signed_psbt = processed_psbt['psbt']
 
@@ -227,7 +225,6 @@ class PSBTTest(BitcoinTestFramework):
 
         # Alternative method: sign AND finalize in one command
         processed_finalized_psbt = self.nodes[0].walletprocesspsbt(psbt=psbtx, finalize=True)
-        assert_equal(processed_finalized_psbt, self.nodes[0].walletprocesspsbt(psbtx, {"finalize": True}))
         finalized_psbt = processed_finalized_psbt['psbt']
         finalized_psbt_hex = processed_finalized_psbt['hex']
         assert signed_psbt != finalized_psbt
@@ -433,13 +430,11 @@ class PSBTTest(BitcoinTestFramework):
 
         # Update psbts, should only have data for one input and not the other
         psbt1 = self.nodes[1].walletprocesspsbt(psbt_orig, False, "ALL")['psbt']
-        assert_equal(psbt1, self.nodes[1].walletprocesspsbt(psbt_orig, {"sign": False, "sighashtype": "ALL"})["psbt"])
         psbt1_decoded = self.nodes[0].decodepsbt(psbt1)
         assert psbt1_decoded['inputs'][0] and not psbt1_decoded['inputs'][1]
         # Check that BIP32 path was added
         assert "bip32_derivs" in psbt1_decoded['inputs'][0]
         psbt2 = self.nodes[2].walletprocesspsbt(psbt_orig, False, "ALL", False)['psbt']
-        assert_equal(psbt2, self.nodes[2].walletprocesspsbt(psbt_orig, {"sign": False, "sighashtype": "ALL", "bip32derivs": False})["psbt"])
         psbt2_decoded = self.nodes[0].decodepsbt(psbt2)
         assert not psbt2_decoded['inputs'][0] and psbt2_decoded['inputs'][1]
         # Check that BIP32 paths were not added
@@ -684,7 +679,6 @@ class PSBTTest(BitcoinTestFramework):
 
         # After update with wallet, only needs signing
         updated = self.nodes[1].walletprocesspsbt(psbt, False, 'ALL', True)['psbt']
-        assert_equal(updated, self.nodes[1].walletprocesspsbt(psbt, {"sign": False, "sighashtype": 'ALL', "bip32derivs": True})["psbt"])
         analyzed = self.nodes[0].analyzepsbt(updated)
         assert analyzed['inputs'][0]['has_utxo'] and not analyzed['inputs'][0]['is_final'] and analyzed['inputs'][0]['next'] == 'signer' and analyzed['next'] == 'signer' and analyzed['inputs'][0]['missing']['signatures'][0] == addrinfo['embedded']['witness_program']
 
@@ -714,9 +708,11 @@ class PSBTTest(BitcoinTestFramework):
         assert_equal(analysis['next'], 'creator')
         assert_equal(analysis['error'], 'PSBT is not valid. Output amount invalid')
 
-        assert_raises_rpc_error(-22, "TX decode failed", self.nodes[0].analyzepsbt, "cHNidP8BAJoCAAAAAkvEW8NnDtdNtDpsmze+Ht2LH35IJcKv00jKAlUs21RrAwAAAAD/////S8Rbw2cO1020OmybN74e3Ysffkglwq/TSMoCVSzbVGsBAAAAAP7///8CwLYClQAAAAAWABSNJKzjaUb3uOxixsvh1GGE3fW7zQD5ApUAAAAAFgAUKNw0x8HRctAgmvoevm4u1SbN7XIAAAAAAAEAnQIAAAACczMa321tVHuN4GKWKRncycI22aX3uXgwSFUKM2orjRsBAAAAAP7///9zMxrfbW1Ue43gYpYpGdzJwjbZpfe5eDBIVQozaiuNGwAAAAAA/v///wIA+QKVAAAAABl2qRT9zXUVA8Ls5iVqynLHe5/vSe1XyYisQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAAAAAQEfQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAA==")
+        analysis = self.nodes[0].analyzepsbt('cHNidP8BAJoCAAAAAkvEW8NnDtdNtDpsmze+Ht2LH35IJcKv00jKAlUs21RrAwAAAAD/////S8Rbw2cO1020OmybN74e3Ysffkglwq/TSMoCVSzbVGsBAAAAAP7///8CwLYClQAAAAAWABSNJKzjaUb3uOxixsvh1GGE3fW7zQD5ApUAAAAAFgAUKNw0x8HRctAgmvoevm4u1SbN7XIAAAAAAAEAnQIAAAACczMa321tVHuN4GKWKRncycI22aX3uXgwSFUKM2orjRsBAAAAAP7///9zMxrfbW1Ue43gYpYpGdzJwjbZpfe5eDBIVQozaiuNGwAAAAAA/v///wIA+QKVAAAAABl2qRT9zXUVA8Ls5iVqynLHe5/vSe1XyYisQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAAAAAQEfQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAA==')
+        assert_equal(analysis['next'], 'creator')
+        assert_equal(analysis['error'], 'PSBT is not valid. Input 0 specifies invalid prevout')
 
-        assert_raises_rpc_error(-22, "TX decode failed", self.nodes[0].walletprocesspsbt, "cHNidP8BAJoCAAAAAkvEW8NnDtdNtDpsmze+Ht2LH35IJcKv00jKAlUs21RrAwAAAAD/////S8Rbw2cO1020OmybN74e3Ysffkglwq/TSMoCVSzbVGsBAAAAAP7///8CwLYClQAAAAAWABSNJKzjaUb3uOxixsvh1GGE3fW7zQD5ApUAAAAAFgAUKNw0x8HRctAgmvoevm4u1SbN7XIAAAAAAAEAnQIAAAACczMa321tVHuN4GKWKRncycI22aX3uXgwSFUKM2orjRsBAAAAAP7///9zMxrfbW1Ue43gYpYpGdzJwjbZpfe5eDBIVQozaiuNGwAAAAAA/v///wIA+QKVAAAAABl2qRT9zXUVA8Ls5iVqynLHe5/vSe1XyYisQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAAAAAQEfQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAA==")
+        assert_raises_rpc_error(-25, 'Inputs missing or spent', self.nodes[0].walletprocesspsbt, 'cHNidP8BAJoCAAAAAkvEW8NnDtdNtDpsmze+Ht2LH35IJcKv00jKAlUs21RrAwAAAAD/////S8Rbw2cO1020OmybN74e3Ysffkglwq/TSMoCVSzbVGsBAAAAAP7///8CwLYClQAAAAAWABSNJKzjaUb3uOxixsvh1GGE3fW7zQD5ApUAAAAAFgAUKNw0x8HRctAgmvoevm4u1SbN7XIAAAAAAAEAnQIAAAACczMa321tVHuN4GKWKRncycI22aX3uXgwSFUKM2orjRsBAAAAAP7///9zMxrfbW1Ue43gYpYpGdzJwjbZpfe5eDBIVQozaiuNGwAAAAAA/v///wIA+QKVAAAAABl2qRT9zXUVA8Ls5iVqynLHe5/vSe1XyYisQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAAAAAQEfQM0ClQAAAAAWABRmWQUcjSjghQ8/uH4Bn/zkakwLtAAAAA==')
 
         self.log.info("Test that we can fund psbts with external inputs specified")
 
@@ -893,7 +889,7 @@ class PSBTTest(BitcoinTestFramework):
             assert_equal(comb_psbt, psbt)
 
         self.log.info("Test walletprocesspsbt raises if an invalid sighashtype is passed")
-        assert_raises_rpc_error(-8, "all is not a valid sighash parameter.", self.nodes[0].walletprocesspsbt, psbt, sighashtype="all")
+        assert_raises_rpc_error(-8, "'all' is not a valid sighash parameter.", self.nodes[0].walletprocesspsbt, psbt, sighashtype="all")
 
         self.log.info("Test decoding PSBT with per-input preimage types")
         # note that the decodepsbt RPC doesn't check whether preimages and hashes match
@@ -978,14 +974,11 @@ class PSBTTest(BitcoinTestFramework):
         # are still added to the psbt
         alt_descriptor = descsum_create(f"wpkh({get_generate_key().privkey})")
         alt_psbt = self.nodes[2].descriptorprocesspsbt(psbt=psbt, descriptors=[alt_descriptor], sighashtype="ALL")["psbt"]
-        assert_equal(alt_psbt, self.nodes[2].descriptorprocesspsbt(psbt=psbt, descriptors=[alt_descriptor], options={'sighashtype': "ALL"})["psbt"])
         decoded = self.nodes[2].decodepsbt(alt_psbt)
         test_psbt_input_keys(decoded['inputs'][0], ['witness_utxo', 'non_witness_utxo'])
 
         # Test that the psbt is not finalized and does not have bip32_derivs unless specified
         processed_psbt = self.nodes[2].descriptorprocesspsbt(psbt=psbt, descriptors=[descriptor], sighashtype="ALL", bip32derivs=True, finalize=False)
-        assert_equal(processed_psbt, self.nodes[2].descriptorprocesspsbt(psbt=psbt, descriptors=[descriptor], options={'sighashtype': "ALL", 'bip32derivs': True, 'finalize': False}))
-        assert_equal(processed_psbt, self.nodes[2].descriptorprocesspsbt(psbt, [descriptor], "ALL", True, False))
         decoded = self.nodes[2].decodepsbt(processed_psbt['psbt'])
         test_psbt_input_keys(decoded['inputs'][0], ['witness_utxo', 'non_witness_utxo', 'partial_signatures', 'bip32_derivs'])
 
@@ -993,7 +986,6 @@ class PSBTTest(BitcoinTestFramework):
         assert "hex" not in processed_psbt
 
         processed_psbt = self.nodes[2].descriptorprocesspsbt(psbt=psbt, descriptors=[descriptor], sighashtype="ALL", bip32derivs=False, finalize=True)
-        assert_equal(processed_psbt, self.nodes[2].descriptorprocesspsbt(psbt, [descriptor], {'sighashtype': "ALL", 'bip32derivs': False, 'finalize': True}))
         decoded = self.nodes[2].decodepsbt(processed_psbt['psbt'])
         test_psbt_input_keys(decoded['inputs'][0], ['witness_utxo', 'non_witness_utxo', 'final_scriptwitness'])
 
@@ -1004,9 +996,7 @@ class PSBTTest(BitcoinTestFramework):
         self.nodes[2].sendrawtransaction(processed_psbt['hex'])
 
         self.log.info("Test descriptorprocesspsbt raises if an invalid sighashtype is passed")
-        assert_raises_rpc_error(-8, "all is not a valid sighash parameter.", self.nodes[2].descriptorprocesspsbt, psbt, [descriptor], sighashtype="all")
-        assert_raises_rpc_error(-8, "all is not a valid sighash parameter.", self.nodes[2].descriptorprocesspsbt, psbt, [descriptor], "all")
-        assert_raises_rpc_error(-8, "all is not a valid sighash parameter.", self.nodes[2].descriptorprocesspsbt, psbt, [descriptor], {'sighashtype': "all"})
+        assert_raises_rpc_error(-8, "'all' is not a valid sighash parameter.", self.nodes[2].descriptorprocesspsbt, psbt, [descriptor], sighashtype="all")
 
 
 if __name__ == '__main__':

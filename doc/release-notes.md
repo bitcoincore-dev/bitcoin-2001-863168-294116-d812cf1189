@@ -1,9 +1,9 @@
-26.1 Release Notes
+26.2rc1 Release Notes
 ==================
 
-Bitcoin Knots version 26.1.knots20240513 is now available from:
+Bitcoin Knots version 26.2rc1.knotsCHANGEME is now available from:
 
-  <https://bitcoinknots.org/files/26.x/26.1.knots20240513/>
+  <https://bitcoinknots.org/files/26.x/26.1.knotsCHANGEME/>
 
 This release includes new features, various bug fixes and performance
 improvements, as well as updated translations.
@@ -87,6 +87,11 @@ Node policy changes
 
 Updated RPCs
 ------------
+### Script
+
+- #29853: sign: don't assume we are parsing a sane TapMiniscript
+
+### P2P and network changes
 
 - `submitpackage` now returns results with per-transaction errors rather than
   throwing an exception potentially obscuring other transactions being
@@ -98,6 +103,29 @@ Updated RPCs
 - `getrawaddrman` has been extended to include in the results for each entry
   "mapped_as" and "source_mapped_as". (#30062)
 
+- #29691: Change Luke Dashjr seed to dashjr-list-of-p2p-nodes.us
+- #30085: p2p: detect addnode cjdns peers in GetAddedNodeInfo()
+
+### RPC
+
+- #29869: rpc, bugfix: Enforce maximum value for setmocktime
+- #28554: bugfix: throw an error if an invalid parameter is passed to getnetworkhashps RPC
+- #30094: rpc: move UniValue in blockToJSON
+- #29870: rpc: Reword SighashFromStr error message
+
+### Build
+
+- #29747: depends: fix mingw-w64 Qt DEBUG=1 build
+- #29985: depends: Fix build of Qt for 32-bit platforms with recent glibc
+- #30151: depends: Fetch miniupnpc sources from an alternative website
+
+### Misc
+
+- #29776: ThreadSanitizer: Fix #29767
+- #29856: ci: Bump s390x to ubuntu:24.04
+- #29764: doc: Suggest installing dev packages for debian/ubuntu qt5 build
+- #30149: contrib: Renew Windows code signing certificate
+
 Credits
 =======
 
@@ -107,11 +135,14 @@ Thanks to everyone who directly contributed to this release:
 - Ava Chow
 - brunoerg
 - Charlie
+- dergoegge
 - Fabian Jahr
 - fanquake
 - furszy
 - Greg Sanders
+- glozow
 - Hennadii Stepanov
+- Jameson Lopp
 - Jon Atack
 - kevkevin
 - Léo Haf
@@ -119,9 +150,13 @@ Thanks to everyone who directly contributed to this release:
 - MarcoFalke
 - Martin Zumsande
 - Matthew Zipkin
+- nanlour
 - pablomartin4btc
 - Sebastian Falbesoner
 - Sergi Delgado Segura
 - Vasil Dimov
 - willcl-ark
 - Wladimir J. van der Laan
+
+As well as to everyone that helped with translations on
+[Transifex](https://www.transifex.com/bitcoin/bitcoin/).
