@@ -732,10 +732,16 @@ AC_ARG_WITH([daemon],
   [build_bitcoind=$withval],
   [build_bitcoind=yes])
 
+
 can_render_icons=yes
+if test "$TARGET_OS" = "darwin"; then
+can_render_icons=no
+fi
+if test "$TARGET_OS" != "darwin"; then
 AC_PATH_PROGS([RSVG_CONVERT],[rsvg-convert rsvg],no)
 AC_PATH_PROGS([IMAGEMAGICK_CONVERT],[convert],no)
 AC_PATH_PROGS([PNG2ICNS],[png2icns],no)
+fi
 
 if test x$RSVG_CONVERT = xno; then
   can_render_icons='rsvg-convert'
@@ -799,12 +805,17 @@ case $host in
      dnl See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=54412.
      AX_CHECK_COMPILE_FLAG([-Wa,-muse-unaligned-vector-move], [CORE_CXXFLAGS="$CORE_CXXFLAGS -Wa,-muse-unaligned-vector-move"], [], [$CXXFLAG_WERROR])
 
-     AC_PATH_PROGS([RSVG_CONVERT], [rsvg-convert rsvg],rsvg-convert)
-     AC_PATH_PROGS([IMAGEMAGICK_CONVERT], [convert],convert)
+     if test "$TARGET_OS" != "darwin"; then
+     AC_PATH_PROGS([RSVG_CONVERT], [rsvg-convert rsvg],no)
+     AC_PATH_PROGS([IMAGEMAGICK_CONVERT], [convert],no)
+     AC_PATH_PROGS([PNG2ICNS],[png2icns],no)
+     fi
      ;;
   *darwin*)
+     if test "$TARGET_OS" != "darwin"; then
      if test x$PNG2ICNS = xno; then
        can_render_icons='png2icns'
+     fi
      fi
 
      TARGET_OS=darwin

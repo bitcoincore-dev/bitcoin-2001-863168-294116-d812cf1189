@@ -3,6 +3,14 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+rm -f configure >/dev/null || true
+rm -f configure~ >/dev/null || true
+
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+type -P convert && echo "convert needed for gui build"|| brew install imagemagick ## needed for gui
+type -P rsvg-convert && echo "rsvg-convert needed for gui build"|| brew install librsvg ## needed for gui
+fi
+
 export LC_ALL=C
 set -e
 srcdir="$(dirname "$0")"
