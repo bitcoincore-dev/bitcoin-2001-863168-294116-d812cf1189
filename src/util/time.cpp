@@ -51,7 +51,8 @@ bool ChronoSanityCheck()
 #ifdef HAVE_GMTIME_R
     if (gmtime_r(&time_val, &epoch) == nullptr) {
 #else
-    if (gmtime_s(&epoch, &time_val) != 0) {
+    if (gmtime_r(&time_val, &epoch) == nullptr) {
+    //if (gmtime_s(&epoch, &time_val) != 0) {
 #endif
         return false;
     }
@@ -102,7 +103,8 @@ std::string FormatISO8601DateTime(int64_t nTime) {
 #ifdef HAVE_GMTIME_R
     if (gmtime_r(&time_val, &ts) == nullptr) {
 #else
-    if (gmtime_s(&ts, &time_val) != 0) {
+    if (gmtime_r(&time_val, &ts) == nullptr) {
+    //if (gmtime_s(&ts, &time_val) != 0) {
 #endif
         return {};
     }
@@ -115,7 +117,8 @@ std::string FormatISO8601Date(int64_t nTime) {
 #ifdef HAVE_GMTIME_R
     if (gmtime_r(&time_val, &ts) == nullptr) {
 #else
-    if (gmtime_s(&ts, &time_val) != 0) {
+    if (gmtime_r(&time_val, &ts) == nullptr) {
+    //if (gmtime_s(&ts, &time_val) != 0) {
 #endif
         return {};
     }
@@ -128,7 +131,8 @@ std::string FormatISO8601Time(int64_t nTime) {
 #ifdef HAVE_GMTIME_R
     gmtime_r(&time_val, &ts);
 #else
-    gmtime_s(&ts, &time_val);
+    gmtime_r(&time_val, &ts);
+    //gmtime_s(&ts, &time_val);
 #endif
     return strprintf("%02i:%02i:%02iZ", ts.tm_hour, ts.tm_min, ts.tm_sec);
 }
