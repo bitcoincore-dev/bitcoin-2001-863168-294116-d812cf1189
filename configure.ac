@@ -734,14 +734,14 @@ AC_ARG_WITH([daemon],
 
 
 can_render_icons=yes
-if test "$TARGET_OS" = "darwin"; then
-can_render_icons=no
-fi
-if test "$TARGET_OS" != "darwin"; then
+#if test "$TARGET_OS" = "darwin"; then
+#can_render_icons=no
+#fi
+#if test "$TARGET_OS" != "darwin"; then
 AC_PATH_PROGS([RSVG_CONVERT],[rsvg-convert rsvg],no)
-AC_PATH_PROGS([IMAGEMAGICK_CONVERT],[convert],no)
+AC_PATH_PROGS([IMAGEMAGICK_CONVERT],[magick convert],no)
 AC_PATH_PROGS([PNG2ICNS],[png2icns],no)
-fi
+#fi
 
 if test x$RSVG_CONVERT = xno; then
   can_render_icons='rsvg-convert'
