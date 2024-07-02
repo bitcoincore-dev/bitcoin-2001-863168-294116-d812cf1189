@@ -2,21 +2,6 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-set(qt_components Core Gui Widgets LinguistTools)
-if(ENABLE_WALLET)
-  list(APPEND qt_components Network)
-endif()
-if(WITH_DBUS)
-  list(APPEND qt_components DBus)
-endif()
-if(BUILD_GUI_TESTS)
-  list(APPEND qt_components Test)
-endif()
-find_package(Qt5 5.11.3 MODULE REQUIRED
-  COMPONENTS ${qt_components}
-)
-unset(qt_components)
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   enable_language(OBJCXX)
   set(CMAKE_OBJCXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
