@@ -341,7 +341,11 @@ elseif(NOT SED_EXECUTABLE)
     COMMAND ${CMAKE_COMMAND} -E echo "Error: GNU sed not found"
   )
 else()
-  get_translatable_sources(translatable_sources src src/qt src/util src/wallet)
+  set(translatable_sources_directories src src/qt src/util)
+  if(ENABLE_WALLET)
+    list(APPEND translatable_sources_directories src/wallet)
+  endif()
+  get_translatable_sources(translatable_sources ${translatable_sources_directories})
   get_translatable_sources(qt_translatable_sources src/qt)
   file(GLOB ui_files ${CMAKE_CURRENT_SOURCE_DIR}/forms/*.ui)
   add_custom_target(translate
