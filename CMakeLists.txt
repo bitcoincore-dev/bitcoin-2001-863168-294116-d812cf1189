@@ -55,7 +55,19 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/module)
+
 set(configure_warnings)
+
+# The core_interface library aims to encapsulate common build flags.
+# It is intended to be a usage requirement for all other targets.
+add_library(core_interface INTERFACE)
+add_library(core_interface_relwithdebinfo INTERFACE)
+add_library(core_interface_debug INTERFACE)
+target_link_libraries(core_interface INTERFACE
+  $<$<CONFIG:RelWithDebInfo>:core_interface_relwithdebinfo>
+  $<$<CONFIG:Debug>:core_interface_debug>
+)
 
 message("\n")
 message("Configure summary")
@@ -69,3 +81,6 @@ if(configure_warnings)
     endforeach()
     message("  ******\n")
 endif()
+
+# We want all build properties to be encapsulated properly.
+include(WarnAboutGlobalProperties)
