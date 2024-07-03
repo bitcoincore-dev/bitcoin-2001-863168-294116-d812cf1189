@@ -191,18 +191,12 @@ unset(check_pie_output)
 # The core_interface library aims to encapsulate common build flags.
 # It is intended to be a usage requirement for all other targets.
 add_library(core_interface INTERFACE)
-# The core_base_interface library is a subset of the core_interface
-# designated to be used with subtrees. In particular, it does not
-# include the warn_interface as subtree's warnings are not fixable
-# in our tree.
-add_library(core_base_interface INTERFACE)
 add_library(core_interface_relwithdebinfo INTERFACE)
 add_library(core_interface_debug INTERFACE)
-target_link_libraries(core_base_interface INTERFACE
+target_link_libraries(core_interface INTERFACE
   $<$<CONFIG:RelWithDebInfo>:core_interface_relwithdebinfo>
   $<$<CONFIG:Debug>:core_interface_debug>
 )
-target_link_libraries(core_interface INTERFACE core_base_interface)
 
 if(ENABLE_FUZZ)
   message(WARNING "ENABLE_FUZZ=ON will disable all other targets and force BUILD_FUZZ_BINARY=ON.")
@@ -248,7 +242,7 @@ if(WIN32)
   - A run-time library must be specified explicitly using _MT definition.
   ]=]
 
-  target_compile_definitions(core_base_interface INTERFACE
+  target_compile_definitions(core_interface INTERFACE
     _WIN32_WINNT=0x0601
     _WIN32_IE=0x0501
     WIN32_LEAN_AND_MEAN
@@ -264,7 +258,7 @@ if(WIN32)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>${msvc_library_linkage}")
     unset(msvc_library_linkage)
 
-    target_compile_definitions(core_base_interface INTERFACE
+    target_compile_definitions(core_interface INTERFACE
       _UNICODE;UNICODE
     )
     target_compile_options(core_interface INTERFACE
@@ -279,51 +273,51 @@ if(WIN32)
   endif()
 
   if(MINGW)
-    target_compile_definitions(core_base_interface INTERFACE
+    target_compile_definitions(core_interface INTERFACE
       WIN32
       _WINDOWS
       _MT
     )
     # Avoid the use of aligned vector instructions when building for Windows.
     # See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=54412.
-    try_append_cxx_flags("-Wa,-muse-unaligned-vector-move" TARGET core_base_interface SKIP_LINK)
-    try_append_linker_flag("-static" TARGET core_base_interface)
+    try_append_cxx_flags("-Wa,-muse-unaligned-vector-move" TARGET core_interface SKIP_LINK)
+    try_append_linker_flag("-static" TARGET core_interface)
     # We require Windows 7 (NT 6.1) or later.
-    try_append_linker_flag("-Wl,--major-subsystem-version,6" TARGET core_base_interface)
-    try_append_linker_flag("-Wl,--minor-subsystem-version,1" TARGET core_base_interface)
+    try_append_linker_flag("-Wl,--major-subsystem-version,6" TARGET core_interface)
+    try_append_linker_flag("-Wl,--minor-subsystem-version,1" TARGET core_interface)
   endif()
 endif()
 
 # Use 64-bit off_t on 32-bit Linux.
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
   # Ensure 64-bit offsets are used for filesystem accesses for 32-bit compilation.
-  target_compile_definitions(core_base_interface INTERFACE
+  target_compile_definitions(core_interface INTERFACE
     _FILE_OFFSET_BITS=64
   )
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  target_compile_definitions(core_base_interface INTERFACE
+  target_compile_definitions(core_interface INTERFACE
     MAC_OSX
   )
   # These flags are specific to ld64, and may cause issues with other linkers.
   # For example: GNU ld will interpret -dead_strip as -de and then try and use
   # "ad_strip" as the symbol for the entry point.
-  try_append_linker_flag("-Wl,-dead_strip" TARGET core_base_interface)
-  try_append_linker_flag("-Wl,-dead_strip_dylibs" TARGET core_base_interface)
+  try_append_linker_flag("-Wl,-dead_strip" TARGET core_interface)
+  try_append_linker_flag("-Wl,-dead_strip_dylibs" TARGET core_interface)
   if(CMAKE_HOST_APPLE)
-    try_append_linker_flag("-Wl,-headerpad_max_install_names" TARGET core_base_interface)
+    try_append_linker_flag("-Wl,-headerpad_max_install_names" TARGET core_interface)
   endif()
 endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(core_base_interface INTERFACE
+target_link_libraries(core_interface INTERFACE
   Threads::Threads
 )
 
 add_library(sanitize_interface INTERFACE)
-target_link_libraries(core_base_interface INTERFACE sanitize_interface)
+target_link_libraries(core_interface INTERFACE sanitize_interface)
 if(SANITIZERS)
   # First check if the compiler accepts flags. If an incompatible pair like
   # -fsanitize=address,thread is used here, this check will fail. This will also
@@ -477,13 +471,13 @@ configure_file(cmake/script/CoverageInclude.cmake.in CoverageInclude.cmake @ONLY
 configure_file(contrib/filter-lcov.py filter-lcov.py COPYONLY)
 
 # Don't allow extended (non-ASCII) symbols in identifiers. This is easier for code review.
-try_append_cxx_flags("-fno-extended-identifiers" TARGET core_base_interface SKIP_LINK)
+try_append_cxx_flags("-fno-extended-identifiers" TARGET core_interface SKIP_LINK)
 
 # Currently all versions of gcc are subject to a class of bugs, see the
 # gccbug_90348 test case (only reproduces on GCC 11 and earlier) and
 # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=111843. To work around that, set
 # -fstack-reuse=none for all gcc builds. (Only gcc understands this flag).
-try_append_cxx_flags("-fstack-reuse=none" TARGET core_base_interface)
+try_append_cxx_flags("-fstack-reuse=none" TARGET core_interface)
 
 if(ENABLE_HARDENING)
   add_library(hardening_interface INTERFACE)
@@ -535,7 +529,7 @@ endif()
 if(REDUCE_EXPORTS)
   set(CMAKE_CXX_VISIBILITY_PRESET hidden)
   set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
-  try_append_linker_flag("-Wl,--exclude-libs,ALL" TARGET core_base_interface)
+  try_append_linker_flag("-Wl,--exclude-libs,ALL" TARGET core_interface)
 endif()
 
 if(WERROR)
@@ -544,7 +538,7 @@ if(WERROR)
   else()
     set(werror_flag "-Werror")
   endif()
-  try_append_cxx_flags(${werror_flag} TARGET core_base_interface SKIP_LINK RESULT_VAR compiler_supports_werror)
+  try_append_cxx_flags(${werror_flag} TARGET core_interface SKIP_LINK RESULT_VAR compiler_supports_werror)
   if(NOT compiler_supports_werror)
     message(FATAL_ERROR "WERROR set but ${werror_flag} is not usable.")
   endif()
@@ -560,7 +554,7 @@ else()
   )
 endif()
 
-target_compile_definitions(core_base_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
+target_compile_definitions(core_interface INTERFACE ${DEPENDS_COMPILE_DEFINITIONS})
 target_compile_definitions(core_interface_relwithdebinfo INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_RELWITHDEBINFO})
 target_compile_definitions(core_interface_debug INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_DEBUG})
 
