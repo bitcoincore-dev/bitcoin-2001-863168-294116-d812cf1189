@@ -86,8 +86,7 @@ target_compile_definitions(crc32c_common INTERFACE
   BYTE_ORDER_BIG_ENDIAN=$<STREQUAL:${CMAKE_CXX_BYTE_ORDER},BIG_ENDIAN>
 )
 target_link_libraries(crc32c_common INTERFACE
-  core_base_interface
-  $<TARGET_NAME_IF_EXISTS:hardening_interface>
+  core_interface
 )
 
 add_library(crc32c STATIC EXCLUDE_FROM_ALL
