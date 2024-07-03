@@ -355,3 +355,7 @@ endif()
 if(BUILD_TESTS)
   add_subdirectory(test)
 endif()
+
+if(BUILD_FUZZ_BINARY)
+  add_subdirectory(test/fuzz)
+endif()
