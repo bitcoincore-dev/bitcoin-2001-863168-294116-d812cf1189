@@ -390,10 +390,6 @@ include(cmake/introspection.cmake)
 
 include(cmake/ccache.cmake)
 
-include(cmake/crc32c.cmake)
-include(cmake/leveldb.cmake)
-include(cmake/minisketch.cmake)
-
 add_library(warn_interface INTERFACE)
 target_link_libraries(core_interface INTERFACE warn_interface)
 if(MSVC)
@@ -614,6 +610,9 @@ set(CMAKE_SKIP_INSTALL_RPATH TRUE)
 add_subdirectory(test)
 add_subdirectory(doc)
 
+include(cmake/crc32c.cmake)
+include(cmake/leveldb.cmake)
+include(cmake/minisketch.cmake)
 add_subdirectory(src)
 
 include(cmake/tests.cmake)
