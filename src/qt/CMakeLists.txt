@@ -2,21 +2,6 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or https://opensource.org/license/mit/.
 
-set(qt_components Core Gui Widgets LinguistTools)
-if(ENABLE_WALLET)
-  list(APPEND qt_components Network)
-endif()
-if(WITH_DBUS)
-  list(APPEND qt_components DBus)
-endif()
-if(BUILD_GUI_TESTS)
-  list(APPEND qt_components Test)
-endif()
-find_package(Qt5 5.11.3 MODULE REQUIRED
-  COMPONENTS ${qt_components}
-)
-unset(qt_components)
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   enable_language(OBJCXX)
   set(CMAKE_OBJCXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
@@ -26,8 +11,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   string(APPEND CMAKE_OBJCXX_COMPILE_OBJECT " ${APPEND_CPPFLAGS} ${APPEND_CXXFLAGS}")
 endif()
 
+get_target_property(qt_lib_type Qt5::Core TYPE)
+
 function(import_plugins target)
-  if(QT_IS_STATIC)
+  if(qt_lib_type STREQUAL "STATIC_LIBRARY")
     set(plugins Qt5::QMinimalIntegrationPlugin)
     if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
       list(APPEND plugins Qt5::QXcbIntegrationPlugin)
@@ -51,21 +38,6 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOUIC_SEARCH_PATHS forms)
-
-include(CMakePushCheckState)
-cmake_push_check_state(RESET)
-set(CMAKE_REQUIRED_LIBRARIES Qt5::Core)
-include(CheckCXXSourceCompiles)
-check_cxx_source_compiles("
-  #include <QtGlobal>
-
-  #if !defined(QT_STATIC)
-  #error Qt is not static
-  #endif
-  int main() {}
-  " QT_IS_STATIC
-)
-cmake_pop_check_state()
 
 # TODO: The file(GLOB ...) command should be replaced with an explicit
 # file list. Such a change must be synced with the corresponding change
@@ -244,7 +216,7 @@ if(WITH_DBUS)
   target_link_libraries(bitcoinqt PRIVATE Qt5::DBus)
 endif()
 
-if(QT_IS_STATIC)
+if(qt_lib_type STREQUAL "STATIC_LIBRARY")
   # We want to define static plugins to link ourselves, thus preventing
   # automatic linking against a "sane" set of default static plugins.
   qt5_import_plugins(bitcoinqt
@@ -341,7 +313,11 @@ elseif(NOT SED_EXECUTABLE)
     COMMAND ${CMAKE_COMMAND} -E echo "Error: GNU sed not found"
   )
 else()
-  get_translatable_sources(translatable_sources src src/qt src/util src/wallet)
+  set(translatable_sources_directories src src/qt src/util)
+  if(ENABLE_WALLET)
+    list(APPEND translatable_sources_directories src/wallet)
+  endif()
+  get_translatable_sources(translatable_sources ${translatable_sources_directories})
   get_translatable_sources(qt_translatable_sources src/qt)
   file(GLOB ui_files ${CMAKE_CURRENT_SOURCE_DIR}/forms/*.ui)
   add_custom_target(translate

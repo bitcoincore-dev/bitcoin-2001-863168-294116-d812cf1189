@@ -159,6 +159,23 @@ if(WITH_MULTIPROCESS)
 endif()
 
 cmake_dependent_option(BUILD_GUI_TESTS "Build test_bitcoin-qt executable." ON "BUILD_GUI;BUILD_TESTS" OFF)
+if(BUILD_GUI)
+  set(qt_components Core Gui Widgets LinguistTools)
+  if(ENABLE_WALLET)
+    list(APPEND qt_components Network)
+  endif()
+  if(WITH_DBUS)
+    list(APPEND qt_components DBus)
+  endif()
+  if(BUILD_GUI_TESTS)
+    list(APPEND qt_components Test)
+  endif()
+  find_package(Qt5 5.11.3 MODULE REQUIRED
+    COMPONENTS ${qt_components}
+  )
+  unset(qt_components)
+endif()
+
 option(BUILD_BENCH "Build bench_bitcoin executable." OFF)
 option(BUILD_FUZZ_BINARY "Build fuzz binary." OFF)
 cmake_dependent_option(ENABLE_FUZZ "Build for fuzzing. Enabling this will disable all other targets and override BUILD_FUZZ_BINARY." OFF "NOT MSVC" OFF)
@@ -356,6 +373,17 @@ if(SANITIZERS)
   endif()
 endif()
 target_link_options(sanitize_interface INTERFACE ${SANITIZER_LDFLAGS})
+
+if(BUILD_FUZZ_BINARY)
+  include(CheckSourceCompilesAndLinks)
+  check_cxx_source_links_with_flags("${SANITIZER_LDFLAGS}" "
+      #include <cstdint>
+      #include <cstddef>
+      extern \"C\" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) { return 0; }
+      // No main() function.
+    " FUZZ_BINARY_LINKS_WITHOUT_MAIN_FUNCTION
+  )
+endif()
 
 include(AddBoostIfNeeded)
 add_boost_if_needed()
