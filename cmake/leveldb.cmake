@@ -97,6 +97,7 @@ endif()
 target_link_libraries(leveldb PRIVATE
   core_base_interface
   $<TARGET_NAME_IF_EXISTS:hardening_interface>
+  warn_interface
   nowarn_leveldb_interface
   crc32c
 )

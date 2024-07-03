@@ -368,10 +368,6 @@ include(cmake/introspection.cmake)
 
 include(cmake/ccache.cmake)
 
-include(cmake/crc32c.cmake)
-include(cmake/leveldb.cmake)
-include(cmake/minisketch.cmake)
-
 add_library(warn_interface INTERFACE)
 target_link_libraries(core_interface INTERFACE warn_interface)
 if(MSVC)
@@ -416,6 +412,10 @@ else()
     IF_CHECK_PASSED "-Wno-unused-parameter"
   )
 endif()
+
+include(cmake/crc32c.cmake)
+include(cmake/leveldb.cmake)
+include(cmake/minisketch.cmake)
 
 include(ProcessConfigurations)
 set_default_config(RelWithDebInfo)
