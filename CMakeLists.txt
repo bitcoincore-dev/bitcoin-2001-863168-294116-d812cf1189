@@ -586,11 +586,8 @@ target_compile_definitions(core_interface INTERFACE ${DEPENDS_COMPILE_DEFINITION
 target_compile_definitions(core_interface_relwithdebinfo INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_RELWITHDEBINFO})
 target_compile_definitions(core_interface_debug INTERFACE ${DEPENDS_COMPILE_DEFINITIONS_DEBUG})
 
-# If {C,CXX,LD}FLAGS variables are defined during building depends and
-# configuring this build system, their content might be duplicated.
-if(DEFINED ENV{CFLAGS})
-  deduplicate_flags(CMAKE_C_FLAGS)
-endif()
+# If the {CXX,LD}FLAGS environment variables are defined during building depends
+# and configuring this build system, their content might be duplicated.
 if(DEFINED ENV{CXXFLAGS})
   deduplicate_flags(CMAKE_CXX_FLAGS)
 endif()
