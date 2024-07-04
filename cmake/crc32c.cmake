@@ -84,6 +84,8 @@ target_compile_definitions(crc32c_common INTERFACE
   HAVE_MM_PREFETCH=$<BOOL:${HAVE_MM_PREFETCH}>
   HAVE_STRONG_GETAUXVAL=$<BOOL:${HAVE_STRONG_GETAUXVAL}>
   BYTE_ORDER_BIG_ENDIAN=$<STREQUAL:${CMAKE_CXX_BYTE_ORDER},BIG_ENDIAN>
+  HAVE_SSE42=$<BOOL:${HAVE_SSE42}>
+  HAVE_ARM64_CRC32C=$<BOOL:${HAVE_ARM64_CRC32C}>
 )
 target_link_libraries(crc32c_common INTERFACE
   core_interface
@@ -104,7 +106,6 @@ if(HAVE_SSE42)
   add_library(crc32c_sse42 STATIC EXCLUDE_FROM_ALL
     ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_sse42.cc
   )
-  target_compile_definitions(crc32c_sse42 PUBLIC HAVE_SSE42=1)
   target_compile_options(crc32c_sse42 PRIVATE ${SSE42_CXXFLAGS})
   target_link_libraries(crc32c_sse42 PRIVATE crc32c_common)
   set_target_properties(crc32c_sse42 PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
@@ -115,7 +116,6 @@ if(HAVE_ARM64_CRC32C)
   add_library(crc32c_arm64 STATIC EXCLUDE_FROM_ALL
     ${PROJECT_SOURCE_DIR}/src/crc32c/src/crc32c_arm64.cc
   )
-  target_compile_definitions(crc32c_arm64 PUBLIC HAVE_ARM64_CRC32C=1)
   target_compile_options(crc32c_arm64 PRIVATE ${ARM64_CRC_CXXFLAGS})
   target_link_libraries(crc32c_arm64 PRIVATE crc32c_common)
   set_target_properties(crc32c_arm64 PROPERTIES EXPORT_COMPILE_COMMANDS OFF)
