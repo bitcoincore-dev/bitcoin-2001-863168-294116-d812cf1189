@@ -32,16 +32,16 @@ function(add_maintenance_targets)
   endif()
 
   # In CMake, the components of the compiler invocation are separated into three distinct variables:
-  #  - CMAKE_C_COMPILER_LAUNCHER: a semicolon-separated list of launchers or tools to precede the compiler (e.g., env or ccache).
-  #  - CMAKE_C_COMPILER: the full path to the compiler binary itself (e.g., /usr/bin/clang).
-  #  - CMAKE_C_COMPILER_ARG1: a string containing initial compiler options (e.g., --target=x86_64-apple-darwin -nostdlibinc).
+  #  - CMAKE_CXX_COMPILER_LAUNCHER: a semicolon-separated list of launchers or tools to precede the compiler (e.g., env or ccache).
+  #  - CMAKE_CXX_COMPILER: the full path to the compiler binary itself (e.g., /usr/bin/clang++).
+  #  - CMAKE_CXX_COMPILER_ARG1: a string containing initial compiler options (e.g., --target=x86_64-apple-darwin -nostdlibinc).
   # By concatenating these variables, we form the complete command line to be passed to a Python script via the CC environment variable.
-  list(JOIN CMAKE_C_COMPILER_LAUNCHER " " c_compiler_command)
-  string(STRIP "${c_compiler_command} ${CMAKE_C_COMPILER}" c_compiler_command)
-  string(STRIP "${c_compiler_command} ${CMAKE_C_COMPILER_ARG1}" c_compiler_command)
+  list(JOIN CMAKE_CXX_COMPILER_LAUNCHER " " cxx_compiler_command)
+  string(STRIP "${cxx_compiler_command} ${CMAKE_CXX_COMPILER}" cxx_compiler_command)
+  string(STRIP "${cxx_compiler_command} ${CMAKE_CXX_COMPILER_ARG1}" cxx_compiler_command)
   add_custom_target(test-security-check
-    COMMAND ${CMAKE_COMMAND} -E env CC=${c_compiler_command} CFLAGS=${CMAKE_C_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-security-check.py TestSecurityChecks.test_${exe_format}
-    COMMAND ${CMAKE_COMMAND} -E env CC=${c_compiler_command} CFLAGS=${CMAKE_C_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-symbol-check.py TestSymbolChecks.test_${exe_format}
+    COMMAND ${CMAKE_COMMAND} -E env CXX=${cxx_compiler_command} CXXFLAGS=${CMAKE_CXX_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-security-check.py TestSecurityChecks.test_${exe_format}
+    COMMAND ${CMAKE_COMMAND} -E env CXX=${cxx_compiler_command} CXXFLAGS=${CMAKE_CXX_FLAGS} LDFLAGS=${CMAKE_EXE_LINKER_FLAGS} ${PYTHON_COMMAND} ${CMAKE_SOURCE_DIR}/contrib/devtools/test-symbol-check.py TestSymbolChecks.test_${exe_format}
     VERBATIM
   )
 
