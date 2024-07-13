@@ -12,13 +12,14 @@ Date:   Mon Apr 22 06:39:35 2024 +0100
 
 diff --git a/configure.ac b/configure.ac
 index d00e063a..cd1fce37 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -349,6 +349,7 @@ AM_CONDITIONAL(BUILD_WITH_NO_UNDEFINED, test x$bwin32 = xtrue || test x$cygwin =
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -906,7 +906,7 @@ if(WIN32)
+     list(APPEND HDR_PRIVATE WIN32-Code/getopt.h)
  
- if test x$bwin32 = xtrue; then
-   AC_HAVE_LIBRARY([ws2_32])
-+  AC_HAVE_LIBRARY([iphlpapi])
- fi
- 
- dnl Checks for typedefs, structures, and compiler characteristics.
+     set(EVENT__DNS_USE_FTIME_FOR_ID 1)
+-    set(LIB_PLATFORM ws2_32 shell32 advapi32)
++    set(LIB_PLATFORM ws2_32 shell32 advapi32 iphlpapi)
+     add_definitions(
+             -D_CRT_SECURE_NO_WARNINGS
+             -D_CRT_NONSTDC_NO_DEPRECATE)
