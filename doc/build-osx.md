@@ -202,6 +202,12 @@ If `sqlite` or `qt` are not installed, this will throw an error.
 cmake -B build -DBUILD_GUI=ON
 ```
 
+### **If cmake is not detecting brew installed dependencies - try relinking them.**
+##### For example:
+```
+brew unlink qrencode && brew link qrencode
+```
+
 ##### No Wallet or GUI
 
 ``` bash
